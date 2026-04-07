@@ -216,9 +216,9 @@
                         </div>
                     </button>
                     <ul x-cloak x-show="activeDropdown === 'digital-marketing'" x-collapse class="sub-menu text-gray-500">
-                        <li><a href="#">Campaign List</a></li>
-                        <li><a href="#">Video Assets</a></li>
-                        <li><a href="#">Poster Assets</a></li>
+                        <li><a href="{{ route('admin.marketing.campaigns.index') }}">Campaign List</a></li>
+                        <li><a href="{{ route('admin.marketing.campaigns.index') }}?type=video">Video Assets</a></li>
+                        <li><a href="{{ route('admin.marketing.campaigns.index') }}?type=poster">Poster Assets</a></li>
                     </ul>
                 </li>
 
@@ -384,15 +384,14 @@
                         </div>
                     </button>
                     <ul x-cloak x-show="activeDropdown === 'accounts'" x-collapse class="sub-menu text-gray-500">
-                        <li><a href="#">Chart of Accounts</a></li>
-                        <li><a href="#">Journal Entries</a></li>
-                        <li><a href="#">General Ledger</a></li>
-                        <li><a href="#">Invoices</a></li>
+                        <li><a href="{{ route('admin.accounting-periods.index') }}">Accounting Periods</a></li>
+                        <li><a href="{{ route('admin.chart-of-accounts.index') }}">Chart of Accounts</a></li>
+                        <li><a href="{{ route('admin.journal-entries.index') }}">Journal Vouchers</a></li>
+                        <li><a href="{{ route('admin.invoices.index') }}">Student Invoices</a></li>
+                        <li><a href="{{ route('admin.payments.index') }}">Student Payments</a></li>
                         <li><a href="#">Expenses</a></li>
                         <li><a href="#">Office Accounts</a></li>
-                        <li><a href="#">VAT & Tax</a></li>
-                        <li><a href="#">Accounting Periods</a></li>
-                        <li><a href="#">Reports</a></li>
+                        <li><a href="#">General Ledger</a></li>
                         <li><a href="#">Balance Sheet</a></li>
                     </ul>
                 </li>

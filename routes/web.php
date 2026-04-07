@@ -101,7 +101,7 @@ Route::prefix('dashboard/roles')->name('tyro-dashboard.roles.')->group(function 
     Route::delete('{id}', [LocalRoleController::class, 'destroy'])->name('destroy');
 });
 
-// Marketing - Lead Management
+// Marketing - Lead & Campaign Management
 Route::prefix('dashboard/marketing')->name('admin.marketing.')->group(function () {
     Route::get('leads/get-universities', [LeadController::class, 'getUniversities'])->name('leads.get-universities');
     Route::get('leads/get-courses', [LeadController::class, 'getCourses'])->name('leads.get-courses');
@@ -112,6 +112,24 @@ Route::prefix('dashboard/marketing')->name('admin.marketing.')->group(function (
     Route::get('leads/{lead}/edit', [LeadController::class, 'edit'])->name('leads.edit')->middleware('can:*marketing');
     Route::put('leads/{lead}', [LeadController::class, 'update'])->name('leads.update')->middleware('can:*marketing');
     Route::delete('leads/{lead}', [LeadController::class, 'destroy'])->name('leads.destroy')->middleware('can:*marketing');
+
+    // Campaigns & Assets
+    Route::prefix('campaigns')->name('campaigns.')->middleware('can:*marketing')->group(function () {
+        Route::get('/', [App\Http\Controllers\Admin\MarketingCampaignController::class, 'index'])->name('index');
+        Route::get('/create', [App\Http\Controllers\Admin\MarketingCampaignController::class, 'create'])->name('create');
+        Route::post('/', [App\Http\Controllers\Admin\MarketingCampaignController::class, 'store'])->name('store');
+        Route::get('{campaign}', [App\Http\Controllers\Admin\MarketingCampaignController::class, 'show'])->name('show');
+        Route::get('{campaign}/edit', [App\Http\Controllers\Admin\MarketingCampaignController::class, 'edit'])->name('edit');
+        Route::put('{campaign}', [App\Http\Controllers\Admin\MarketingCampaignController::class, 'update'])->name('update');
+        Route::post('{campaign}/toggle-boosting', [App\Http\Controllers\Admin\MarketingCampaignController::class, 'toggleBoosting'])->name('toggle-boosting');
+        Route::delete('{campaign}', [App\Http\Controllers\Admin\MarketingCampaignController::class, 'destroy'])->name('destroy');
+
+        // Assets
+        Route::post('{campaign}/videos', [App\Http\Controllers\Admin\MarketingCampaignController::class, 'storeVideo'])->name('store-video');
+        Route::post('{campaign}/posters', [App\Http\Controllers\Admin\MarketingCampaignController::class, 'storePoster'])->name('store-poster');
+        Route::delete('videos/{video}', [App\Http\Controllers\Admin\MarketingCampaignController::class, 'destroyVideo'])->name('destroy-video');
+        Route::delete('posters/{poster}', [App\Http\Controllers\Admin\MarketingCampaignController::class, 'destroyPoster'])->name('destroy-poster');
+    });
 });
 
 // Expense Management
@@ -160,6 +178,41 @@ Route::prefix('dashboard/finance-categories')->name('admin.finance-categories.')
     Route::post('/', [App\Http\Controllers\Admin\FinanceCategoryController::class, 'store'])->name('store')->middleware('can:*accountant');
     Route::put('{category}', [App\Http\Controllers\Admin\FinanceCategoryController::class, 'update'])->name('update')->middleware('can:*accountant');
     Route::delete('{category}', [App\Http\Controllers\Admin\FinanceCategoryController::class, 'destroy'])->name('destroy')->middleware('can:*accountant');
+});
+
+// Accounting Periods
+Route::prefix('dashboard/accounting-periods')->name('admin.accounting-periods.')->group(function () {
+    Route::get('/', [App\Http\Controllers\Admin\AccountingPeriodController::class, 'index'])->name('index')->middleware('can:*accountant');
+    Route::post('/', [App\Http\Controllers\Admin\AccountingPeriodController::class, 'store'])->name('store')->middleware('can:*accountant');
+    Route::put('{period}', [App\Http\Controllers\Admin\AccountingPeriodController::class, 'update'])->name('update')->middleware('can:*accountant');
+    Route::delete('{period}', [App\Http\Controllers\Admin\AccountingPeriodController::class, 'destroy'])->name('destroy')->middleware('can:*accountant');
+});
+
+// Chart of Accounts
+Route::prefix('dashboard/chart-of-accounts')->name('admin.chart-of-accounts.')->group(function () {
+    Route::get('/', [App\Http\Controllers\Admin\ChartOfAccountController::class, 'index'])->name('index')->middleware('can:*accountant');
+    Route::post('/', [App\Http\Controllers\Admin\ChartOfAccountController::class, 'store'])->name('store')->middleware('can:*accountant');
+    Route::put('{account}', [App\Http\Controllers\Admin\ChartOfAccountController::class, 'update'])->name('update')->middleware('can:*accountant');
+    Route::post('{account}/status', [App\Http\Controllers\Admin\ChartOfAccountController::class, 'toggleStatus'])->name('status')->middleware('can:*accountant');
+    Route::delete('{account}', [App\Http\Controllers\Admin\ChartOfAccountController::class, 'destroy'])->name('destroy')->middleware('can:*accountant');
+});
+
+// Journal Entries
+Route::prefix('dashboard/journal-entries')->name('admin.journal-entries.')->group(function () {
+    Route::get('/', [App\Http\Controllers\Admin\JournalEntryController::class, 'index'])->name('index')->middleware('can:*accountant');
+    Route::get('/create', [App\Http\Controllers\Admin\JournalEntryController::class, 'create'])->name('create')->middleware('can:*accountant');
+    Route::post('/', [App\Http\Controllers\Admin\JournalEntryController::class, 'store'])->name('store')->middleware('can:*accountant');
+    Route::get('{entry}', [App\Http\Controllers\Admin\JournalEntryController::class, 'show'])->name('show')->middleware('can:*accountant');
+    Route::delete('{entry}', [App\Http\Controllers\Admin\JournalEntryController::class, 'destroy'])->name('destroy')->middleware('can:*accountant');
+});
+
+// Invoices
+Route::prefix('dashboard/invoices')->name('admin.invoices.')->group(function () {
+    Route::get('/', [App\Http\Controllers\Admin\InvoiceController::class, 'index'])->name('index')->middleware('can:*accountant');
+    Route::get('/create', [App\Http\Controllers\Admin\InvoiceController::class, 'create'])->name('create')->middleware('can:*accountant');
+    Route::post('/', [App\Http\Controllers\Admin\InvoiceController::class, 'store'])->name('store')->middleware('can:*accountant');
+    Route::get('{invoice}', [App\Http\Controllers\Admin\InvoiceController::class, 'show'])->name('show')->middleware('can:*accountant');
+    Route::delete('{invoice}', [App\Http\Controllers\Admin\InvoiceController::class, 'destroy'])->name('destroy')->middleware('can:*accountant');
 });
 
 // Financial Reports

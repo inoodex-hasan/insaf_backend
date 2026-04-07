@@ -110,7 +110,7 @@
                                 d="M7.5 19C8.15503 20.7478 9.92246 22 12 22C14.0775 22 15.845 20.7478 16.5 19"
                                 stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
                         </svg>
-                        @if (auth()->user()->unreadNotifications->count() > 0)
+                        @if (auth()->check() && auth()->user()->unreadNotifications->count() > 0)
                             <span class="absolute top-0 flex h-3 w-3 ltr:right-0 rtl:left-0">
                                 <span
                                     class="absolute -top-[3px] inline-flex h-full w-full animate-ping rounded-full bg-success/50 opacity-75 ltr:-right-[3px] rtl:-left-[3px]"></span>
@@ -125,43 +125,45 @@
                             <div
                                 class="flex items-center justify-between !overflow-hidden rounded-t-md bg-white-light/40 px-4 py-2 dark:bg-dark/40">
                                 <h4 class="text-lg font-bold">Notifications</h4>
-                                @if (auth()->user()->unreadNotifications->count() > 0)
+                                @if (auth()->check() && auth()->user()->unreadNotifications->count() > 0)
                                     <span
                                         class="badge badge-primary">{{ auth()->user()->unreadNotifications->count() }}
                                         New</span>
                                 @endif
                             </div>
                         </li>
-                        @php $notifications = auth()->user()->unreadNotifications; @endphp
-                        @forelse($notifications as $notification)
-                            <li>
-                                <a href="{{ route('admin.notifications.read', $notification->id) }}"
-                                    class="!grid grid-cols-[auto_1fr] gap-2 !px-4 !py-3 hover:bg-gray-100 dark:hover:bg-[#191e3a]"
-                                    @click="toggle">
-                                    <div
-                                        class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-success/10 text-success">
-                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
-                                            xmlns="http://www.w3.org/2000/svg">
-                                            <path
-                                                d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"
-                                                fill="currentColor" />
-                                        </svg>
+                        @if(auth()->check())
+                            @php $notifications = auth()->user()->unreadNotifications; @endphp
+                            @forelse($notifications as $notification)
+                                <li>
+                                    <a href="{{ route('admin.notifications.read', $notification->id) }}"
+                                        class="!grid grid-cols-[auto_1fr] gap-2 !px-4 !py-3 hover:bg-gray-100 dark:hover:bg-[#191e3a]"
+                                        @click="toggle">
+                                        <div
+                                            class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-success/10 text-success">
+                                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+                                                xmlns="http://www.w3.org/2000/svg">
+                                                <path
+                                                    d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"
+                                                    fill="currentColor" />
+                                            </svg>
+                                        </div>
+                                        <div>
+                                            <h6 class="text-sm font-bold">
+                                                {{ $notification->data['message'] ?? 'New Notification' }}</h6>
+                                            <p class="text-xs text-white-dark/50">
+                                                {{ $notification->created_at->diffForHumans() }}</p>
+                                        </div>
+                                    </a>
+                                </li>
+                            @empty
+                                <li>
+                                    <div class="!px-4 !py-3 text-center hover:bg-gray-100 dark:hover:bg-[#191e3a]">
+                                        <p class="text-sm font-semibold text-white-dark/50">No new notifications</p>
                                     </div>
-                                    <div>
-                                        <h6 class="text-sm font-bold">
-                                            {{ $notification->data['message'] ?? 'New Notification' }}</h6>
-                                        <p class="text-xs text-white-dark/50">
-                                            {{ $notification->created_at->diffForHumans() }}</p>
-                                    </div>
-                                </a>
-                            </li>
-                        @empty
-                            <li>
-                                <div class="!px-4 !py-3 text-center hover:bg-gray-100 dark:hover:bg-[#191e3a]">
-                                    <p class="text-sm font-semibold text-white-dark/50">No new notifications</p>
-                                </div>
-                            </li>
-                        @endforelse
+                                </li>
+                            @endforelse
+                        @endif
                         <li class="border-t border-white-light/40 dark:border-dark/40">
                             <a href="{{ route('admin.notifications.readAll') }}"
                                 class="!py-3 text-center hover:!bg-transparent text-primary hover:underline">
@@ -175,7 +177,7 @@
                     <a href="javascript:;" class="group relative" @click="toggle">
                         <span>
                             <img class="h-9 w-9 rounded-full object-cover saturate-50 group-hover:saturate-100"
-                                src="https://ui-avatars.com/api/?name={{ urlencode(auth()->user()->name) }}&rounded=true&background=random"
+                                src="https://ui-avatars.com/api/?name={{ urlencode(auth()->user()->name ?? 'User') }}&rounded=true&background=random"
                                 alt="userProfile" />
                         </span>
                     </a>
@@ -184,7 +186,7 @@
                         <li>
                             <div class="flex items-center px-4 py-4">
                                 <img class="h-10 w-10 rounded-md object-cover"
-                                    src="https://ui-avatars.com/api/?name={{ urlencode(auth()->user()->name) }}&rounded=true&background=random"
+                                    src="https://ui-avatars.com/api/?name={{ urlencode(auth()->user()->name ?? 'User') }}&rounded=true&background=random"
                                     alt="userProfile" />
                                 <div class="truncate ltr:pl-4 rtl:pr-4">
                                     <h4 class="text-base">

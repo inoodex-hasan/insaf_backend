@@ -12,22 +12,18 @@ class AccountingPeriod extends Model
     use HasFactory;
 
     protected $fillable = [
-        'year',
-        'month',
-        'is_closed',
-        'closed_at',
-        'closed_by',
+        'name',
+        'start_date',
+        'end_date',
+        'type',
+        'status',
+        'remarks',
     ];
 
     protected $casts = [
-        'is_closed' => 'boolean',
-        'closed_at' => 'datetime',
+        'start_date' => 'date',
+        'end_date' => 'date',
     ];
-
-    public function closedBy(): BelongsTo
-    {
-        return $this->belongsTo(User::class, 'closed_by');
-    }
 
     public function journalEntries(): HasMany
     {

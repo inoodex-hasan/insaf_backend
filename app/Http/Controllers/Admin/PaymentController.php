@@ -6,9 +6,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 use App\Http\Controllers\Controller;
-use App\Models\{Application, OfficeAccount, OfficeTransaction, Payment, Setting, Student, User};
+use App\Models\{Application, OfficeAccount, OfficeTransaction, Payment, Setting, Student, User, JournalEntry, JournalEntryItem, AccountingPeriod, ChartOfAccount};
 use App\Services\CommissionService;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\DB;
 
 class PaymentController extends Controller
 {
@@ -80,28 +81,87 @@ class PaymentController extends Controller
         $application = Application::findOrFail($validated['application_id']);
         $validated['student_id'] = $application->student_id;
 
-        $payment = Payment::create($validated);
+        try {
+            DB::beginTransaction();
 
-        // Auto-log as office transaction (income)
-        if ($payment->office_account_id) {
-            OfficeTransaction::create([
-                'from_account_id' => null,
-                'to_account_id' => $payment->office_account_id,
-                'amount' => $payment->amount,
-                'transaction_date' => $payment->payment_date ?? now(),
-                'transaction_type' => 'income',
-                'reference' => 'Payment: ' . ($payment->receipt_number ?? 'REC-' . $payment->id),
-                'notes' => 'Payment for application #' . $application->application_id,
-            ]);
+            $payment = Payment::create($validated);
+
+            // Auto-log as office transaction (Legacy Support)
+            if ($payment->office_account_id) {
+                OfficeTransaction::create([
+                    'from_account_id' => null,
+                    'to_account_id' => $payment->office_account_id,
+                    'amount' => $payment->amount,
+                    'transaction_date' => $payment->payment_date ?? now(),
+                    'transaction_type' => 'income',
+                    'reference' => 'Payment: ' . ($payment->receipt_number ?? 'REC-' . $payment->id),
+                    'notes' => 'Payment for application #' . $application->application_id,
+                ]);
+
+                // NEW: Double-Entry Ledger Posting
+                if ($validated['payment_status'] === 'completed') {
+                    $officeAccount = OfficeAccount::find($payment->office_account_id);
+                    $period = AccountingPeriod::where('status', 'open')->first();
+                    
+                    if ($officeAccount && $officeAccount->chart_of_account_id && $period) {
+                        $entry = JournalEntry::create([
+                            'currency_id' => 1, // Default BDT
+                            'period_id' => $period->id,
+                            'date' => $payment->payment_date ?? now(),
+                            'reference_number' => 'JV-PAY-' . $payment->receipt_number,
+                            'note' => 'Automated post for Student Payment: ' . $payment->receipt_number,
+                            'status' => 'posted',
+                            'created_by' => Auth::id(),
+                        ]);
+
+                        $payment->update(['journal_entry_id' => $entry->id]);
+
+                        // Debit Bank/Cash
+                        JournalEntryItem::create([
+                            'journal_entry_id' => $entry->id,
+                            'chart_of_account_id' => $officeAccount->chart_of_account_id,
+                            'currency_id' => 1,
+                            'exchange_rate_at_posting' => 1,
+                            'base_currency_amount' => $payment->amount,
+                            'debit' => $payment->amount,
+                            'credit' => 0,
+                            'description' => 'Payment received in ' . $officeAccount->account_name,
+                        ]);
+
+                        // Credit Student Fees Income (Finding dynamic head)
+                        $incomeHead = ChartOfAccount::where('name', 'like', '%Student Fee%')
+                            ->orWhere('code', '4001') // Common income code
+                            ->first() ?? ChartOfAccount::where('type', 'revenue')->first();
+
+                        if ($incomeHead) {
+                            JournalEntryItem::create([
+                                'journal_entry_id' => $entry->id,
+                                'chart_of_account_id' => $incomeHead->id,
+                                'currency_id' => 1,
+                                'exchange_rate_at_posting' => 1,
+                                'base_currency_amount' => -$payment->amount,
+                                'debit' => 0,
+                                'credit' => $payment->amount,
+                                'description' => 'Student Payment Credit: ' . $application->student->first_name,
+                            ]);
+                        }
+                    }
+                }
+            }
+
+            if ($validated['payment_status'] === 'completed') {
+                $this->commissionService->calculateCommissions($payment);
+            }
+
+            DB::commit();
+            return redirect()
+                ->route('admin.payments.index')
+                ->with('success', 'Payment recorded and Ledger posted successfully.');
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->withErrors(['msg' => 'Posting failed: ' . $e->getMessage()])->withInput();
         }
-
-        if ($validated['payment_status'] === 'completed') {
-            $this->commissionService->calculateCommissions($payment);
-        }
-
-        return redirect()
-            ->route('admin.payments.index')
-            ->with('success', 'Payment recorded successfully.');
     }
 
     public function edit(Payment $payment)
@@ -139,11 +199,21 @@ class PaymentController extends Controller
     {
         $this->authorize('*accountant');
 
-        $payment->delete();
-
-        return redirect()
-            ->route('admin.payments.index')
-            ->with('success', 'Payment deleted successfully.');
+        try {
+            DB::beginTransaction();
+            if ($payment->journal_entry_id) {
+                JournalEntry::find($payment->journal_entry_id)?->delete();
+            }
+            $payment->delete();
+            DB::commit();
+            
+            return redirect()
+                ->route('admin.payments.index')
+                ->with('success', 'Payment and ledger entry deleted.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->withErrors(['msg' => 'Deletion failed: ' . $e->getMessage()]);
+        }
     }
 
     public function downloadInvoice(Payment $payment)
