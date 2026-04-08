@@ -23,7 +23,7 @@ class InvoiceController extends Controller
      */
     public function index()
     {
-        $invoices = Invoice::with(['student', 'university'])
+        $invoices = Invoice::with(['student', 'application', 'university'])
             ->orderBy('date', 'desc')
             ->orderBy('id', 'desc')
             ->paginate(20);
@@ -50,6 +50,7 @@ class InvoiceController extends Controller
     {
         $request->validate([
             'student_id' => 'required|exists:students,id',
+            'application_id' => 'nullable|exists:applications,id',
             'university_id' => 'nullable|exists:universities,id',
             'date' => 'required|date',
             'due_date' => 'required|date|after_or_equal:date',
@@ -69,6 +70,7 @@ class InvoiceController extends Controller
 
             $invoice = Invoice::create([
                 'student_id' => $request->student_id,
+                'application_id' => $request->application_id,
                 'university_id' => $request->university_id,
                 'invoice_number' => $request->invoice_number ?? 'INV-' . date('Ymd') . '-' . strtoupper(bin2hex(random_bytes(2))),
                 'date' => $request->date,
@@ -106,7 +108,7 @@ class InvoiceController extends Controller
      */
     public function show(Invoice $invoice)
     {
-        $invoice->load(['items.chartOfAccount', 'student', 'university']);
+        $invoice->load(['items.chartOfAccount', 'student', 'application', 'university']);
         return view('admin.accounts.invoices.show', compact('invoice'));
     }
 

@@ -36,19 +36,12 @@ class SettingController extends Controller
             'social_facebook' => 'nullable|url|max:255',
             'social_twitter' => 'nullable|url|max:255',
             'social_linkedin' => 'nullable|url|max:255',
-            'currency_symbol' => 'nullable|string|max:10',
             'date_format' => 'nullable|string|max:50',
             'enable_registration' => 'nullable|boolean',
             'maintenance_mode' => 'nullable|boolean',
             'meta_title' => 'nullable|string|max:255',
             'meta_description' => 'nullable|string|max:500',
             'meta_keywords' => 'nullable|string|max:500',
-            'commission_marketing_percent' => 'nullable|numeric|min:0|max:100',
-            'commission_consultant_percent' => 'nullable|numeric|min:0|max:100',
-            'commission_application_percent' => 'nullable|numeric|min:0|max:100',
-            'commission_accountant_percent' => 'nullable|numeric|min:0|max:100',
-            'employee_commissions' => 'nullable|array',
-            'employee_commissions.*' => 'nullable|numeric|min:0|max:100',
         ]);
 
         $keys = [
@@ -59,24 +52,18 @@ class SettingController extends Controller
             'social_facebook',
             'social_twitter',
             'social_linkedin',
-            'currency_symbol',
             'date_format',
             'enable_registration',
             'maintenance_mode',
             'meta_title',
             'meta_description',
             'meta_keywords',
-            'commission_marketing_percent',
-            'commission_consultant_percent',
-            'commission_application_percent',
-            'commission_accountant_percent',
         ];
 
         foreach ($keys as $key) {
             if ($request->has($key)) {
                 Setting::updateOrCreate(['key' => $key], ['value' => $request->input($key)]);
-            }
-            else {
+            } else {
                 // Handle checkboxes that are unchecked (not sent in request)
                 if (in_array($key, ['enable_registration', 'maintenance_mode'])) {
                     Setting::updateOrCreate(['key' => $key], ['value' => '0']);
@@ -94,13 +81,6 @@ class SettingController extends Controller
             $favicon = $request->file('app_favicon');
             $faviconPath = $favicon->store('uploads/settings', 'public');
             Setting::updateOrCreate(['key' => 'app_favicon'], ['value' => $faviconPath]);
-        }
-
-        // Update individual marketing employee commissions
-        if ($request->has('employee_commissions')) {
-            foreach ($request->input('employee_commissions') as $userId => $commission) {
-                \App\Models\User::where('id', $userId)->update(['commission_percentage' => $commission]);
-            }
         }
 
         return redirect()->back()->with('success', 'Settings updated successfully.');

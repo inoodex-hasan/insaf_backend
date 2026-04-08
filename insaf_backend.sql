@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Apr 07, 2026 at 12:41 PM
+-- Generation Time: Apr 08, 2026 at 12:26 PM
 -- Server version: 8.4.3
 -- PHP Version: 8.3.26
 
@@ -29,8 +29,14 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `accounting_periods` (
   `id` bigint UNSIGNED NOT NULL,
+  `name` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `year` year NOT NULL,
   `month` tinyint UNSIGNED NOT NULL,
+  `start_date` date DEFAULT NULL,
+  `end_date` date DEFAULT NULL,
+  `type` enum('fiscal_year','monthly','quarterly') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'monthly',
+  `status` enum('open','closed') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'open',
+  `remarks` text COLLATE utf8mb4_unicode_ci,
   `is_closed` tinyint(1) NOT NULL DEFAULT '0',
   `closed_at` timestamp NULL DEFAULT NULL,
   `closed_by` bigint UNSIGNED DEFAULT NULL,
@@ -52,7 +58,6 @@ CREATE TABLE `applications` (
   `course_id` bigint UNSIGNED NOT NULL,
   `course_intake_id` bigint UNSIGNED NOT NULL,
   `tuition_fee` decimal(12,2) DEFAULT NULL,
-  `currency` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `total_fee` decimal(10,2) NOT NULL DEFAULT '0.00',
   `status` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'pending',
   `notes` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
@@ -65,8 +70,8 @@ CREATE TABLE `applications` (
 -- Dumping data for table `applications`
 --
 
-INSERT INTO `applications` (`id`, `application_id`, `student_id`, `university_id`, `course_id`, `course_intake_id`, `tuition_fee`, `currency`, `total_fee`, `status`, `notes`, `created_by`, `created_at`, `updated_at`) VALUES
-(10, 'APP-2026-00001', 6, 2, 2, 2, 1200.00, 'AUD', 100000.00, 'pending', NULL, 3, '2026-02-22 11:22:42', '2026-02-22 11:22:42');
+INSERT INTO `applications` (`id`, `application_id`, `student_id`, `university_id`, `course_id`, `course_intake_id`, `tuition_fee`, `total_fee`, `status`, `notes`, `created_by`, `created_at`, `updated_at`) VALUES
+(10, 'APP-2026-00001', 6, 2, 2, 2, 1200.00, 100000.00, 'pending', NULL, 3, '2026-02-22 11:22:42', '2026-02-22 11:22:42');
 
 -- --------------------------------------------------------
 
@@ -77,7 +82,6 @@ INSERT INTO `applications` (`id`, `application_id`, `student_id`, `university_id
 CREATE TABLE `bank_reconciliations` (
   `id` bigint UNSIGNED NOT NULL,
   `account_id` bigint UNSIGNED NOT NULL,
-  `currency_id` bigint UNSIGNED NOT NULL,
   `statement_date` date NOT NULL,
   `statement_balance` decimal(15,2) NOT NULL,
   `system_balance` decimal(15,2) NOT NULL,
@@ -116,7 +120,7 @@ CREATE TABLE `bank_reconciliation_items` (
 
 CREATE TABLE `budgets` (
   `id` bigint UNSIGNED NOT NULL,
-  `category` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `chart_of_account_id` bigint UNSIGNED DEFAULT NULL,
   `amount` decimal(12,2) NOT NULL,
   `period` enum('monthly','yearly') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'monthly',
   `start_date` date NOT NULL,
@@ -131,8 +135,8 @@ CREATE TABLE `budgets` (
 -- Dumping data for table `budgets`
 --
 
-INSERT INTO `budgets` (`id`, `category`, `amount`, `period`, `start_date`, `end_date`, `created_by`, `notes`, `created_at`, `updated_at`) VALUES
-(1, 'Marketing', 5000.00, 'monthly', '2026-02-01', '2026-02-28', 4, NULL, '2026-02-18 01:25:05', '2026-02-18 01:25:05');
+INSERT INTO `budgets` (`id`, `chart_of_account_id`, `amount`, `period`, `start_date`, `end_date`, `created_by`, `notes`, `created_at`, `updated_at`) VALUES
+(1, 2, 5000.00, 'monthly', '2026-02-01', '2026-02-28', 4, NULL, '2026-02-18 01:25:05', '2026-02-18 01:25:05');
 
 -- --------------------------------------------------------
 
@@ -151,12 +155,15 @@ CREATE TABLE `cache` (
 --
 
 INSERT INTO `cache` (`key`, `value`, `expiration`) VALUES
-('admin-dashboard-cache-tyro:user-3:privileges', 'a:1:{i:0;s:11:\"*consultant\";}', 1775538887),
-('admin-dashboard-cache-tyro:user-3:roles', 'a:1:{i:0;s:10:\"consultant\";}', 1775538886),
-('admin-dashboard-cache-tyro:user-4:privileges', 'a:1:{i:0;s:11:\"*accountant\";}', 1774937553),
-('admin-dashboard-cache-tyro:user-4:roles', 'a:1:{i:0;s:10:\"accountant\";}', 1774937553),
-('admin-dashboard-cache-tyro:user-6:privileges', 'a:1:{i:0;s:12:\"*application\";}', 1775564202),
-('admin-dashboard-cache-tyro:user-6:roles', 'a:1:{i:0;s:11:\"application\";}', 1775564200);
+('admin-dashboard-cache-tyro:user-1:roles', 'a:1:{i:0;s:5:\"admin\";}', 1775626284),
+('admin-dashboard-cache-tyro:user-2:privileges', 'a:1:{i:0;s:10:\"*marketing\";}', 1775623402),
+('admin-dashboard-cache-tyro:user-2:roles', 'a:1:{i:0;s:9:\"marketing\";}', 1775623402),
+('admin-dashboard-cache-tyro:user-3:privileges', 'a:1:{i:0;s:11:\"*consultant\";}', 1775648150),
+('admin-dashboard-cache-tyro:user-3:roles', 'a:1:{i:0;s:10:\"consultant\";}', 1775648150),
+('admin-dashboard-cache-tyro:user-4:privileges', 'a:3:{i:0;s:11:\"*accountant\";i:1;s:8:\"*payment\";i:2;s:10:\"*comission\";}', 1775633544),
+('admin-dashboard-cache-tyro:user-4:roles', 'a:1:{i:0;s:10:\"accountant\";}', 1775633544),
+('admin-dashboard-cache-tyro:user-6:privileges', 'a:1:{i:0;s:12:\"*application\";}', 1775620876),
+('admin-dashboard-cache-tyro:user-6:roles', 'a:1:{i:0;s:11:\"application\";}', 1775620874);
 
 -- --------------------------------------------------------
 
@@ -188,6 +195,18 @@ CREATE TABLE `chart_of_accounts` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Dumping data for table `chart_of_accounts`
+--
+
+INSERT INTO `chart_of_accounts` (`id`, `parent_id`, `code`, `name`, `type`, `is_active`, `is_default`, `created_at`, `updated_at`) VALUES
+(1, NULL, '51001', 'Rent', 'expense', 1, 0, '2026-04-07 23:29:08', '2026-04-07 23:29:08'),
+(2, NULL, '51002', 'Marketing', 'expense', 1, 0, '2026-04-07 23:30:52', '2026-04-07 23:30:52'),
+(3, NULL, '51003', 'Salaries', 'expense', 1, 0, '2026-04-07 23:31:47', '2026-04-07 23:31:47'),
+(4, NULL, '51004', 'Utilities', 'expense', 1, 0, '2026-04-07 23:31:47', '2026-04-07 23:31:47'),
+(5, NULL, '51005', 'Office Supplies', 'expense', 1, 0, '2026-04-07 23:31:47', '2026-04-07 23:31:47'),
+(6, NULL, '41001', 'Student Fees', 'revenue', 1, 0, '2026-04-07 23:31:47', '2026-04-07 23:31:47');
+
 -- --------------------------------------------------------
 
 --
@@ -198,7 +217,6 @@ CREATE TABLE `commissions` (
   `id` bigint UNSIGNED NOT NULL,
   `payment_id` bigint UNSIGNED NOT NULL,
   `user_id` bigint UNSIGNED NOT NULL,
-  `role` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `amount` decimal(15,2) NOT NULL,
   `percentage` decimal(5,2) NOT NULL,
   `status` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'pending',
@@ -211,9 +229,9 @@ CREATE TABLE `commissions` (
 -- Dumping data for table `commissions`
 --
 
-INSERT INTO `commissions` (`id`, `payment_id`, `user_id`, `role`, `amount`, `percentage`, `status`, `journal_entry_id`, `created_at`, `updated_at`) VALUES
-(7, 19, 2, 'marketing', 1500.00, 3.00, 'pending', NULL, '2026-02-22 11:28:46', '2026-02-22 11:30:28'),
-(8, 20, 2, 'marketing', 1500.00, 3.00, 'pending', NULL, '2026-02-22 23:14:32', '2026-02-22 23:14:32');
+INSERT INTO `commissions` (`id`, `payment_id`, `user_id`, `amount`, `percentage`, `status`, `journal_entry_id`, `created_at`, `updated_at`) VALUES
+(7, 19, 2, 1500.00, 3.00, 'pending', NULL, '2026-02-22 11:28:46', '2026-02-22 11:30:28'),
+(8, 20, 2, 1500.00, 3.00, 'pending', NULL, '2026-02-22 23:14:32', '2026-02-22 23:14:32');
 
 -- --------------------------------------------------------
 
@@ -252,7 +270,6 @@ CREATE TABLE `courses` (
   `degree_level` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `duration` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `tuition_fee` decimal(12,2) DEFAULT NULL,
-  `currency` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'BDT',
   `status` tinyint(1) NOT NULL DEFAULT '1',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
@@ -262,9 +279,9 @@ CREATE TABLE `courses` (
 -- Dumping data for table `courses`
 --
 
-INSERT INTO `courses` (`id`, `university_id`, `name`, `degree_level`, `duration`, `tuition_fee`, `currency`, `status`, `created_at`, `updated_at`) VALUES
-(1, 1, 'Data Analyst', 'Masters', '1 year', 440.00, 'GBP', 1, '2026-02-17 07:03:21', '2026-02-22 04:01:21'),
-(2, 2, 'Cyber Security', 'Masters', '6 Month', 1200.00, 'AUD', 1, '2026-02-18 04:18:36', '2026-02-22 04:01:09');
+INSERT INTO `courses` (`id`, `university_id`, `name`, `degree_level`, `duration`, `tuition_fee`, `status`, `created_at`, `updated_at`) VALUES
+(1, 1, 'Data Analyst', 'Masters', '1 year', 440.00, 1, '2026-02-17 07:03:21', '2026-02-22 04:01:21'),
+(2, 2, 'Cyber Security', 'Masters', '6 Month', 1200.00, 1, '2026-02-18 04:18:36', '2026-02-22 04:01:09');
 
 -- --------------------------------------------------------
 
@@ -295,35 +312,6 @@ INSERT INTO `course_intakes` (`id`, `course_id`, `intake_name`, `application_sta
 -- --------------------------------------------------------
 
 --
--- Table structure for table `currencies`
---
-
-CREATE TABLE `currencies` (
-  `id` bigint UNSIGNED NOT NULL,
-  `code` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `symbol` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `exchange_rate` decimal(15,6) NOT NULL DEFAULT '1.000000',
-  `last_updated_at` timestamp NULL DEFAULT NULL,
-  `is_active` tinyint(1) NOT NULL DEFAULT '1',
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Dumping data for table `currencies`
---
-
-INSERT INTO `currencies` (`id`, `code`, `symbol`, `exchange_rate`, `last_updated_at`, `is_active`, `created_at`, `updated_at`) VALUES
-(1, 'BDT', '৳', 1.000000, '2026-02-23 00:03:31', 1, '2026-02-18 04:08:52', '2026-02-23 00:03:31'),
-(2, 'GBP', '£', 0.006058, '2026-02-23 00:03:31', 1, '2026-02-18 04:08:52', '2026-02-23 00:03:31'),
-(3, 'USD', '$', 0.008179, '2026-02-23 00:03:31', 1, '2026-02-18 04:08:52', '2026-02-23 00:03:31'),
-(4, 'EUR', '€', 0.006930, '2026-02-23 00:03:31', 1, '2026-02-18 04:08:52', '2026-02-23 00:03:31'),
-(5, 'AUD', 'A$', 0.011549, '2026-02-23 00:03:31', 1, '2026-02-18 04:08:52', '2026-02-23 00:03:31'),
-(6, 'CAD', 'C$', 0.011184, '2026-02-23 00:03:31', 1, '2026-02-18 04:08:52', '2026-02-23 00:03:31');
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `expenses`
 --
 
@@ -333,8 +321,7 @@ CREATE TABLE `expenses` (
   `description` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `amount` decimal(10,2) NOT NULL,
   `expense_date` date NOT NULL,
-  `category` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `payment_method` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `payment_method` enum('cash','bank_transfer','mobile_banking','cheque') COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `office_account_id` bigint UNSIGNED DEFAULT NULL,
   `created_by` bigint UNSIGNED DEFAULT NULL,
   `notes` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
@@ -348,15 +335,15 @@ CREATE TABLE `expenses` (
 -- Dumping data for table `expenses`
 --
 
-INSERT INTO `expenses` (`id`, `chart_of_account_id`, `description`, `amount`, `expense_date`, `category`, `payment_method`, `office_account_id`, `created_by`, `notes`, `created_at`, `updated_at`, `salary_id`, `journal_entry_id`) VALUES
-(6, NULL, 'Office Rent', 15000.00, '2026-02-22', 'Rent', 'bank_transfer', 2, 4, NULL, '2026-02-22 11:26:59', '2026-02-22 11:26:59', NULL, NULL),
-(7, NULL, 'Marketing', 5000.00, '2026-02-22', 'Marketing', 'mobile_banking', 1, 4, NULL, '2026-02-22 11:28:20', '2026-02-22 11:28:20', NULL, NULL),
-(8, NULL, 'Inoodex - Salary Payment', 15000.00, '2026-02-23', 'Salaries', 'bank_transfer', 2, 4, NULL, '2026-02-23 00:41:15', '2026-02-23 00:41:15', NULL, NULL),
-(9, NULL, 'Salary Payment - Marketing (2026-01)', 18000.00, '2026-02-23', 'Salaries', 'bank_transfer', 1, 4, NULL, '2026-02-23 00:48:20', '2026-02-23 00:48:20', NULL, NULL),
-(10, NULL, 'Salary Payment - Consultant (2026-01)', 12000.00, '2026-02-23', 'Salaries', 'bank_transfer', 1, 4, NULL, '2026-02-23 00:48:20', '2026-02-23 00:48:20', NULL, NULL),
-(11, NULL, 'Salary Payment - Accountant (2026-01)', 20000.00, '2026-02-23', 'Salaries', 'bank_transfer', 1, 4, NULL, '2026-02-23 00:48:20', '2026-02-23 00:48:20', NULL, NULL),
-(12, NULL, 'Salary Payment - Editor (2026-01)', 12000.00, '2026-02-23', 'Salaries', 'bank_transfer', 1, 4, NULL, '2026-02-23 00:48:20', '2026-02-23 00:48:20', NULL, NULL),
-(13, NULL, 'Salary Payment - Application (2026-01)', 15000.00, '2026-02-23', 'Salaries', 'bank_transfer', 1, 4, NULL, '2026-02-23 00:48:20', '2026-02-23 00:48:20', NULL, NULL);
+INSERT INTO `expenses` (`id`, `chart_of_account_id`, `description`, `amount`, `expense_date`, `payment_method`, `office_account_id`, `created_by`, `notes`, `created_at`, `updated_at`, `salary_id`, `journal_entry_id`) VALUES
+(6, 1, 'Office Rent', 15000.00, '2026-02-22', 'bank_transfer', 2, 4, NULL, '2026-02-22 11:26:59', '2026-02-22 11:26:59', NULL, NULL),
+(7, 2, 'Marketing', 5000.00, '2026-02-22', 'mobile_banking', 1, 4, NULL, '2026-02-22 11:28:20', '2026-02-22 11:28:20', NULL, NULL),
+(8, 3, 'Inoodex - Salary Payment', 15000.00, '2026-02-23', 'bank_transfer', 2, 4, NULL, '2026-02-23 00:41:15', '2026-02-23 00:41:15', NULL, NULL),
+(9, 3, 'Salary Payment - Marketing (2026-01)', 18000.00, '2026-02-23', 'bank_transfer', 1, 4, NULL, '2026-02-23 00:48:20', '2026-02-23 00:48:20', NULL, NULL),
+(10, 3, 'Salary Payment - Consultant (2026-01)', 12000.00, '2026-02-23', 'bank_transfer', 1, 4, NULL, '2026-02-23 00:48:20', '2026-02-23 00:48:20', NULL, NULL),
+(11, 3, 'Salary Payment - Accountant (2026-01)', 20000.00, '2026-02-23', 'bank_transfer', 1, 4, NULL, '2026-02-23 00:48:20', '2026-02-23 00:48:20', NULL, NULL),
+(12, 3, 'Salary Payment - Editor (2026-01)', 12000.00, '2026-02-23', 'bank_transfer', 1, 4, NULL, '2026-02-23 00:48:20', '2026-02-23 00:48:20', NULL, NULL),
+(13, 3, 'Salary Payment - Application (2026-01)', 15000.00, '2026-02-23', 'bank_transfer', 1, 4, NULL, '2026-02-23 00:48:20', '2026-02-23 00:48:20', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -373,33 +360,6 @@ CREATE TABLE `failed_jobs` (
   `exception` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `failed_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `finance_categories`
---
-
-CREATE TABLE `finance_categories` (
-  `id` bigint UNSIGNED NOT NULL,
-  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `type` enum('expense','income','both') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'both',
-  `is_active` tinyint(1) NOT NULL DEFAULT '1',
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Dumping data for table `finance_categories`
---
-
-INSERT INTO `finance_categories` (`id`, `name`, `type`, `is_active`, `created_at`, `updated_at`) VALUES
-(1, 'Rent', 'expense', 1, '2026-02-18 02:30:54', '2026-02-18 02:30:54'),
-(2, 'Marketing', 'expense', 1, '2026-02-18 02:30:54', '2026-02-18 02:30:54'),
-(3, 'Salaries', 'expense', 1, '2026-02-18 02:30:54', '2026-02-18 02:30:54'),
-(4, 'Utilities', 'expense', 1, '2026-02-18 02:30:54', '2026-02-18 02:30:54'),
-(5, 'Office Supplies', 'expense', 1, '2026-02-18 02:30:54', '2026-02-18 02:30:54'),
-(6, 'Student Fees', 'income', 1, '2026-02-18 02:30:54', '2026-02-18 02:30:54');
 
 -- --------------------------------------------------------
 
@@ -438,11 +398,11 @@ CREATE TABLE `invitation_referrals` (
 CREATE TABLE `invoices` (
   `id` bigint UNSIGNED NOT NULL,
   `student_id` bigint UNSIGNED DEFAULT NULL,
+  `application_id` bigint UNSIGNED DEFAULT NULL,
   `university_id` bigint UNSIGNED DEFAULT NULL,
   `invoice_number` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `date` date NOT NULL,
   `due_date` date DEFAULT NULL,
-  `currency_id` bigint UNSIGNED NOT NULL,
   `total_amount` decimal(15,2) NOT NULL,
   `status` enum('draft','sent','paid','partially_paid','void') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'draft',
   `notes` text COLLATE utf8mb4_unicode_ci,
@@ -513,7 +473,6 @@ CREATE TABLE `job_batches` (
 
 CREATE TABLE `journal_entries` (
   `id` bigint UNSIGNED NOT NULL,
-  `currency_id` bigint UNSIGNED NOT NULL,
   `period_id` bigint UNSIGNED NOT NULL,
   `date` date NOT NULL,
   `reference_number` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -534,9 +493,6 @@ CREATE TABLE `journal_entry_items` (
   `id` bigint UNSIGNED NOT NULL,
   `journal_entry_id` bigint UNSIGNED NOT NULL,
   `chart_of_account_id` bigint UNSIGNED NOT NULL,
-  `currency_id` bigint UNSIGNED NOT NULL,
-  `exchange_rate_at_posting` decimal(15,6) NOT NULL DEFAULT '1.000000',
-  `base_currency_amount` decimal(15,2) NOT NULL,
   `debit` decimal(15,2) NOT NULL DEFAULT '0.00',
   `credit` decimal(15,2) NOT NULL DEFAULT '0.00',
   `description` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
@@ -556,8 +512,8 @@ CREATE TABLE `leads` (
   `email` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `phone` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `current_education` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `preferred_country` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `preferred_course` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `preferred_country` bigint UNSIGNED DEFAULT NULL,
+  `preferred_course` bigint UNSIGNED DEFAULT NULL,
   `source` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `status` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'pending',
   `notes` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
@@ -574,8 +530,8 @@ CREATE TABLE `leads` (
 --
 
 INSERT INTO `leads` (`id`, `student_name`, `email`, `phone`, `current_education`, `preferred_country`, `preferred_course`, `source`, `status`, `notes`, `last_contacted_at`, `next_follow_up_at`, `created_by`, `consultant_id`, `created_at`, `updated_at`) VALUES
-(5, 'Rahim', 'rahim@example.com', '01234567890', 'HSC', '2', '2', 'Phone', 'pending', NULL, NULL, '2026-02-24 18:00:00', 2, NULL, '2026-02-21 22:53:14', '2026-02-21 22:53:14'),
-(6, 'Hasan', 'hasan@example.com', '0120320020', 'JSC', '1', '1', 'Phone', 'pending', NULL, NULL, '2026-02-24 18:00:00', 2, NULL, '2026-02-22 03:55:24', '2026-02-22 03:55:24');
+(5, 'Rahim', 'rahim@example.com', '01234567890', 'HSC', NULL, NULL, 'Phone', 'pending', NULL, NULL, '2026-02-24 18:00:00', 2, NULL, '2026-02-21 22:53:14', '2026-02-21 22:53:14'),
+(6, 'Hasan', 'hasan@example.com', '0120320020', 'JSC', NULL, NULL, 'Phone', 'pending', NULL, NULL, '2026-02-24 18:00:00', 2, NULL, '2026-02-22 03:55:24', '2026-02-22 03:55:24');
 
 -- --------------------------------------------------------
 
@@ -702,7 +658,18 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (60, '2026_04_07_000010_add_ledger_links_to_finance_tables', 27),
 (61, '2026_04_07_000011_create_marketing_campaigns_table', 28),
 (62, '2026_04_07_000012_create_marketing_videos_table', 28),
-(63, '2026_04_07_000013_create_marketing_posters_table', 28);
+(63, '2026_04_07_000013_create_marketing_posters_table', 28),
+(66, '2026_04_08_000000_add_missing_columns_to_accounting_periods_table', 29),
+(68, '2026_04_08_000001_migrate_finance_categories_to_chart_of_accounts', 30),
+(69, '2026_04_08_000002_convert_office_transactions_to_journal_entries', 30),
+(70, '2026_04_08_000003_remove_currencies_table_and_columns', 31),
+(71, '2026_04_08_100000_fix_payments_foreign_key_constraints', 32),
+(72, '2026_04_08_100001_fix_accounting_periods_unique_constraint', 33),
+(73, '2026_04_08_100002_remove_redundant_commission_settings', 34),
+(74, '2026_04_08_100003_fix_leads_preferred_country_and_course_foreign_keys', 35),
+(75, '2026_04_08_100004_add_application_id_to_invoices', 36),
+(76, '2026_04_08_100005_fix_expenses_payment_method_to_enum', 37),
+(77, '2026_04_08_100006_fix_remaining_foreign_key_constraints', 38);
 
 -- --------------------------------------------------------
 
@@ -775,37 +742,6 @@ INSERT INTO `office_accounts` (`id`, `account_name`, `account_type`, `provider_n
 -- --------------------------------------------------------
 
 --
--- Table structure for table `office_transactions`
---
-
-CREATE TABLE `office_transactions` (
-  `id` bigint UNSIGNED NOT NULL,
-  `from_account_id` bigint UNSIGNED DEFAULT NULL,
-  `to_account_id` bigint UNSIGNED DEFAULT NULL,
-  `amount` decimal(10,2) NOT NULL,
-  `transaction_date` date NOT NULL,
-  `transaction_type` enum('transfer','deposit','withdrawal','income','expense') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `reference` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `notes` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
-  `created_by` bigint UNSIGNED DEFAULT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Dumping data for table `office_transactions`
---
-
-INSERT INTO `office_transactions` (`id`, `from_account_id`, `to_account_id`, `amount`, `transaction_date`, `transaction_type`, `reference`, `notes`, `created_by`, `created_at`, `updated_at`) VALUES
-(9, NULL, 2, 50000.00, '2026-02-22', 'income', 'Payment: REC-20260222-0001', 'Payment for application #APP-2026-00001', 4, '2026-02-22 11:25:35', '2026-02-22 11:25:35'),
-(10, 2, NULL, 15000.00, '2026-02-22', 'expense', 'Expense: Office Rent', NULL, 4, '2026-02-22 11:26:59', '2026-02-22 11:26:59'),
-(11, 1, NULL, 5000.00, '2026-02-22', 'expense', 'Expense: Marketing', NULL, 4, '2026-02-22 11:28:20', '2026-02-22 11:28:20'),
-(12, NULL, 1, 50000.00, '2026-02-22', 'income', 'Payment: REC-20260222-0002', 'Payment for application #APP-2026-00001', 4, '2026-02-22 11:28:46', '2026-02-22 11:28:46'),
-(13, NULL, 2, 50000.00, '2026-02-23', 'income', 'Payment: REC-20260223-0001', 'Payment for application #APP-2026-00001', 4, '2026-02-22 23:14:32', '2026-02-22 23:14:32');
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `password_reset_tokens`
 --
 
@@ -829,7 +765,7 @@ CREATE TABLE `payments` (
   `amount` decimal(10,2) NOT NULL,
   `payment_type` enum('advance','partial','final') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `payment_date` datetime NOT NULL,
-  `collected_by` bigint UNSIGNED NOT NULL,
+  `collected_by` bigint UNSIGNED DEFAULT NULL,
   `receipt_number` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `payment_status` enum('pending','completed') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'pending',
   `office_account_id` bigint UNSIGNED DEFAULT NULL,
@@ -895,7 +831,9 @@ INSERT INTO `privileges` (`id`, `name`, `slug`, `description`, `created_at`, `up
 (7, 'Manage Users', 'users.manage', 'Allows creating, editing, and deleting users.', '2026-02-21 01:19:44', '2026-02-21 01:19:44'),
 (8, 'Manage Roles', 'roles.manage', 'Allows editing Tyro roles.', '2026-02-21 01:19:44', '2026-02-21 01:19:44'),
 (9, 'View Billing', 'billing.view', 'Allows viewing billing statements.', '2026-02-21 01:19:44', '2026-02-21 01:19:44'),
-(10, 'Wildcard', '*', 'Grants every privilege.', '2026-02-21 01:19:44', '2026-02-21 01:19:44');
+(10, 'Wildcard', '*', 'Grants every privilege.', '2026-02-21 01:19:44', '2026-02-21 01:19:44'),
+(11, 'Payment', '*payment', NULL, '2026-04-07 21:53:18', '2026-04-07 21:55:35'),
+(12, 'Comission', '*comission', NULL, '2026-04-07 21:55:21', '2026-04-07 21:55:21');
 
 -- --------------------------------------------------------
 
@@ -927,7 +865,9 @@ INSERT INTO `privilege_role` (`id`, `role_id`, `privilege_id`, `created_at`, `up
 (9, 10, 7, '2026-02-21 01:19:44', '2026-02-21 01:19:44'),
 (10, 10, 8, '2026-02-21 01:19:44', '2026-02-21 01:19:44'),
 (11, 1, 9, '2026-02-21 01:19:44', '2026-02-21 01:19:44'),
-(12, 7, 9, '2026-02-21 01:19:44', '2026-02-21 01:19:44');
+(12, 7, 9, '2026-02-21 01:19:44', '2026-02-21 01:19:44'),
+(14, 4, 11, '2026-04-07 21:53:18', '2026-04-07 21:53:18'),
+(15, 4, 12, '2026-04-07 21:55:21', '2026-04-07 21:55:21');
 
 -- --------------------------------------------------------
 
@@ -1011,10 +951,10 @@ CREATE TABLE `sessions` (
 --
 
 INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, `last_activity`) VALUES
-('AXypOPINWDWvydFhRCcEekLzzv0vqatz115rcACZ', 1, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36', 'YTo1OntzOjY6Il90b2tlbiI7czo0MDoidFlkbFZLV2oyWksxek51YVBmWGJrYnZ3aGRTUWRGclRqRnVoVFhrYiI7czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6MzE6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC9kYXNoYm9hcmQiO3M6NToicm91dGUiO3M6MjA6InR5cm8tZGFzaGJvYXJkLmluZGV4Ijt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czoxMDoidHlyby1sb2dpbiI7YToxOntzOjc6ImNhcHRjaGEiO2E6MDp7fX1zOjUwOiJsb2dpbl93ZWJfNTliYTM2YWRkYzJiMmY5NDAxNTgwZjAxNGM3ZjU4ZWE0ZTMwOTg5ZCI7aToxO30=', 1774936438),
-('e42wcBfP6ti7NZUN1LvDDnLOI220ZvKRakQjJ5cq', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:149.0) Gecko/20100101 Firefox/149.0', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiWmJuOHZuSXE2TmxwOU9abmxGUEdNelFmeGR6NllMUlJyU3Qya3BqMCI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czoxMDoidHlyby1sb2dpbiI7YToxOntzOjc6ImNhcHRjaGEiO2E6MTp7czo1OiJsb2dpbiI7aToxMjt9fXM6OToiX3ByZXZpb3VzIjthOjI6e3M6MzoidXJsIjtzOjI3OiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvbG9naW4iO3M6NToicm91dGUiO3M6MTY6InR5cm8tbG9naW4ubG9naW4iO319', 1775565158),
-('HfiNcr2anhLnzlLtNKIOIaVggp4NoozTrXrlTSnK', 4, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:149.0) Gecko/20100101 Firefox/149.0', 'YTo1OntzOjY6Il90b2tlbiI7czo0MDoiRUN2ekFMeWJmWHBzeHRoSXBSSnpzTHZ0Y0hPa1ZNSUx6QzNld3RITSI7czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6MzE6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC9kYXNoYm9hcmQiO3M6NToicm91dGUiO3M6MjA6InR5cm8tZGFzaGJvYXJkLmluZGV4Ijt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czoxMDoidHlyby1sb2dpbiI7YToxOntzOjc6ImNhcHRjaGEiO2E6MDp7fX1zOjUwOiJsb2dpbl93ZWJfNTliYTM2YWRkYzJiMmY5NDAxNTgwZjAxNGM3ZjU4ZWE0ZTMwOTg5ZCI7aTo0O30=', 1774937268),
-('WDWwlfVVBX4U6ZS76QQSRmdkXqYSRLofR4EUpCup', 3, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:149.0) Gecko/20100101 Firefox/149.0', 'YTo1OntzOjY6Il90b2tlbiI7czo0MDoiYWczUXdKZ1NCb3ZFY1VMODZmYkhqWGRFMHlWMnJHRHFPQnVseEllWiI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czoxMDoidHlyby1sb2dpbiI7YToxOntzOjc6ImNhcHRjaGEiO2E6MDp7fX1zOjk6Il9wcmV2aW91cyI7YToyOntzOjM6InVybCI7czozMToiaHR0cDovLzEyNy4wLjAuMTo4MDAwL2Rhc2hib2FyZCI7czo1OiJyb3V0ZSI7czoyMDoidHlyby1kYXNoYm9hcmQuaW5kZXgiO31zOjUwOiJsb2dpbl93ZWJfNTliYTM2YWRkYzJiMmY5NDAxNTgwZjAxNGM3ZjU4ZWE0ZTMwOTg5ZCI7aTozO30=', 1775538587);
+('8KALA2lWt7KL5tXad00WgwjD5aYvzFGHyvlxXUFf', 4, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:149.0) Gecko/20100101 Firefox/149.0', 'YTo1OntzOjY6Il90b2tlbiI7czo0MDoiNzc0OERudVV6Tkc5UXR4VFdXQ2lrWTBMMEpmRWdENjdsN0V1YVFneiI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czoxMDoidHlyby1sb2dpbiI7YToxOntzOjc6ImNhcHRjaGEiO2E6MDp7fX1zOjk6Il9wcmV2aW91cyI7YToyOntzOjM6InVybCI7czo1MDoiaHR0cDovLzEyNy4wLjAuMTo4MDAwL2Rhc2hib2FyZC9hY2NvdW50aW5nLXBlcmlvZHMiO3M6NToicm91dGUiO3M6MzA6ImFkbWluLmFjY291bnRpbmctcGVyaW9kcy5pbmRleCI7fXM6NTA6ImxvZ2luX3dlYl81OWJhMzZhZGRjMmIyZjk0MDE1ODBmMDE0YzdmNThlYTRlMzA5ODlkIjtpOjQ7fQ==', 1775633263),
+('FNHJxBZA9mvL855WgID8Mf9EOFPpqI6COcBo3zjT', 1, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:149.0) Gecko/20100101 Firefox/149.0', 'YTo1OntzOjY6Il90b2tlbiI7czo0MDoiQk1scUdocGM5b0FNVjRwbWRCZHhYd29NMnlxUmpmVDZBaXl2OTNEZSI7czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6NDA6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC9kYXNoYm9hcmQvc2V0dGluZ3MiO3M6NToicm91dGUiO3M6MjA6ImFkbWluLnNldHRpbmdzLmluZGV4Ijt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czoxMDoidHlyby1sb2dpbiI7YToxOntzOjc6ImNhcHRjaGEiO2E6MDp7fX1zOjUwOiJsb2dpbl93ZWJfNTliYTM2YWRkYzJiMmY5NDAxNTgwZjAxNGM3ZjU4ZWE0ZTMwOTg5ZCI7aToxO30=', 1775625671),
+('iqQurFcuTqiQkBxAdFbzfCVotrkOIbvx3V8Yzewr', 3, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:149.0) Gecko/20100101 Firefox/149.0', 'YTo1OntzOjY6Il90b2tlbiI7czo0MDoidlVsRVRGd3ZUcW9ralN6M2tWclVNY2ZXRko1ajZuT005dXhSNGo2UCI7czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6MzE6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC9kYXNoYm9hcmQiO3M6NToicm91dGUiO3M6MjA6InR5cm8tZGFzaGJvYXJkLmluZGV4Ijt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czoxMDoidHlyby1sb2dpbiI7YToxOntzOjc6ImNhcHRjaGEiO2E6MDp7fX1zOjUwOiJsb2dpbl93ZWJfNTliYTM2YWRkYzJiMmY5NDAxNTgwZjAxNGM3ZjU4ZWE0ZTMwOTg5ZCI7aTozO30=', 1775647927),
+('UuN2gG2zH9eFXq99hWDOqCxnj2HPNUVBxiC9bVwg', 1, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36', 'YTo1OntzOjY6Il90b2tlbiI7czo0MDoielFtazJ4bm94U2xsQ0hIODhjZ0w1czl4MzlyV0JycFByUWRFMjlTNSI7czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6MzE6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC9kYXNoYm9hcmQiO3M6NToicm91dGUiO3M6MjA6InR5cm8tZGFzaGJvYXJkLmluZGV4Ijt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czoxMDoidHlyby1sb2dpbiI7YToxOntzOjc6ImNhcHRjaGEiO2E6MDp7fX1zOjUwOiJsb2dpbl93ZWJfNTliYTM2YWRkYzJiMmY5NDAxNTgwZjAxNGM3ZjU4ZWE0ZTMwOTg5ZCI7aToxO30=', 1775625984);
 
 -- --------------------------------------------------------
 
@@ -1050,11 +990,7 @@ INSERT INTO `settings` (`id`, `key`, `value`, `created_at`, `updated_at`) VALUES
 (13, 'meta_description', NULL, '2026-02-16 03:20:28', '2026-02-16 03:20:28'),
 (14, 'meta_keywords', NULL, '2026-02-16 03:20:28', '2026-02-16 03:20:28'),
 (15, 'app_logo', 'uploads/settings/55dl2iPgxNFXTX31JtwAREFkupbl3eQcVSVFVYRy.png', '2026-02-17 22:37:17', '2026-02-22 11:16:54'),
-(16, 'app_favicon', 'uploads/settings/POlV6I7SgJuvs1SoD6ktrvHlzxRv0p9Zo1JK4HuU.png', '2026-02-17 22:37:17', '2026-02-22 11:16:54'),
-(17, 'commission_marketing_percent', '3', '2026-02-21 03:07:51', '2026-02-21 22:49:50'),
-(18, 'commission_consultant_percent', '3', '2026-02-21 03:07:51', '2026-02-21 03:07:51'),
-(19, 'commission_application_percent', '4', '2026-02-21 03:07:51', '2026-02-21 03:07:51'),
-(20, 'commission_accountant_percent', '5', '2026-02-21 03:07:51', '2026-02-21 03:07:51');
+(16, 'app_favicon', 'uploads/settings/POlV6I7SgJuvs1SoD6ktrvHlzxRv0p9Zo1JK4HuU.png', '2026-02-17 22:37:17', '2026-02-22 11:16:54');
 
 -- --------------------------------------------------------
 
@@ -1166,7 +1102,27 @@ INSERT INTO `tyro_audit_logs` (`id`, `user_id`, `event`, `auditable_type`, `audi
 (6, 1, 'role.removed', 'App\\Models\\User', 3, NULL, '{\"role_id\": 5, \"role_slug\": \"editor\"}', '{\"ip\": \"127.0.0.1\", \"is_console\": false, \"user_agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:147.0) Gecko/20100101 Firefox/147.0\"}', '2026-02-23 07:15:13'),
 (7, 1, 'user.suspended', 'App\\Models\\User', 5, '{\"suspended_at\": null, \"suspension_reason\": null}', '{\"suspended_at\": \"2026-02-23T07:15:26.738707Z\", \"suspension_reason\": \"test\"}', '{\"ip\": \"127.0.0.1\", \"is_console\": false, \"user_agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:147.0) Gecko/20100101 Firefox/147.0\"}', '2026-02-23 07:15:26'),
 (8, 6, 'user.login', 'App\\Models\\User', 6, NULL, '{\"email\": \"application@example.com\"}', '{\"ip\": \"127.0.0.1\", \"is_console\": false, \"user_agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:149.0) Gecko/20100101 Firefox/149.0\"}', '2026-04-07 12:11:37'),
-(9, 6, 'user.logout', 'App\\Models\\User', 6, NULL, '{\"email\": \"application@example.com\"}', '{\"ip\": \"127.0.0.1\", \"is_console\": false, \"user_agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:149.0) Gecko/20100101 Firefox/149.0\"}', '2026-04-07 12:11:57');
+(9, 6, 'user.logout', 'App\\Models\\User', 6, NULL, '{\"email\": \"application@example.com\"}', '{\"ip\": \"127.0.0.1\", \"is_console\": false, \"user_agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:149.0) Gecko/20100101 Firefox/149.0\"}', '2026-04-07 12:11:57'),
+(10, 1, 'user.login', 'App\\Models\\User', 1, NULL, '{\"email\": \"hello@inoodex.com\"}', '{\"ip\": \"127.0.0.1\", \"is_console\": false, \"user_agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:149.0) Gecko/20100101 Firefox/149.0\"}', '2026-04-08 03:45:54'),
+(11, 1, 'privilege.created', 'HasinHayder\\Tyro\\Models\\Privilege', 11, NULL, '{\"id\": 11, \"name\": \"payment\", \"slug\": \".payment\", \"description\": null}', '{\"ip\": \"127.0.0.1\", \"is_console\": false, \"user_agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:149.0) Gecko/20100101 Firefox/149.0\"}', '2026-04-08 03:53:18'),
+(12, 1, 'privilege.attached', 'HasinHayder\\Tyro\\Models\\Role', 4, NULL, '{\"privilege_id\": 11, \"privilege_slug\": \".payment\"}', '{\"ip\": \"127.0.0.1\", \"is_console\": false, \"user_agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:149.0) Gecko/20100101 Firefox/149.0\"}', '2026-04-08 03:53:18'),
+(13, 1, 'privilege.created', 'HasinHayder\\Tyro\\Models\\Privilege', 11, NULL, '{\"id\": 11, \"name\": \"payment\", \"slug\": \".payment\", \"roles\": [4], \"description\": null}', '{\"ip\": \"127.0.0.1\", \"is_console\": false, \"user_agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:149.0) Gecko/20100101 Firefox/149.0\"}', '2026-04-08 03:53:18'),
+(14, 1, 'privilege.updated', 'HasinHayder\\Tyro\\Models\\Privilege', 11, '{\"id\": 11, \"name\": \"payment\", \"slug\": \".payment\", \"created_at\": \"2026-04-08T03:53:18.000000Z\", \"updated_at\": \"2026-04-08T03:53:18.000000Z\", \"description\": null}', '{\"slug\": \"*payment\", \"updated_at\": \"2026-04-08 03:53:33\"}', '{\"ip\": \"127.0.0.1\", \"is_console\": false, \"user_agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:149.0) Gecko/20100101 Firefox/149.0\"}', '2026-04-08 03:53:33'),
+(15, 1, 'privilege.slug_changed', 'HasinHayder\\Tyro\\Models\\Privilege', 11, '{\"slug\": \".payment\"}', '{\"slug\": \"*payment\"}', '{\"ip\": \"127.0.0.1\", \"is_console\": false, \"user_agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:149.0) Gecko/20100101 Firefox/149.0\"}', '2026-04-08 03:53:33'),
+(16, 1, 'privilege.created', 'HasinHayder\\Tyro\\Models\\Privilege', 12, NULL, '{\"id\": 12, \"name\": \"Comission\", \"slug\": \"*comission\", \"description\": null}', '{\"ip\": \"127.0.0.1\", \"is_console\": false, \"user_agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:149.0) Gecko/20100101 Firefox/149.0\"}', '2026-04-08 03:55:21'),
+(17, 1, 'privilege.attached', 'HasinHayder\\Tyro\\Models\\Role', 4, NULL, '{\"privilege_id\": 12, \"privilege_slug\": \"*comission\"}', '{\"ip\": \"127.0.0.1\", \"is_console\": false, \"user_agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:149.0) Gecko/20100101 Firefox/149.0\"}', '2026-04-08 03:55:21'),
+(18, 1, 'privilege.created', 'HasinHayder\\Tyro\\Models\\Privilege', 12, NULL, '{\"id\": 12, \"name\": \"Comission\", \"slug\": \"*comission\", \"roles\": [4], \"description\": null}', '{\"ip\": \"127.0.0.1\", \"is_console\": false, \"user_agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:149.0) Gecko/20100101 Firefox/149.0\"}', '2026-04-08 03:55:21'),
+(19, 1, 'privilege.updated', 'HasinHayder\\Tyro\\Models\\Privilege', 11, '{\"id\": 11, \"name\": \"payment\", \"slug\": \"*payment\", \"created_at\": \"2026-04-08T03:53:18.000000Z\", \"updated_at\": \"2026-04-08T03:53:33.000000Z\", \"description\": null}', '{\"name\": \"Payment\", \"updated_at\": \"2026-04-08 03:55:35\"}', '{\"ip\": \"127.0.0.1\", \"is_console\": false, \"user_agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:149.0) Gecko/20100101 Firefox/149.0\"}', '2026-04-08 03:55:35'),
+(20, 1, 'privilege.name_changed', 'HasinHayder\\Tyro\\Models\\Privilege', 11, '{\"name\": \"payment\"}', '{\"name\": \"Payment\"}', '{\"ip\": \"127.0.0.1\", \"is_console\": false, \"user_agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:149.0) Gecko/20100101 Firefox/149.0\"}', '2026-04-08 03:55:35'),
+(21, 1, 'user.logout', 'App\\Models\\User', 1, NULL, '{\"email\": \"hello@inoodex.com\"}', '{\"ip\": \"127.0.0.1\", \"is_console\": false, \"user_agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:149.0) Gecko/20100101 Firefox/149.0\"}', '2026-04-08 03:55:55'),
+(22, 6, 'user.login', 'App\\Models\\User', 6, NULL, '{\"email\": \"application@example.com\"}', '{\"ip\": \"127.0.0.1\", \"is_console\": false, \"user_agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:149.0) Gecko/20100101 Firefox/149.0\"}', '2026-04-08 03:56:13'),
+(23, 6, 'user.logout', 'App\\Models\\User', 6, NULL, '{\"email\": \"application@example.com\"}', '{\"ip\": \"127.0.0.1\", \"is_console\": false, \"user_agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:149.0) Gecko/20100101 Firefox/149.0\"}', '2026-04-08 03:57:34'),
+(24, 2, 'user.login', 'App\\Models\\User', 2, NULL, '{\"email\": \"marketing@example.com\"}', '{\"ip\": \"127.0.0.1\", \"is_console\": false, \"user_agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:149.0) Gecko/20100101 Firefox/149.0\"}', '2026-04-08 03:57:55'),
+(25, 1, 'user.login', 'App\\Models\\User', 1, NULL, '{\"email\": \"hello@inoodex.com\"}', '{\"ip\": \"127.0.0.1\", \"is_console\": false, \"user_agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:149.0) Gecko/20100101 Firefox/149.0\"}', '2026-04-08 03:58:49'),
+(26, 2, 'user.logout', 'App\\Models\\User', 2, NULL, '{\"email\": \"marketing@example.com\"}', '{\"ip\": \"127.0.0.1\", \"is_console\": false, \"user_agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:149.0) Gecko/20100101 Firefox/149.0\"}', '2026-04-08 04:39:12'),
+(27, 4, 'user.login', 'App\\Models\\User', 4, NULL, '{\"email\": \"accountant@example.com\"}', '{\"ip\": \"127.0.0.1\", \"is_console\": false, \"user_agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:149.0) Gecko/20100101 Firefox/149.0\"}', '2026-04-08 04:39:22'),
+(28, 1, 'user.login', 'App\\Models\\User', 1, NULL, '{\"email\": \"hello@inoodex.com\"}', '{\"ip\": \"127.0.0.1\", \"is_console\": false, \"user_agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36\"}', '2026-04-08 05:26:18'),
+(29, 3, 'user.login', 'App\\Models\\User', 3, NULL, '{\"email\": \"consultant@example.com\"}', '{\"ip\": \"127.0.0.1\", \"is_console\": false, \"user_agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:149.0) Gecko/20100101 Firefox/149.0\"}', '2026-04-08 10:42:19');
 
 -- --------------------------------------------------------
 
@@ -1273,7 +1229,7 @@ INSERT INTO `user_roles` (`id`, `user_id`, `role_id`, `created_at`, `updated_at`
 --
 ALTER TABLE `accounting_periods`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `accounting_periods_year_month_unique` (`year`,`month`),
+  ADD UNIQUE KEY `accounting_periods_year_month_type_unique` (`year`,`month`,`type`),
   ADD KEY `accounting_periods_closed_by_foreign` (`closed_by`);
 
 --
@@ -1294,7 +1250,6 @@ ALTER TABLE `applications`
 ALTER TABLE `bank_reconciliations`
   ADD PRIMARY KEY (`id`),
   ADD KEY `bank_reconciliations_account_id_foreign` (`account_id`),
-  ADD KEY `bank_reconciliations_currency_id_foreign` (`currency_id`),
   ADD KEY `bank_reconciliations_closed_by_foreign` (`closed_by`);
 
 --
@@ -1311,7 +1266,8 @@ ALTER TABLE `bank_reconciliation_items`
 --
 ALTER TABLE `budgets`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `budgets_created_by_foreign` (`created_by`);
+  ADD KEY `budgets_created_by_foreign` (`created_by`),
+  ADD KEY `budgets_chart_of_account_id_foreign` (`chart_of_account_id`);
 
 --
 -- Indexes for table `cache`
@@ -1365,13 +1321,6 @@ ALTER TABLE `course_intakes`
   ADD KEY `course_intakes_course_id_foreign` (`course_id`);
 
 --
--- Indexes for table `currencies`
---
-ALTER TABLE `currencies`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `currencies_code_unique` (`code`);
-
---
 -- Indexes for table `expenses`
 --
 ALTER TABLE `expenses`
@@ -1388,13 +1337,6 @@ ALTER TABLE `expenses`
 ALTER TABLE `failed_jobs`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `failed_jobs_uuid_unique` (`uuid`);
-
---
--- Indexes for table `finance_categories`
---
-ALTER TABLE `finance_categories`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `finance_categories_name_unique` (`name`);
 
 --
 -- Indexes for table `invitation_links`
@@ -1418,9 +1360,9 @@ ALTER TABLE `invitation_referrals`
 ALTER TABLE `invoices`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `invoices_invoice_number_unique` (`invoice_number`),
+  ADD KEY `invoices_application_id_foreign` (`application_id`),
   ADD KEY `invoices_student_id_foreign` (`student_id`),
-  ADD KEY `invoices_university_id_foreign` (`university_id`),
-  ADD KEY `invoices_currency_id_foreign` (`currency_id`);
+  ADD KEY `invoices_university_id_foreign` (`university_id`);
 
 --
 -- Indexes for table `invoice_items`
@@ -1449,7 +1391,6 @@ ALTER TABLE `job_batches`
 ALTER TABLE `journal_entries`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `journal_entries_reference_number_unique` (`reference_number`),
-  ADD KEY `journal_entries_currency_id_foreign` (`currency_id`),
   ADD KEY `journal_entries_period_id_foreign` (`period_id`),
   ADD KEY `journal_entries_created_by_foreign` (`created_by`);
 
@@ -1459,8 +1400,7 @@ ALTER TABLE `journal_entries`
 ALTER TABLE `journal_entry_items`
   ADD PRIMARY KEY (`id`),
   ADD KEY `journal_entry_items_journal_entry_id_foreign` (`journal_entry_id`),
-  ADD KEY `journal_entry_items_chart_of_account_id_foreign` (`chart_of_account_id`),
-  ADD KEY `journal_entry_items_currency_id_foreign` (`currency_id`);
+  ADD KEY `journal_entry_items_chart_of_account_id_foreign` (`chart_of_account_id`);
 
 --
 -- Indexes for table `leads`
@@ -1468,7 +1408,9 @@ ALTER TABLE `journal_entry_items`
 ALTER TABLE `leads`
   ADD PRIMARY KEY (`id`),
   ADD KEY `leads_created_by_foreign` (`created_by`),
-  ADD KEY `leads_consultant_id_foreign` (`consultant_id`);
+  ADD KEY `leads_consultant_id_foreign` (`consultant_id`),
+  ADD KEY `leads_preferred_country_foreign` (`preferred_country`),
+  ADD KEY `leads_preferred_course_foreign` (`preferred_course`);
 
 --
 -- Indexes for table `marketing_campaigns`
@@ -1511,15 +1453,6 @@ ALTER TABLE `office_accounts`
   ADD PRIMARY KEY (`id`),
   ADD KEY `office_accounts_created_by_foreign` (`created_by`),
   ADD KEY `office_accounts_chart_of_account_id_foreign` (`chart_of_account_id`);
-
---
--- Indexes for table `office_transactions`
---
-ALTER TABLE `office_transactions`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `office_transactions_from_account_id_foreign` (`from_account_id`),
-  ADD KEY `office_transactions_to_account_id_foreign` (`to_account_id`),
-  ADD KEY `office_transactions_created_by_foreign` (`created_by`);
 
 --
 -- Indexes for table `password_reset_tokens`
@@ -1695,7 +1628,7 @@ ALTER TABLE `budgets`
 -- AUTO_INCREMENT for table `chart_of_accounts`
 --
 ALTER TABLE `chart_of_accounts`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `commissions`
@@ -1722,12 +1655,6 @@ ALTER TABLE `course_intakes`
   MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
--- AUTO_INCREMENT for table `currencies`
---
-ALTER TABLE `currencies`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
-
---
 -- AUTO_INCREMENT for table `expenses`
 --
 ALTER TABLE `expenses`
@@ -1738,12 +1665,6 @@ ALTER TABLE `expenses`
 --
 ALTER TABLE `failed_jobs`
   MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `finance_categories`
---
-ALTER TABLE `finance_categories`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `invitation_links`
@@ -1815,19 +1736,13 @@ ALTER TABLE `marketing_videos`
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=64;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=78;
 
 --
 -- AUTO_INCREMENT for table `office_accounts`
 --
 ALTER TABLE `office_accounts`
   MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
-
---
--- AUTO_INCREMENT for table `office_transactions`
---
-ALTER TABLE `office_transactions`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- AUTO_INCREMENT for table `payments`
@@ -1845,13 +1760,13 @@ ALTER TABLE `personal_access_tokens`
 -- AUTO_INCREMENT for table `privileges`
 --
 ALTER TABLE `privileges`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `privilege_role`
 --
 ALTER TABLE `privilege_role`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `roles`
@@ -1893,7 +1808,7 @@ ALTER TABLE `taxes`
 -- AUTO_INCREMENT for table `tyro_audit_logs`
 --
 ALTER TABLE `tyro_audit_logs`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
 
 --
 -- AUTO_INCREMENT for table `universities`
@@ -1927,19 +1842,18 @@ ALTER TABLE `accounting_periods`
 -- Constraints for table `applications`
 --
 ALTER TABLE `applications`
-  ADD CONSTRAINT `applications_course_id_foreign` FOREIGN KEY (`course_id`) REFERENCES `courses` (`id`),
-  ADD CONSTRAINT `applications_course_intake_id_foreign` FOREIGN KEY (`course_intake_id`) REFERENCES `course_intakes` (`id`),
+  ADD CONSTRAINT `applications_course_id_foreign` FOREIGN KEY (`course_id`) REFERENCES `courses` (`id`) ON DELETE RESTRICT,
+  ADD CONSTRAINT `applications_course_intake_id_foreign` FOREIGN KEY (`course_intake_id`) REFERENCES `course_intakes` (`id`) ON DELETE RESTRICT,
   ADD CONSTRAINT `applications_created_by_foreign` FOREIGN KEY (`created_by`) REFERENCES `users` (`id`) ON DELETE SET NULL,
   ADD CONSTRAINT `applications_student_id_foreign` FOREIGN KEY (`student_id`) REFERENCES `students` (`id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `applications_university_id_foreign` FOREIGN KEY (`university_id`) REFERENCES `universities` (`id`);
+  ADD CONSTRAINT `applications_university_id_foreign` FOREIGN KEY (`university_id`) REFERENCES `universities` (`id`) ON DELETE RESTRICT;
 
 --
 -- Constraints for table `bank_reconciliations`
 --
 ALTER TABLE `bank_reconciliations`
   ADD CONSTRAINT `bank_reconciliations_account_id_foreign` FOREIGN KEY (`account_id`) REFERENCES `office_accounts` (`id`),
-  ADD CONSTRAINT `bank_reconciliations_closed_by_foreign` FOREIGN KEY (`closed_by`) REFERENCES `users` (`id`),
-  ADD CONSTRAINT `bank_reconciliations_currency_id_foreign` FOREIGN KEY (`currency_id`) REFERENCES `currencies` (`id`);
+  ADD CONSTRAINT `bank_reconciliations_closed_by_foreign` FOREIGN KEY (`closed_by`) REFERENCES `users` (`id`);
 
 --
 -- Constraints for table `bank_reconciliation_items`
@@ -1953,6 +1867,7 @@ ALTER TABLE `bank_reconciliation_items`
 -- Constraints for table `budgets`
 --
 ALTER TABLE `budgets`
+  ADD CONSTRAINT `budgets_chart_of_account_id_foreign` FOREIGN KEY (`chart_of_account_id`) REFERENCES `chart_of_accounts` (`id`),
   ADD CONSTRAINT `budgets_created_by_foreign` FOREIGN KEY (`created_by`) REFERENCES `users` (`id`) ON DELETE SET NULL;
 
 --
@@ -2001,9 +1916,9 @@ ALTER TABLE `invitation_referrals`
 -- Constraints for table `invoices`
 --
 ALTER TABLE `invoices`
-  ADD CONSTRAINT `invoices_currency_id_foreign` FOREIGN KEY (`currency_id`) REFERENCES `currencies` (`id`),
-  ADD CONSTRAINT `invoices_student_id_foreign` FOREIGN KEY (`student_id`) REFERENCES `students` (`id`),
-  ADD CONSTRAINT `invoices_university_id_foreign` FOREIGN KEY (`university_id`) REFERENCES `universities` (`id`);
+  ADD CONSTRAINT `invoices_application_id_foreign` FOREIGN KEY (`application_id`) REFERENCES `applications` (`id`) ON DELETE SET NULL,
+  ADD CONSTRAINT `invoices_student_id_foreign` FOREIGN KEY (`student_id`) REFERENCES `students` (`id`) ON DELETE RESTRICT,
+  ADD CONSTRAINT `invoices_university_id_foreign` FOREIGN KEY (`university_id`) REFERENCES `universities` (`id`) ON DELETE RESTRICT;
 
 --
 -- Constraints for table `invoice_items`
@@ -2016,8 +1931,7 @@ ALTER TABLE `invoice_items`
 -- Constraints for table `journal_entries`
 --
 ALTER TABLE `journal_entries`
-  ADD CONSTRAINT `journal_entries_created_by_foreign` FOREIGN KEY (`created_by`) REFERENCES `users` (`id`),
-  ADD CONSTRAINT `journal_entries_currency_id_foreign` FOREIGN KEY (`currency_id`) REFERENCES `currencies` (`id`),
+  ADD CONSTRAINT `journal_entries_created_by_foreign` FOREIGN KEY (`created_by`) REFERENCES `users` (`id`) ON DELETE RESTRICT,
   ADD CONSTRAINT `journal_entries_period_id_foreign` FOREIGN KEY (`period_id`) REFERENCES `accounting_periods` (`id`);
 
 --
@@ -2025,15 +1939,16 @@ ALTER TABLE `journal_entries`
 --
 ALTER TABLE `journal_entry_items`
   ADD CONSTRAINT `journal_entry_items_chart_of_account_id_foreign` FOREIGN KEY (`chart_of_account_id`) REFERENCES `chart_of_accounts` (`id`),
-  ADD CONSTRAINT `journal_entry_items_currency_id_foreign` FOREIGN KEY (`currency_id`) REFERENCES `currencies` (`id`),
   ADD CONSTRAINT `journal_entry_items_journal_entry_id_foreign` FOREIGN KEY (`journal_entry_id`) REFERENCES `journal_entries` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `leads`
 --
 ALTER TABLE `leads`
-  ADD CONSTRAINT `leads_consultant_id_foreign` FOREIGN KEY (`consultant_id`) REFERENCES `users` (`id`),
-  ADD CONSTRAINT `leads_created_by_foreign` FOREIGN KEY (`created_by`) REFERENCES `users` (`id`);
+  ADD CONSTRAINT `leads_consultant_id_foreign` FOREIGN KEY (`consultant_id`) REFERENCES `users` (`id`) ON DELETE SET NULL,
+  ADD CONSTRAINT `leads_created_by_foreign` FOREIGN KEY (`created_by`) REFERENCES `users` (`id`) ON DELETE RESTRICT,
+  ADD CONSTRAINT `leads_preferred_country_foreign` FOREIGN KEY (`preferred_country`) REFERENCES `countries` (`id`) ON DELETE SET NULL,
+  ADD CONSTRAINT `leads_preferred_course_foreign` FOREIGN KEY (`preferred_course`) REFERENCES `courses` (`id`) ON DELETE SET NULL;
 
 --
 -- Constraints for table `marketing_campaigns`
@@ -2061,23 +1976,15 @@ ALTER TABLE `office_accounts`
   ADD CONSTRAINT `office_accounts_created_by_foreign` FOREIGN KEY (`created_by`) REFERENCES `users` (`id`) ON DELETE SET NULL;
 
 --
--- Constraints for table `office_transactions`
---
-ALTER TABLE `office_transactions`
-  ADD CONSTRAINT `office_transactions_created_by_foreign` FOREIGN KEY (`created_by`) REFERENCES `users` (`id`) ON DELETE SET NULL,
-  ADD CONSTRAINT `office_transactions_from_account_id_foreign` FOREIGN KEY (`from_account_id`) REFERENCES `office_accounts` (`id`) ON DELETE SET NULL,
-  ADD CONSTRAINT `office_transactions_to_account_id_foreign` FOREIGN KEY (`to_account_id`) REFERENCES `office_accounts` (`id`) ON DELETE SET NULL;
-
---
 -- Constraints for table `payments`
 --
 ALTER TABLE `payments`
   ADD CONSTRAINT `payments_application_id_foreign` FOREIGN KEY (`application_id`) REFERENCES `applications` (`id`) ON DELETE SET NULL,
-  ADD CONSTRAINT `payments_collected_by_foreign` FOREIGN KEY (`collected_by`) REFERENCES `users` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `payments_collected_by_foreign` FOREIGN KEY (`collected_by`) REFERENCES `users` (`id`) ON DELETE SET NULL,
   ADD CONSTRAINT `payments_invoice_id_foreign` FOREIGN KEY (`invoice_id`) REFERENCES `invoices` (`id`),
   ADD CONSTRAINT `payments_journal_entry_id_foreign` FOREIGN KEY (`journal_entry_id`) REFERENCES `journal_entries` (`id`),
   ADD CONSTRAINT `payments_office_account_id_foreign` FOREIGN KEY (`office_account_id`) REFERENCES `office_accounts` (`id`) ON DELETE SET NULL,
-  ADD CONSTRAINT `payments_student_id_foreign` FOREIGN KEY (`student_id`) REFERENCES `students` (`id`) ON DELETE CASCADE;
+  ADD CONSTRAINT `payments_student_id_foreign` FOREIGN KEY (`student_id`) REFERENCES `students` (`id`) ON DELETE RESTRICT;
 
 --
 -- Constraints for table `privilege_role`

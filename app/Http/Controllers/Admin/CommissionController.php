@@ -16,15 +16,19 @@ class CommissionController extends Controller
             $search = $request->search;
             $query->where(function ($q) use ($search) {
                 $q->where('role', 'like', "%{$search}%")
-                    ->orWhereHas('user', function ($uq) use ($search) {
-                    $uq->where('name', 'like', "%{$search}%");
-                }
-                )
-                    ->orWhereHas('payment.application.student', function ($sq) use ($search) {
-                    $sq->where('first_name', 'like', "%{$search}%")
-                        ->orWhere('last_name', 'like', "%{$search}%");
-                }
-                );
+                    ->orWhereHas(
+                        'user',
+                        function ($uq) use ($search) {
+                            $uq->where('name', 'like', "%{$search}%");
+                        }
+                    )
+                    ->orWhereHas(
+                        'payment.application.student',
+                        function ($sq) use ($search) {
+                            $sq->where('first_name', 'like', "%{$search}%")
+                                ->orWhere('last_name', 'like', "%{$search}%");
+                        }
+                    );
             });
         }
 

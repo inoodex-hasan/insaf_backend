@@ -157,7 +157,7 @@ class ExpenseController extends Controller
             'amount' => ['required', 'numeric', 'min:0.01'],
             'expense_date' => ['required', 'date'],
             'chart_of_account_id' => ['required', 'exists:chart_of_accounts,id'],
-            'payment_method' => ['required', 'in:cash,bank_transfer,mobile_banking'],
+            'payment_method' => ['required', 'in:cash,bank_transfer,mobile_banking,cheque'],
             'office_account_id' => ['nullable', 'exists:office_accounts,id'],
             'salary_id' => ['nullable', 'exists:salaries,id'],
             'notes' => ['nullable', 'string'],

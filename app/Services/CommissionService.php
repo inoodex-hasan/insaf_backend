@@ -2,13 +2,14 @@
 
 namespace App\Services;
 
-use App\Models\{Commission, Payment, Setting, User};
+use App\Models\{Commission, Payment, User};
 
 class CommissionService
 {
     /**
      * Calculate and record commissions for a payment.
      * Commission is based on the sum of all payments for the same application.
+     * Uses the user's individual commission_percentage from the users table.
      *
      * @param Payment $payment
      * @return void
@@ -29,11 +30,6 @@ class CommissionService
             return;
         }
 
-        // Fetch settings
-        $settings = Setting::whereIn('key', [
-            'commission_marketing_percent',
-        ])->pluck('value', 'key')->all();
-
         // Calculate total amount for all completed payments in this application
         $totalAmount = Payment::where('application_id', $application->id)
             ->where('payment_status', 'completed')
@@ -44,9 +40,18 @@ class CommissionService
             ->where('payment_status', 'completed')
             ->first();
 
-        // 1. Marketing Only - based on total application amount
-        if ($student->assigned_marketing_id && isset($settings['commission_marketing_percent']) && $firstPayment) {
-            $this->createApplicationCommission($firstPayment, $student->assigned_marketing_id, 'marketing', $totalAmount, $settings['commission_marketing_percent']);
+        // Marketing Commission - uses individual user's commission_percentage
+        if ($student->assigned_marketing_id && $firstPayment) {
+            $marketingUser = User::find($student->assigned_marketing_id);
+            if ($marketingUser && $marketingUser->commission_percentage !== null) {
+                $this->createApplicationCommission(
+                    $firstPayment,
+                    $marketingUser->id,
+                    'marketing',
+                    $totalAmount,
+                    $marketingUser->commission_percentage
+                );
+            }
         }
     }
 

@@ -13,6 +13,7 @@ class Invoice extends Model
 
     protected $fillable = [
         'student_id',
+        'application_id',
         'university_id',
         'invoice_number',
         'date',
@@ -31,6 +32,11 @@ class Invoice extends Model
     public function student(): BelongsTo
     {
         return $this->belongsTo(Student::class);
+    }
+
+    public function application(): BelongsTo
+    {
+        return $this->belongsTo(Application::class);
     }
 
     public function university(): BelongsTo
