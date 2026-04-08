@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\{Auth, DB};
 use Illuminate\Validation\Rule;
 use App\Http\Controllers\Controller;
-use App\Models\{Expense, FinanceCategory, OfficeAccount, OfficeTransaction, Salary, User};
+use App\Models\{Expense, ChartOfAccount, OfficeAccount, Salary, User};
 use Barryvdh\DomPDF\Facade\Pdf;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -351,7 +351,7 @@ class SalaryController extends Controller
         $this->authorize('*accountant');
 
         $salaryIds = $request->get('salary_ids', []);
-        
+
         // Convert comma-separated string to array if needed
         if (is_string($salaryIds) && !empty($salaryIds)) {
             $salaryIds = array_filter(array_map('intval', explode(',', trim($salaryIds))));
@@ -360,7 +360,7 @@ class SalaryController extends Controller
         } else {
             $salaryIds = [];
         }
-        
+
         if (empty($salaryIds)) {
             return redirect()->route('admin.salaries.index')->with('error', 'Please select at least one salary.');
         }
@@ -373,12 +373,13 @@ class SalaryController extends Controller
             return redirect()->route('admin.salaries.index')->with('error', 'No pending or partial salaries selected.');
         }
 
-        $totalAmount = $salaries->sum(function($salary) {
+        $totalAmount = $salaries->sum(function ($salary) {
             return $salary->net_salary - $salary->paid_amount;
         });
         $accounts = OfficeAccount::where('status', 'active')->get();
-        $categories = FinanceCategory::where('is_active', true)
-            ->whereIn('type', ['expense', 'both'])
+        $categories = ChartOfAccount::where('is_active', true)
+            ->where('type', 'expense')
+            ->orderBy('code')
             ->get();
 
         return view('admin.salaries.bulk-pay', compact('salaries', 'totalAmount', 'accounts', 'categories'));
@@ -393,7 +394,7 @@ class SalaryController extends Controller
             'salary_ids.*' => ['exists:salaries,id'],
             'office_account_id' => ['nullable', 'exists:office_accounts,id'],
             'payment_method' => ['required', 'in:cash,bank_transfer,mobile_banking,cheque'],
-            'category' => ['required', 'string', 'exists:finance_categories,name'],
+            'chart_of_account_id' => ['required', 'exists:chart_of_accounts,id'],
             'payment_date' => ['required', 'date'],
             'notes' => ['nullable', 'string'],
         ]);
@@ -416,7 +417,7 @@ class SalaryController extends Controller
                     'description' => 'Salary Payment - ' . $salary->employee_name . ' (' . $salary->month . ')',
                     'amount' => $remainingAmount,
                     'expense_date' => $validated['payment_date'],
-                    'category' => $validated['category'],
+                    'chart_of_account_id' => $validated['chart_of_account_id'],
                     'payment_method' => $validated['payment_method'],
                     'office_account_id' => $validated['office_account_id'],
                     'salary_id' => $salary->id,
@@ -430,19 +431,6 @@ class SalaryController extends Controller
                 $salary->payment_date = $validated['payment_date'];
                 $salary->payment_method = $validated['payment_method'];
                 $salary->save();
-
-                // Create office transaction
-                if ($validated['office_account_id']) {
-                    OfficeTransaction::create([
-                        'from_account_id' => $validated['office_account_id'],
-                        'to_account_id' => null,
-                        'amount' => $remainingAmount,
-                        'transaction_date' => $validated['payment_date'],
-                        'transaction_type' => 'expense',
-                        'reference' => 'Salary: ' . $salary->employee_name,
-                        'notes' => $validated['notes'],
-                    ]);
-                }
             }
 
             DB::commit();

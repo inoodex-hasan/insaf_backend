@@ -13,7 +13,6 @@ class Application extends Model
         'course_id',
         'course_intake_id',
         'tuition_fee',
-        'currency',
         'total_fee',
         'status',
         'notes',
@@ -62,10 +61,5 @@ class Application extends Model
     public function payments()
     {
         return $this->hasMany(Payment::class);
-    }
-
-    public function getCurrencyCode()
-    {
-        return $this->currency ?? 'BDT';
     }
 }

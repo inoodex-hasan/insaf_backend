@@ -37,18 +37,24 @@ class OfficeAccount extends Model
         return $this->belongsTo(User::class, 'created_by');
     }
 
-    public function incomingTransactions()
-    {
-        return $this->hasMany(OfficeTransaction::class, 'to_account_id');
-    }
-
-    public function outgoingTransactions()
-    {
-        return $this->hasMany(OfficeTransaction::class, 'from_account_id');
-    }
-
     public function chartOfAccount()
     {
         return $this->belongsTo(ChartOfAccount::class);
+    }
+
+    public function incomingJournalEntries()
+    {
+        return $this->hasMany(JournalEntry::class, 'period_id')
+            ->whereHas('items', function ($query) {
+                $query->where('credit', '>', 0);
+            });
+    }
+
+    public function outgoingJournalEntries()
+    {
+        return $this->hasMany(JournalEntry::class, 'period_id')
+            ->whereHas('items', function ($query) {
+                $query->where('debit', '>', 0);
+            });
     }
 }

@@ -13,17 +13,12 @@ class JournalEntryItem extends Model
     protected $fillable = [
         'journal_entry_id',
         'chart_of_account_id',
-        'currency_id',
-        'exchange_rate_at_posting',
-        'base_currency_amount',
         'debit',
         'credit',
         'description',
     ];
 
     protected $casts = [
-        'exchange_rate_at_posting' => 'decimal:6',
-        'base_currency_amount' => 'decimal:2',
         'debit' => 'decimal:2',
         'credit' => 'decimal:2',
     ];
@@ -36,10 +31,5 @@ class JournalEntryItem extends Model
     public function chartOfAccount(): BelongsTo
     {
         return $this->belongsTo(ChartOfAccount::class);
-    }
-
-    public function currency(): BelongsTo
-    {
-        return $this->belongsTo(Currency::class);
     }
 }

@@ -4,13 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Budget extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'category',
+        'chart_of_account_id',
         'amount',
         'period',
         'start_date',
@@ -28,8 +29,13 @@ class Budget extends Model
         });
     }
 
-    public function creator()
+    public function creator(): BelongsTo
     {
         return $this->belongsTo(User::class, 'created_by');
+    }
+
+    public function chartOfAccount(): BelongsTo
+    {
+        return $this->belongsTo(ChartOfAccount::class, 'chart_of_account_id');
     }
 }

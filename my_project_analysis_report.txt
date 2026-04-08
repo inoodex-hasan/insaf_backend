@@ -45,8 +45,6 @@ C. University & Admissions
 | course_intakes | id, course_id, intake_month, intake_year, deadline, created_at, updated_at | Specific enrollment periods for courses. |
 | applications | id, student_id, course_id, intake_id, application_number, status, tuition_fee, total_fee, currency_id, created_at, updated_at | Student applications to specific courses and intakes. |
 
-
-
 D. Finance & Accounting
 | currencies | id, name, code, symbol, exchange_rate, is_default, created_at, updated_at | Multicurrency support with exchange rates. |
 | office_accounts | id, account_name, account_number, bank_name, opening_balance, balance, created_at, updated_at | Bank and cash accounts for office transactions. |
@@ -67,7 +65,7 @@ New Tables to be ADDED (Planned)
 | invoice_items | id, invoice_id, chart_of_account_id, description, quantity, unit_price, subtotal, tax_amount, total, created_at, updated_at | Detailed line items for services. |
 | bank_reconciliations | id, account_id, currency_id, statement_date, statement_balance, system_balance, difference, status, created_at, closed_at, closed_by | Verifying system balances against bank records. |
 | bank_reconciliation_items | id, reconciliation_id, journal_entry_id, bank_statement_ref, amount, type, matched_at, matched_by | Individual matched and unmatched line items between system journal entries and bank statement records |
-| accounting_periods | id, year, month, is_closed, closed_at, closed_by, created_at, updated_at | Tracks open and closed accounting months to protect finalized records |
+| accounting_periods | id, name, start_date, end_date, type, status, remarks, closed_at, closed_by, created_at, updated_at | Tracks open and closed accounting months to protect finalized records |
 Existing Tables to be MODIFIED
 | payments | Add invoice_id, journal_entry_id | To link student receipts to invoices and the general ledger. |
 | expenses | Add journal_entry_id | To link office costs to the general ledger. |

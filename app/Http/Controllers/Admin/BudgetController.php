@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Budget;
-use App\Models\FinanceCategory;
+use App\Models\ChartOfAccount;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
@@ -19,10 +19,12 @@ class BudgetController extends Controller
     {
         $this->authorize('*accountant');
 
-        $query = Budget::with(['creator']);
+        $query = Budget::with(['creator', 'chartOfAccount']);
 
         if ($search = $request->get('search')) {
-            $query->where('category', 'like', "%{$search}%");
+            $query->whereHas('chartOfAccount', function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%");
+            });
         }
 
         if ($period = $request->get('period')) {
@@ -37,10 +39,11 @@ class BudgetController extends Controller
     public function create()
     {
         $this->authorize('*accountant');
-        $categories = FinanceCategory::where('is_active', true)
-            ->whereIn('type', ['expense', 'both'])
+        $accounts = ChartOfAccount::where('is_active', true)
+            ->where('type', 'expense')
+            ->orderBy('code')
             ->get();
-        return view('admin.budgets.create', compact('categories'));
+        return view('admin.budgets.create', compact('accounts'));
     }
 
     public function store(Request $request)
@@ -59,10 +62,11 @@ class BudgetController extends Controller
     public function edit(Budget $budget)
     {
         $this->authorize('*accountant');
-        $categories = FinanceCategory::where('is_active', true)
-            ->whereIn('type', ['expense', 'both'])
+        $accounts = ChartOfAccount::where('is_active', true)
+            ->where('type', 'expense')
+            ->orderBy('code')
             ->get();
-        return view('admin.budgets.edit', compact('budget', 'categories'));
+        return view('admin.budgets.edit', compact('budget', 'accounts'));
     }
 
     public function update(Request $request, Budget $budget)
@@ -91,7 +95,7 @@ class BudgetController extends Controller
     private function validateBudget(Request $request): array
     {
         return $request->validate([
-            'category' => ['required', 'string', 'exists:finance_categories,name'],
+            'chart_of_account_id' => ['required', 'exists:chart_of_accounts,id'],
             'amount' => ['required', 'numeric', 'min:0.01'],
             'period' => ['required', Rule::in(['monthly', 'yearly'])],
             'start_date' => ['required', 'date'],

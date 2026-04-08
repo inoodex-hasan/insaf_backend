@@ -75,7 +75,7 @@
                         <code style="padding: 0.25rem 0.5rem; background-color: var(--muted); border-radius: 0.25rem; font-size: 0.8125rem;">{{ $privilege->slug }}</code>
                     </td>
                     <td>
-                        <span style="font-size: 0.875rem; color: var(--muted-foreground);">{{ Str::limit($privilege->description, 50) ?: '-' }}</span>
+                        <span style="font-size: 0.875rem; color: var(--muted-foreground);">{{ \Illuminate\Support\Str::limit($privilege->description, 50) ?: '-' }}</span>
                     </td>
                     <td>
                         <span class="badge badge-secondary">{{ $privilege->roles_count }} roles</span>

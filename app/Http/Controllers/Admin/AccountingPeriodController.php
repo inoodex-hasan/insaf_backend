@@ -19,7 +19,9 @@ class AccountingPeriodController extends Controller
      */
     public function index()
     {
-        $periods = AccountingPeriod::orderBy('start_date', 'desc')->get();
+        $periods = AccountingPeriod::orderBy('year', 'desc')
+            ->orderBy('month', 'desc')
+            ->get();
         return view('admin.accounts.periods.index', compact('periods'));
     }
 
@@ -29,31 +31,28 @@ class AccountingPeriodController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'name' => 'required|string|max:100',
-            'start_date' => 'required|date',
-            'end_date' => 'required|date|after_or_equal:start_date',
-            'type' => ['required', Rule::in(['fiscal_year', 'monthly', 'quarterly'])],
+            'year' => 'required|integer|min:2000|max:2100',
+            'month' => 'required|integer|min:1|max:12',
             'remarks' => 'nullable|string',
         ]);
 
-        // Strict overlap prevention for the same type
-        $overlap = AccountingPeriod::where('type', $validated['type'])
-            ->where(function ($query) use ($request) {
-                $query->whereBetween('start_date', [$request->start_date, $request->end_date])
-                    ->orWhereBetween('end_date', [$request->start_date, $request->end_date])
-                    ->orWhere(function ($q) use ($request) {
-                        $q->where('start_date', '<=', $request->start_date)
-                          ->where('end_date', '>=', $request->end_date);
-                    });
-            })->exists();
+        // Check if period already exists
+        $exists = AccountingPeriod::where('year', $validated['year'])
+            ->where('month', $validated['month'])
+            ->exists();
 
-        if ($overlap) {
+        if ($exists) {
             return redirect()->back()
-                ->withErrors(['start_date' => 'This period overlaps with an existing period of the same type.'])
+                ->withErrors(['month' => 'This accounting period already exists.'])
                 ->withInput();
         }
 
-        AccountingPeriod::create($validated);
+        AccountingPeriod::create([
+            'year' => $validated['year'],
+            'month' => $validated['month'],
+            'is_closed' => false,
+            'remarks' => $validated['remarks'] ?? null,
+        ]);
 
         return redirect()->back()->with('success', 'Accounting period created successfully.');
     }

@@ -78,7 +78,6 @@ class ApplicationController extends Controller
             'course_id' => 'required|exists:courses,id',
             'course_intake_id' => 'required|exists:course_intakes,id',
             'tuition_fee' => 'required|numeric|min:0',
-            'currency' => 'required|string|max:10',
             'total_fee' => 'required|numeric|min:0',
             'status' => 'required|string',
             'notes' => 'nullable|string',

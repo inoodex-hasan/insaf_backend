@@ -14,7 +14,6 @@ class Expense extends Model
         'description',
         'amount',
         'expense_date',
-        'category',
         'payment_method',
         'office_account_id',
         'salary_id',

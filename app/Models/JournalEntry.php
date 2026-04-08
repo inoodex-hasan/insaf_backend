@@ -12,7 +12,6 @@ class JournalEntry extends Model
     use HasFactory;
 
     protected $fillable = [
-        'currency_id',
         'period_id',
         'date',
         'reference_number',
@@ -24,11 +23,6 @@ class JournalEntry extends Model
     protected $casts = [
         'date' => 'date',
     ];
-
-    public function currency(): BelongsTo
-    {
-        return $this->belongsTo(Currency::class);
-    }
 
     public function period(): BelongsTo
     {

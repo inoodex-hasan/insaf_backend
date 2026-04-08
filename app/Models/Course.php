@@ -15,7 +15,6 @@ class Course extends Model
         'degree_level',
         'duration',
         'tuition_fee',
-        'currency',
         'status'
     ];
 

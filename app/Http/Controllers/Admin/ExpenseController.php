@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 use App\Http\Controllers\Controller;
-use App\Models\{Expense, FinanceCategory, OfficeAccount, OfficeTransaction, Salary};
+use App\Models\{Expense, ChartOfAccount, OfficeAccount, Salary};
 use Barryvdh\DomPDF\Facade\Pdf;
 
 class ExpenseController extends Controller
@@ -16,52 +16,25 @@ class ExpenseController extends Controller
         $this->middleware('can:*accountant');
     }
 
-    // public function index(Request $request)
-    // {
-    //     $this->authorize('*accountant');
-
-    //     $query = Expense::with(['creator']);
-
-    //     if ($search = $request->get('search')) {
-    //         $query->where(function ($q) use ($search) {
-    //             $q->where('description', 'like', "%{$search}%")
-    //                 ->orWhere('category', 'like', "%{$search}%")
-    //                 ->orWhere('payment_method', 'like', "%{$search}%");
-    //         });
-    //     }
-
-    //     if ($category = $request->get('category')) {
-    //         $query->where('category', $category);
-    //     }
-
-    //     $expenses = $query->latest()->paginate(15)->withQueryString();
-
-    //     // Fetch unique categories for the filter
-    //     $categories = FinanceCategory::where('is_active', true)
-    //         ->whereIn('type', ['expense', 'both'])
-    //         ->get();
-
-    //     return view('admin.expenses.index', compact('expenses', 'categories'));
-    // }
-
     public function index(Request $request)
     {
         $this->authorize('*accountant');
 
-        $query = Expense::with(['creator']);
+        $query = Expense::with(['creator', 'chartOfAccount']);
 
         // Search filter
         if ($search = $request->get('search')) {
             $query->where(function ($q) use ($search) {
                 $q->where('description', 'like', "%{$search}%")
-                    ->orWhere('category', 'like', "%{$search}%")
                     ->orWhere('payment_method', 'like', "%{$search}%");
             });
         }
 
-        // Category filter
+        // Category filter (using chart_of_account)
         if ($category = $request->get('category')) {
-            $query->where('category', $category);
+            $query->whereHas('chartOfAccount', function ($q) use ($category) {
+                $q->where('name', 'like', "%{$category}%");
+            });
         }
 
         // Timeframe filter: daily, monthly, yearly
@@ -84,9 +57,10 @@ class ExpenseController extends Controller
 
         $expenses = $query->latest()->paginate(15)->withQueryString();
 
-        // Fetch categories
-        $categories = FinanceCategory::where('is_active', true)
-            ->whereIn('type', ['expense', 'both'])
+        // Fetch expense accounts
+        $categories = ChartOfAccount::where('is_active', true)
+            ->where('type', 'expense')
+            ->orderBy('code')
             ->get();
 
         return view('admin.expenses.index', compact('expenses', 'categories'));
@@ -95,12 +69,13 @@ class ExpenseController extends Controller
     public function create()
     {
         $this->authorize('*accountant');
-        $categories = FinanceCategory::where('is_active', true)
-            ->whereIn('type', ['expense', 'both'])
+        $accounts = ChartOfAccount::where('is_active', true)
+            ->where('type', 'expense')
+            ->orderBy('code')
             ->get();
-        $accounts = OfficeAccount::where('status', 'active')->get();
-        $pendings_salaries = Salary::whereIn('payment_status', ['pending', 'partial'])->get();
-        return view('admin.expenses.create', compact('categories', 'accounts', 'pendings_salaries'));
+        $officeAccounts = OfficeAccount::where('status', 'active')->get();
+        $pendingsSalaries = Salary::whereIn('payment_status', ['pending', 'partial'])->get();
+        return view('admin.expenses.create', compact('accounts', 'officeAccounts', 'pendingsSalaries'));
     }
 
     public function store(Request $request)
@@ -127,19 +102,6 @@ class ExpenseController extends Controller
             }
         }
 
-        // Auto-log as office transaction
-        if ($expense->office_account_id) {
-            OfficeTransaction::create([
-                'from_account_id' => $expense->office_account_id,
-                'to_account_id' => null,
-                'amount' => $expense->amount,
-                'transaction_date' => $expense->expense_date,
-                'transaction_type' => 'expense',
-                'reference' => 'Expense: ' . $expense->description,
-                'notes' => $expense->notes,
-            ]);
-        }
-
         return redirect()
             ->route('admin.expenses.index')
             ->with('success', 'Expense recorded successfully.');
@@ -148,11 +110,12 @@ class ExpenseController extends Controller
     public function edit(Expense $expense)
     {
         $this->authorize('*accountant');
-        $categories = FinanceCategory::where('is_active', true)
-            ->whereIn('type', ['expense', 'both'])
+        $accounts = ChartOfAccount::where('is_active', true)
+            ->where('type', 'expense')
+            ->orderBy('code')
             ->get();
-        $accounts = OfficeAccount::where('status', 'active')->get();
-        return view('admin.expenses.edit', compact('expense', 'categories', 'accounts'));
+        $officeAccounts = OfficeAccount::where('status', 'active')->get();
+        return view('admin.expenses.edit', compact('expense', 'accounts', 'officeAccounts'));
     }
 
     public function update(Request $request, Expense $expense)
@@ -193,7 +156,7 @@ class ExpenseController extends Controller
             'description' => ['required', 'string', 'max:255'],
             'amount' => ['required', 'numeric', 'min:0.01'],
             'expense_date' => ['required', 'date'],
-            'category' => ['required', 'string', 'exists:finance_categories,name'],
+            'chart_of_account_id' => ['required', 'exists:chart_of_accounts,id'],
             'payment_method' => ['required', 'in:cash,bank_transfer,mobile_banking'],
             'office_account_id' => ['nullable', 'exists:office_accounts,id'],
             'salary_id' => ['nullable', 'exists:salaries,id'],

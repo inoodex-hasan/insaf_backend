@@ -38,9 +38,8 @@ class CourseController extends Controller
         $this->authorize('*editor');
 
         $universities = University::where('status', 1)->orderBy('name')->get();
-        $currencies = \App\Models\Currency::where('is_active', true)->orderBy('code')->get();
 
-        return view('admin.courses.create', compact('universities', 'currencies'));
+        return view('admin.courses.create', compact('universities'));
     }
 
     public function store(Request $request)
@@ -61,9 +60,8 @@ class CourseController extends Controller
         $this->authorize('*editor');
 
         $universities = University::where('status', 1)->orderBy('name')->get();
-        $currencies = \App\Models\Currency::where('is_active', true)->orderBy('code')->get();
 
-        return view('admin.courses.edit', compact('course', 'universities', 'currencies'));
+        return view('admin.courses.edit', compact('course', 'universities'));
     }
 
     public function update(Request $request, Course $course)
@@ -98,7 +96,6 @@ class CourseController extends Controller
             'degree_level' => ['nullable', 'string', 'max:100'],
             'duration' => ['nullable', 'string', 'max:100'],
             'tuition_fee' => ['nullable', 'numeric'],
-            'currency' => ['required', 'string', 'max:10'],
             'status' => ['required', 'boolean'],
         ]);
     }

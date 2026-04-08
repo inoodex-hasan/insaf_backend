@@ -153,14 +153,7 @@ Route::prefix('dashboard/office-accounts')->name('admin.office-accounts.')->grou
     Route::delete('{officeAccount}', [App\Http\Controllers\Admin\OfficeAccountController::class, 'destroy'])->name('destroy')->middleware('can:*accountant');
 });
 
-// Office Transactions Management
-Route::prefix('dashboard/office-transactions')->name('admin.office-transactions.')->group(function () {
-    Route::get('/', [App\Http\Controllers\Admin\OfficeTransactionController::class, 'index'])->name('index')->middleware('can:*accountant');
-    Route::get('/create', [App\Http\Controllers\Admin\OfficeTransactionController::class, 'create'])->name('create')->middleware('can:*accountant');
-    Route::post('/', [App\Http\Controllers\Admin\OfficeTransactionController::class, 'store'])->name('store')->middleware('can:*accountant');
-    Route::get('{officeTransaction}', [App\Http\Controllers\Admin\OfficeTransactionController::class, 'show'])->name('show')->middleware('can:*accountant');
-    Route::delete('{officeTransaction}', [App\Http\Controllers\Admin\OfficeTransactionController::class, 'destroy'])->name('destroy')->middleware('can:*accountant');
-});
+// Office Transactions - REMOVED: Migrated to Journal Entries
 
 // Budget Management
 Route::prefix('dashboard/budgets')->name('admin.budgets.')->group(function () {
@@ -172,13 +165,7 @@ Route::prefix('dashboard/budgets')->name('admin.budgets.')->group(function () {
     Route::delete('{budget}', [App\Http\Controllers\Admin\BudgetController::class, 'destroy'])->name('destroy')->middleware('can:*accountant');
 });
 
-// Finance Categories
-Route::prefix('dashboard/finance-categories')->name('admin.finance-categories.')->group(function () {
-    Route::get('/', [App\Http\Controllers\Admin\FinanceCategoryController::class, 'index'])->name('index')->middleware('can:*accountant');
-    Route::post('/', [App\Http\Controllers\Admin\FinanceCategoryController::class, 'store'])->name('store')->middleware('can:*accountant');
-    Route::put('{category}', [App\Http\Controllers\Admin\FinanceCategoryController::class, 'update'])->name('update')->middleware('can:*accountant');
-    Route::delete('{category}', [App\Http\Controllers\Admin\FinanceCategoryController::class, 'destroy'])->name('destroy')->middleware('can:*accountant');
-});
+// Finance Categories - REMOVED: Migrated to Chart of Accounts
 
 // Accounting Periods
 Route::prefix('dashboard/accounting-periods')->name('admin.accounting-periods.')->group(function () {
@@ -221,14 +208,7 @@ Route::prefix('dashboard/reports')->name('admin.reports.')->group(function () {
     Route::get('/download-pdf', [App\Http\Controllers\Admin\ReportController::class, 'downloadPdf'])->name('download-pdf')->middleware('can:*accountant');
 });
 
-// Currencies
-Route::prefix('dashboard/currencies')->name('admin.currencies.')->group(function () {
-    Route::get('/refresh', [App\Http\Controllers\Admin\CurrencyController::class, 'refresh'])->name('refresh')->middleware('can:*accountant|*consultant|*application');
-    Route::get('/', [App\Http\Controllers\Admin\CurrencyController::class, 'index'])->name('index')->middleware('can:*accountant|*consultant|*application');
-    Route::post('/', [App\Http\Controllers\Admin\CurrencyController::class, 'store'])->name('store')->middleware('can:*accountant');
-    Route::put('{currency}', [App\Http\Controllers\Admin\CurrencyController::class, 'update'])->name('update')->middleware('can:*accountant');
-    Route::delete('{currency}', [App\Http\Controllers\Admin\CurrencyController::class, 'destroy'])->name('destroy')->middleware('can:*accountant');
-});
+// Currencies - REMOVED: Currency functionality removed from project
 
 // Salary Management
 Route::prefix('dashboard/salaries')->name('admin.salaries.')->group(function () {

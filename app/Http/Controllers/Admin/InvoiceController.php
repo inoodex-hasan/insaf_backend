@@ -8,7 +8,6 @@ use App\Models\InvoiceItem;
 use App\Models\Student;
 use App\Models\University;
 use App\Models\ChartOfAccount;
-use App\Models\Currency;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -24,11 +23,11 @@ class InvoiceController extends Controller
      */
     public function index()
     {
-        $invoices = Invoice::with(['student', 'university', 'currency'])
+        $invoices = Invoice::with(['student', 'university'])
             ->orderBy('date', 'desc')
             ->orderBy('id', 'desc')
             ->paginate(20);
-            
+
         return view('admin.accounts.invoices.index', compact('invoices'));
     }
 
@@ -40,10 +39,8 @@ class InvoiceController extends Controller
         $students = Student::orderBy('first_name')->get();
         $universities = University::orderBy('name')->get();
         $accounts = ChartOfAccount::where('is_active', true)->orderBy('code')->get();
-        $currencies = Currency::all();
-        $defaultCurrency = Currency::where('code', 'BDT')->first() ?? $currencies->first();
 
-        return view('admin.accounts.invoices.create', compact('students', 'universities', 'accounts', 'currencies', 'defaultCurrency'));
+        return view('admin.accounts.invoices.create', compact('students', 'universities', 'accounts'));
     }
 
     /**
@@ -56,7 +53,6 @@ class InvoiceController extends Controller
             'university_id' => 'nullable|exists:universities,id',
             'date' => 'required|date',
             'due_date' => 'required|date|after_or_equal:date',
-            'currency_id' => 'required|exists:currencies,id',
             'invoice_number' => 'nullable|string|max:50|unique:invoices,invoice_number',
             'notes' => 'nullable|string',
             'items' => 'required|array|min:1',
@@ -69,7 +65,7 @@ class InvoiceController extends Controller
         try {
             DB::beginTransaction();
 
-            $totalAmount = collect($request->items)->sum(fn($i) => (float)$i['quantity'] * (float)$i['unit_price']);
+            $totalAmount = collect($request->items)->sum(fn($i) => (float) $i['quantity'] * (float) $i['unit_price']);
 
             $invoice = Invoice::create([
                 'student_id' => $request->student_id,
@@ -77,14 +73,13 @@ class InvoiceController extends Controller
                 'invoice_number' => $request->invoice_number ?? 'INV-' . date('Ymd') . '-' . strtoupper(bin2hex(random_bytes(2))),
                 'date' => $request->date,
                 'due_date' => $request->due_date,
-                'currency_id' => $request->currency_id,
                 'total_amount' => $totalAmount,
                 'status' => 'unpaid',
                 'notes' => $request->notes,
             ]);
 
             foreach ($request->items as $item) {
-                $subtotal = (float)$item['quantity'] * (float)$item['unit_price'];
+                $subtotal = (float) $item['quantity'] * (float) $item['unit_price'];
                 InvoiceItem::create([
                     'invoice_id' => $invoice->id,
                     'chart_of_account_id' => $item['chart_of_account_id'],
@@ -111,7 +106,7 @@ class InvoiceController extends Controller
      */
     public function show(Invoice $invoice)
     {
-        $invoice->load(['items.chartOfAccount', 'student', 'university', 'currency']);
+        $invoice->load(['items.chartOfAccount', 'student', 'university']);
         return view('admin.accounts.invoices.show', compact('invoice'));
     }
 

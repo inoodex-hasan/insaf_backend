@@ -17,7 +17,6 @@ class Invoice extends Model
         'invoice_number',
         'date',
         'due_date',
-        'currency_id',
         'total_amount',
         'status',
         'notes',
@@ -37,11 +36,6 @@ class Invoice extends Model
     public function university(): BelongsTo
     {
         return $this->belongsTo(University::class);
-    }
-
-    public function currency(): BelongsTo
-    {
-        return $this->belongsTo(Currency::class);
     }
 
     public function items(): HasMany

@@ -12,21 +12,37 @@ class AccountingPeriod extends Model
     use HasFactory;
 
     protected $fillable = [
-        'name',
-        'start_date',
-        'end_date',
-        'type',
-        'status',
+        'year',
+        'month',
+        'is_closed',
+        'closed_at',
+        'closed_by',
         'remarks',
     ];
 
     protected $casts = [
-        'start_date' => 'date',
-        'end_date' => 'date',
+        'year' => 'integer',
+        'month' => 'integer',
+        'is_closed' => 'boolean',
+        'closed_at' => 'datetime',
     ];
+
+    /**
+     * Get the display name for the period
+     */
+    public function getDisplayNameAttribute(): string
+    {
+        $monthName = date('F', mktime(0, 0, 0, $this->month, 1));
+        return "{$monthName} {$this->year}";
+    }
 
     public function journalEntries(): HasMany
     {
         return $this->hasMany(JournalEntry::class, 'period_id');
+    }
+
+    public function closedByUser(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'closed_by');
     }
 }

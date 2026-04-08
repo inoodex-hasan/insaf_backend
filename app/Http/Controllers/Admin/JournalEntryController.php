@@ -7,7 +7,6 @@ use App\Models\JournalEntry;
 use App\Models\JournalEntryItem;
 use App\Models\ChartOfAccount;
 use App\Models\AccountingPeriod;
-use App\Models\Currency;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -29,7 +28,7 @@ class JournalEntryController extends Controller
             ->orderBy('date', 'desc')
             ->orderBy('id', 'desc')
             ->paginate(20);
-            
+
         return view('admin.accounts.journal-entries.index', compact('entries'));
     }
 
@@ -39,11 +38,12 @@ class JournalEntryController extends Controller
     public function create()
     {
         $accounts = ChartOfAccount::where('is_active', true)->orderBy('code')->get();
-        $periods = AccountingPeriod::where('status', 'open')->orderBy('start_date', 'desc')->get();
-        $currencies = Currency::all();
-        $defaultCurrency = Currency::where('code', 'BDT')->first() ?? $currencies->first();
+        $periods = AccountingPeriod::where('is_closed', false)
+            ->orderBy('year', 'desc')
+            ->orderBy('month', 'desc')
+            ->get();
 
-        return view('admin.accounts.journal-entries.create', compact('accounts', 'periods', 'currencies', 'defaultCurrency'));
+        return view('admin.accounts.journal-entries.create', compact('accounts', 'periods'));
     }
 
     /**
@@ -54,7 +54,6 @@ class JournalEntryController extends Controller
         $request->validate([
             'date' => 'required|date',
             'period_id' => 'required|exists:accounting_periods,id',
-            'currency_id' => 'required|exists:currencies,id',
             'reference_number' => 'nullable|string|max:50',
             'note' => 'nullable|string',
             'items' => 'required|array|min:2',
@@ -65,8 +64,8 @@ class JournalEntryController extends Controller
         ]);
 
         $items = collect($request->items);
-        $totalDebit = $items->sum(fn($i) => (float)($i['debit'] ?? 0));
-        $totalCredit = $items->sum(fn($i) => (float)($i['credit'] ?? 0));
+        $totalDebit = $items->sum(fn($i) => (float) ($i['debit'] ?? 0));
+        $totalCredit = $items->sum(fn($i) => (float) ($i['credit'] ?? 0));
 
         // Strict balance check (allowing for 0.01 precision difference due to float)
         if (abs($totalDebit - $totalCredit) > 0.01) {
@@ -83,7 +82,6 @@ class JournalEntryController extends Controller
             DB::beginTransaction();
 
             $entry = JournalEntry::create([
-                'currency_id' => $request->currency_id,
                 'period_id' => $request->period_id,
                 'date' => $request->date,
                 'reference_number' => $request->reference_number ?? 'JV-' . date('Ymd') . '-' . strtoupper(bin2hex(random_bytes(2))),
@@ -93,16 +91,13 @@ class JournalEntryController extends Controller
             ]);
 
             foreach ($request->items as $item) {
-                $debit = (float)($item['debit'] ?? 0);
-                $credit = (float)($item['credit'] ?? 0);
+                $debit = (float) ($item['debit'] ?? 0);
+                $credit = (float) ($item['credit'] ?? 0);
 
                 if ($debit > 0 || $credit > 0) {
                     JournalEntryItem::create([
                         'journal_entry_id' => $entry->id,
                         'chart_of_account_id' => $item['chart_of_account_id'],
-                        'currency_id' => $request->currency_id,
-                        'exchange_rate_at_posting' => 1.000000,
-                        'base_currency_amount' => $debit - $credit,
                         'debit' => $debit,
                         'credit' => $credit,
                         'description' => $item['description'],
@@ -124,7 +119,7 @@ class JournalEntryController extends Controller
      */
     public function show(JournalEntry $entry)
     {
-        $entry->load(['items.chartOfAccount', 'period', 'creator', 'currency']);
+        $entry->load(['items.chartOfAccount', 'period', 'creator']);
         return view('admin.accounts.journal-entries.show', compact('entry'));
     }
 
