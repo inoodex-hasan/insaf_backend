@@ -21,23 +21,28 @@
             @method('PUT')
             <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
                 <div class="form-group">
-                    <label for="category">Budget Category <span class="text-danger">*</span></label>
-                    <select name="category" id="category" class="form-select" required>
+                    <label for="chart_of_account_id">Budget Category <span class="text-danger">*</span></label>
+                    <select name="chart_of_account_id" id="chart_of_account_id" class="form-select" required>
                         <option value="">Select Category</option>
-                        @foreach($categories as $category)
-                            <option value="{{ $category->name }}" {{ old('category', $budget->category) == $category->name ? 'selected' : '' }}>
-                                {{ $category->name }}
+                        @foreach ($accounts as $account)
+                            <option value="{{ $account->id }}"
+                                {{ old('chart_of_account_id', $budget->chart_of_account_id) == $account->id ? 'selected' : '' }}>
+                                {{ $account->code }} - {{ $account->name }}
                             </option>
                         @endforeach
                     </select>
-                    @error('category') <span class="text-danger text-sm">{{ $message }}</span> @enderror
+                    @error('chart_of_account_id')
+                        <span class="text-danger text-sm">{{ $message }}</span>
+                    @enderror
                 </div>
 
                 <div class="form-group">
                     <label for="amount">Allocated Amount <span class="text-danger">*</span></label>
                     <input type="number" name="amount" id="amount" class="form-input" step="0.01"
                         value="{{ old('amount', $budget->amount) }}" required>
-                    @error('amount') <span class="text-danger text-sm">{{ $message }}</span> @enderror
+                    @error('amount')
+                        <span class="text-danger text-sm">{{ $message }}</span>
+                    @enderror
                 </div>
 
                 <div class="form-group">
@@ -48,7 +53,9 @@
                         <option value="yearly" {{ old('period', $budget->period) == 'yearly' ? 'selected' : '' }}>Yearly
                         </option>
                     </select>
-                    @error('period') <span class="text-danger text-sm">{{ $message }}</span> @enderror
+                    @error('period')
+                        <span class="text-danger text-sm">{{ $message }}</span>
+                    @enderror
                 </div>
 
                 <div class="grid grid-cols-2 gap-4">
@@ -56,21 +63,26 @@
                         <label for="start_date">Start Date <span class="text-danger">*</span></label>
                         <input type="date" name="start_date" id="start_date" class="form-input"
                             value="{{ old('start_date', $budget->start_date) }}" required>
-                        @error('start_date') <span class="text-danger text-sm">{{ $message }}</span> @enderror
+                        @error('start_date')
+                            <span class="text-danger text-sm">{{ $message }}</span>
+                        @enderror
                     </div>
                     <div class="form-group">
                         <label for="end_date">End Date <span class="text-danger">*</span></label>
                         <input type="date" name="end_date" id="end_date" class="form-input"
                             value="{{ old('end_date', $budget->end_date) }}" required>
-                        @error('end_date') <span class="text-danger text-sm">{{ $message }}</span> @enderror
+                        @error('end_date')
+                            <span class="text-danger text-sm">{{ $message }}</span>
+                        @enderror
                     </div>
                 </div>
 
                 <div class="form-group md:col-span-2">
                     <label for="notes">Notes</label>
-                    <textarea name="notes" id="notes" class="form-textarea"
-                        rows="3">{{ old('notes', $budget->notes) }}</textarea>
-                    @error('notes') <span class="text-danger text-sm">{{ $message }}</span> @enderror
+                    <textarea name="notes" id="notes" class="form-textarea" rows="3">{{ old('notes', $budget->notes) }}</textarea>
+                    @error('notes')
+                        <span class="text-danger text-sm">{{ $message }}</span>
+                    @enderror
                 </div>
             </div>
 

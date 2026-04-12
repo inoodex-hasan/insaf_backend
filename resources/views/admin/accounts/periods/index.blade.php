@@ -15,12 +15,14 @@
                 @csrf
                 <div class="mb-4">
                     <label for="name">Period Name</label>
-                    <input type="text" name="name" id="name" class="form-input" placeholder="e.g. FY 2026-27" value="{{ old('name') }}" required>
+                    <input type="text" name="name" id="name" class="form-input" placeholder="e.g. FY 2026-27"
+                        value="{{ old('name') }}" required>
                 </div>
                 <div class="mb-4">
                     <label for="type">Period Type</label>
                     <select name="type" id="type" class="form-select" required>
-                        <option value="fiscal_year" {{ old('type') == 'fiscal_year' ? 'selected' : '' }}>Fiscal Year</option>
+                        <option value="fiscal_year" {{ old('type') == 'fiscal_year' ? 'selected' : '' }}>Fiscal Year
+                        </option>
                         <option value="monthly" {{ old('type') == 'monthly' ? 'selected' : '' }}>Monthly</option>
                         <option value="quarterly" {{ old('type') == 'quarterly' ? 'selected' : '' }}>Quarterly</option>
                     </select>
@@ -28,11 +30,13 @@
                 <div class="mb-4 grid grid-cols-2 gap-4">
                     <div>
                         <label for="start_date">Start Date</label>
-                        <input type="date" name="start_date" id="start_date" class="form-input" value="{{ old('start_date') }}" required>
+                        <input type="date" name="start_date" id="start_date" class="form-input"
+                            value="{{ old('start_date') }}" required>
                     </div>
                     <div>
                         <label for="end_date">End Date</label>
-                        <input type="date" name="end_date" id="end_date" class="form-input" value="{{ old('end_date') }}" required>
+                        <input type="date" name="end_date" id="end_date" class="form-input"
+                            value="{{ old('end_date') }}" required>
                     </div>
                 </div>
                 <div class="mb-4">
@@ -70,7 +74,7 @@
                                     </span>
                                 </td>
                                 <td>
-                                    @if($period->status == 'open')
+                                    @if ($period->status == 'open')
                                         <span class="badge badge-outline-success">Open</span>
                                     @else
                                         <span class="badge badge-outline-danger">Closed</span>
@@ -79,16 +83,32 @@
                                 <td>
                                     <div class="flex items-center justify-center gap-2">
                                         <!-- Toggle Status -->
-                                        <form action="{{ route('admin.accounting-periods.update', $period) }}" method="POST">
+                                        <form action="{{ route('admin.accounting-periods.update', $period) }}"
+                                            method="POST">
                                             @csrf
                                             @method('PUT')
-                                            <input type="hidden" name="status" value="{{ $period->status == 'open' ? 'closed' : 'open' }}">
-                                            <button type="submit" class="btn btn-sm {{ $period->status == 'open' ? 'btn-outline-danger' : 'btn-outline-success' }}">
+                                            <input type="hidden" name="status"
+                                                value="{{ $period->status == 'open' ? 'closed' : 'open' }}">
+                                            <button type="submit"
+                                                class="btn btn-sm {{ $period->status == 'open' ? 'btn-outline-danger' : 'btn-outline-success' }}">
                                                 {{ $period->status == 'open' ? 'Close' : 'Open' }}
                                             </button>
                                         </form>
 
-                                        <!-- Delete -->
+                                        {{-- <td class="text-center"> --}}
+                                        <div class="flex items-center justify-center gap-2">
+                                            <a href="{{ route('admin.accounting-periods.edit', $period->id) }}"
+                                                class="btn btn-sm btn-outline-primary">Edit</a>
+                                            <form action="{{ route('admin.accounting-periods.destroy', $period->id) }}"
+                                                method="POST" onsubmit="return confirm('Delete this accounting period?');">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+                                            </form>
+                                        </div>
+                                </td>
+
+                                {{-- <!-- Delete -->
                                         <form action="{{ route('admin.accounting-periods.destroy', $period) }}" method="POST" onsubmit="return confirm('Delete this period?')">
                                             @csrf
                                             @method('DELETE')
@@ -97,18 +117,18 @@
                                                     <path d="M3 6h18M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                                                 </svg>
                                             </button>
-                                        </form>
-                                    </div>
-                                </td>
-                            </tr>
-                        @empty
-                            <tr>
-                                <td colspan="5" class="text-center text-gray-400 py-8">No accounting periods defined yet.</td>
-                            </tr>
-                        @endforelse
-                    </tbody>
-                </table>
+                                        </form> --}}
             </div>
+            </td>
+            </tr>
+        @empty
+            <tr>
+                <td colspan="5" class="text-center text-gray-400 py-8">No accounting periods defined yet.</td>
+            </tr>
+            @endforelse
+            </tbody>
+            </table>
         </div>
+    </div>
     </div>
 @endsection

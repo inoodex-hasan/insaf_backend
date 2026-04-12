@@ -170,6 +170,8 @@ Route::prefix('dashboard/budgets')->name('admin.budgets.')->group(function () {
 // Accounting Periods
 Route::prefix('dashboard/accounting-periods')->name('admin.accounting-periods.')->group(function () {
     Route::get('/', [App\Http\Controllers\Admin\AccountingPeriodController::class, 'index'])->name('index')->middleware('can:*accountant');
+    Route::get('/create', [App\Http\Controllers\Admin\AccountingPeriodController::class, 'create'])->name('create')->middleware('can:*accountant');
+    Route::get('/{period}/edit', [App\Http\Controllers\Admin\AccountingPeriodController::class, 'edit'])->name('edit')->middleware('can:*accountant');
     Route::post('/', [App\Http\Controllers\Admin\AccountingPeriodController::class, 'store'])->name('store')->middleware('can:*accountant');
     Route::put('{period}', [App\Http\Controllers\Admin\AccountingPeriodController::class, 'update'])->name('update')->middleware('can:*accountant');
     Route::delete('{period}', [App\Http\Controllers\Admin\AccountingPeriodController::class, 'destroy'])->name('destroy')->middleware('can:*accountant');

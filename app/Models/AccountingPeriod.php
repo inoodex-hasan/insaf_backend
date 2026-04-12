@@ -12,18 +12,19 @@ class AccountingPeriod extends Model
     use HasFactory;
 
     protected $fillable = [
-        'year',
-        'month',
-        'is_closed',
+        'name',
+        'type',
+        'start_date',
+        'end_date',
+        'status',
+        'remarks',
         'closed_at',
         'closed_by',
-        'remarks',
     ];
 
     protected $casts = [
-        'year' => 'integer',
-        'month' => 'integer',
-        'is_closed' => 'boolean',
+        'start_date' => 'date',
+        'end_date' => 'date',
         'closed_at' => 'datetime',
     ];
 
@@ -32,8 +33,7 @@ class AccountingPeriod extends Model
      */
     public function getDisplayNameAttribute(): string
     {
-        $monthName = date('F', mktime(0, 0, 0, $this->month, 1));
-        return "{$monthName} {$this->year}";
+        return "{$this->name} ({$this->start_date->format('M d, Y')} - {$this->end_date->format('M d, Y')})";
     }
 
     public function journalEntries(): HasMany
