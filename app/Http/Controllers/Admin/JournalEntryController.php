@@ -38,9 +38,8 @@ class JournalEntryController extends Controller
     public function create()
     {
         $accounts = ChartOfAccount::where('is_active', true)->orderBy('code')->get();
-        $periods = AccountingPeriod::where('is_closed', false)
-            ->orderBy('year', 'desc')
-            ->orderBy('month', 'desc')
+        $periods = AccountingPeriod::where('status', 'open')
+            ->orderBy('start_date', 'desc')
             ->get();
 
         return view('admin.accounts.journal-entries.create', compact('accounts', 'periods'));

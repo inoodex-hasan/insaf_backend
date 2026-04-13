@@ -51,18 +51,51 @@ class ChartOfAccountController extends Controller
     }
 
     /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(ChartOfAccount $account)
+    {
+        // Get all accounts except this one and its children (to prevent circular reference)
+        $parentAccounts = ChartOfAccount::where('id', '!=', $account->id)
+            ->orderBy('name')
+            ->get();
+
+        $accounts = ChartOfAccount::with('children')
+            ->whereNull('parent_id')
+            ->orderBy('type')
+            ->orderBy('code')
+            ->get();
+
+        return view('admin.accounts.chart-of-accounts.edit', compact('account', 'parentAccounts', 'accounts'));
+    }
+
+    /**
      * Update the specified resource in storage.
      */
     public function update(Request $request, ChartOfAccount $account)
     {
+        // Check if this is a simple update from inline form
+        if ($request->has('name') && !$request->has('type')) {
+            $validated = $request->validate([
+                'name' => 'required|string|max:100',
+                'code' => ['required', 'string', 'max:20', Rule::unique('chart_of_accounts')->ignore($account->id)],
+            ]);
+
+            $account->update($validated);
+            return redirect()->back()->with('success', 'Account details updated.');
+        }
+
+        // Full update from edit form
         $validated = $request->validate([
-            'name' => 'required|string|max:100',
+            'parent_id' => ['nullable', 'exists:chart_of_accounts,id', Rule::notIn([$account->id])],
             'code' => ['required', 'string', 'max:20', Rule::unique('chart_of_accounts')->ignore($account->id)],
+            'name' => 'required|string|max:100',
+            'type' => ['required', Rule::in(['asset', 'liability', 'equity', 'revenue', 'expense'])],
         ]);
 
         $account->update($validated);
 
-        return redirect()->back()->with('success', 'Account details updated.');
+        return redirect()->route('admin.chart-of-accounts.index')->with('success', 'Account updated successfully.');
     }
 
     /**

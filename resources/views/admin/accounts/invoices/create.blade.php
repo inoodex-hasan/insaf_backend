@@ -47,7 +47,8 @@
         </a>
     </div>
 
-    <form action="{{ route('admin.invoices.store') }}" method="POST" x-data="invoiceForm()" @submit.prevent="submitInvoice">
+    <form action="{{ route('admin.invoices.store') }}" method="POST" x-data="invoiceForm()"
+        @submit.prevent="submitInvoice">
         @csrf
 
         <div class="panel mt-6">
@@ -72,9 +73,10 @@
                     <select name="student_id" id="student_id" class="form-select bg-gray-100 dark:bg-black/20"
                         x-model="selectedStudentId" disabled>
                         <option value="">Select Application First</option>
-                        @foreach($students as $student)
+                        @foreach ($students as $student)
                             <option value="{{ $student->id }}">{{ $student->first_name }} {{ $student->last_name }}
-                                ({{ $student->phone }})</option>
+                                ({{ $student->phone }})
+                            </option>
                         @endforeach
                     </select>
                 </div>
@@ -97,17 +99,18 @@
                             x-text="applicationDetails?.intake || '-'"></span></div>
                     <div><span class="text-white-dark">Application ID:</span> <span class="font-semibold text-primary"
                             x-text="applicationDetails?.application_id || '-'"></span></div>
-                    <div><span class="text-white-dark">Tuition Fee:</span> <span class="font-semibold"
+                    {{-- <div><span class="text-white-dark">Tuition Fee:</span> <span class="font-semibold"
                             x-text="applicationDetails?.tuition_fee || '-'"></span></div>
                     <div><span class="text-white-dark">Service Charge:</span> <span class="font-semibold"
-                            x-text="applicationDetails?.service_charge || '-'"></span></div>
+                            x-text="applicationDetails?.service_charge || '-'"></span></div> --}}
                 </div>
             </div>
 
             <div class="grid grid-cols-1 gap-5 md:grid-cols-2 mt-5">
                 <div class="form-group">
                     <label for="date">Issue Date <span class="text-danger">*</span></label>
-                    <input type="date" name="date" id="date" class="form-input" required value="{{ date('Y-m-d') }}" />
+                    <input type="date" name="date" id="date" class="form-input" required
+                        value="{{ date('Y-m-d') }}" />
                 </div>
                 <div class="form-group">
                     <label for="due_date">Due Date <span class="text-danger">*</span></label>
@@ -123,9 +126,21 @@
             </div>
         </div>
 
-        @if($errors->has('msg'))
-            <div class="mt-4 p-4 border border-danger bg-danger/5 text-danger rounded flex items-center gap-3 animate-shake">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        @if ($errors->any())
+            <div class="mt-4 p-4 border border-danger bg-danger/5 text-danger rounded">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
+        @if ($errors->has('msg'))
+            <div
+                class="mt-4 p-4 border border-danger bg-danger/5 text-danger rounded flex items-center gap-3 animate-shake">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="2">
                     <path
                         d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                 </svg>
@@ -145,7 +160,8 @@
                             <th class="p-3 text-left uppercase text-[10px] tracking-widest">Service Description</th>
                             <th class="p-3 text-right w-24 uppercase text-[10px] tracking-widest">Qty</th>
                             <th class="p-3 text-right w-32 uppercase text-[10px] tracking-widest">Amount</th>
-                            <th class="p-3 text-right w-40 uppercase text-[10px] tracking-widest text-primary">Subtotal</th>
+                            <th class="p-3 text-right w-40 uppercase text-[10px] tracking-widest text-primary">Subtotal
+                            </th>
                             <th class="p-3 w-10"></th>
                         </tr>
                     </thead>
@@ -156,15 +172,17 @@
                                     <select :name="`items[${index}][chart_of_account_id]`"
                                         class="form-select text-xs font-bold" x-model="item.chart_of_account_id" required>
                                         <option value="">Select Ledger</option>
-                                        @foreach($accounts as $account)
-                                            <option value="{{ $account->id }}">{{ $account->code }} - {{ $account->name }}
+                                        @foreach ($accounts as $account)
+                                            <option value="{{ $account->id }}">{{ $account->code }} -
+                                                {{ $account->name }}
                                             </option>
                                         @endforeach
                                     </select>
                                 </td>
                                 <td class="p-2">
-                                    <input type="text" :name="`items[${index}][description]`" class="form-input text-xs"
-                                        x-model="item.description" placeholder="Brief details about service..." required />
+                                    <input type="text" :name="`items[${index}][description]`"
+                                        class="form-input text-xs" x-model="item.description"
+                                        placeholder="Brief details about service..." required />
                                 </td>
                                 <td class="p-2">
                                     <input type="number" :name="`items[${index}][quantity]`" step="1"
@@ -172,17 +190,17 @@
                                         @input="calculateTotals" required min="1" />
                                 </td>
                                 <td class="p-2">
-                                    <input type="number" :name="`items[${index}][amount]`" step="0.01"
+                                    <input type="number" :name="`items[${index}][unit_price]`" step="0.01"
                                         class="form-input text-right text-xs font-mono font-bold"
-                                        x-model.number="item.amount" @input="calculateTotals" required />
+                                        x-model.number="item.unit_price" @input="calculateTotals" required />
                                 </td>
                                 <td class="p-2 text-right font-black font-mono text-primary"
-                                    x-text="formatCurrency(item.amount)"></td>
+                                    x-text="formatCurrency(item.unit_price * item.quantity)"></td>
                                 <td class="p-2 text-center text-danger">
                                     <button type="button" @click="removeItem(index)"
                                         class="hover:text-danger/70 transition-all" x-show="items.length > 1">
-                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                            stroke-width="2">
+                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                            stroke="currentColor" stroke-width="2">
                                             <circle cx="12" cy="12" r="10" opacity="0.2" />
                                             <path d="M15 9l-6 6M9 9l6 6" />
                                         </svg>
@@ -193,7 +211,8 @@
                     </tbody>
                     <tfoot class="bg-primary/5">
                         <tr class="font-black text-2xl border-t-4 border-primary">
-                            <td colspan="4" class="p-5 text-right uppercase text-[10px] tracking-[4px] text-white-dark">
+                            <td colspan="4"
+                                class="p-5 text-right uppercase text-[10px] tracking-[4px] text-white-dark">
                                 Grand Invoice Total:</td>
                             <td class="p-5 text-right text-primary font-mono tracking-tighter"
                                 x-text="formatCurrency(grandTotal)"></td>
@@ -206,7 +225,8 @@
             <div class="mt-8 flex flex-wrap justify-between items-center gap-4">
                 <button type="button" @click="addItem"
                     class="btn btn-outline-primary flex items-center gap-2 text-xs font-bold uppercase transition-transform hover:scale-105 active:scale-95">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="3">
                         <path d="M12 5v14M5 12h14" />
                     </svg>
                     New Item
@@ -216,9 +236,8 @@
                     <button type="reset" @click="window.location.reload()"
                         class="btn btn-outline-danger uppercase text-[10px] font-bold">Reset</button>
                     <button type="submit"
-                        class="btn btn-primary px-16 uppercase text-xs font-black shadow-[0_10px_20px_-10px_rgba(67,97,238,0.44)]"
-                        :disabled="grandTotal <= 0">
-                        Post & Print Invoice
+                        class="btn btn-primary px-16 uppercase text-xs font-black shadow-[0_10px_20px_-10px_rgba(67,97,238,0.44)]">
+                        Print Invoice
                     </button>
                 </div>
             </div>
@@ -231,21 +250,28 @@
     <script>
         function invoiceForm() {
             return {
-                items: [
-                    { chart_of_account_id: '', description: '', quantity: 1, unit_price: 0 }
-                ],
+                items: [{
+                    chart_of_account_id: '',
+                    description: '',
+                    quantity: 1,
+                    unit_price: 0
+                }],
                 grandTotal: 0,
-                selectedApplication: '{{ $selectedApplication ? $selectedApplication->id : "" }}',
-                selectedStudentId: '{{ $selectedApplication ? $selectedApplication->student_id : "" }}',
-                applicationDetails: {!! json_encode($selectedApplication ? [
-        'application_id' => $selectedApplication->application_id,
-        'university' => $selectedApplication->university->name ?? '',
-        'course' => $selectedApplication->course->name ?? '',
-        'intake' => $selectedApplication->intake->intake_name ?? '',
-        'tuition_fee' => number_format($selectedApplication->tuition_fee ?? 0, 2, '.', ''),
-        'service_charge' => number_format($selectedApplication->service_charge ?? 0, 2, '.', ''),
-        'id' => $selectedApplication->id
-    ] : null) !!},
+                selectedApplication: '{{ $selectedApplication ? $selectedApplication->id : '' }}',
+                selectedStudentId: '{{ $selectedApplication ? $selectedApplication->student_id : '' }}',
+                applicationDetails: {!! json_encode(
+                    $selectedApplication
+                        ? [
+                            'application_id' => $selectedApplication->application_id,
+                            'university' => $selectedApplication->university->name ?? '',
+                            'course' => $selectedApplication->course->name ?? '',
+                            'intake' => $selectedApplication->intake->intake_name ?? '',
+                            'tuition_fee' => number_format($selectedApplication->tuition_fee ?? 0, 2, '.', ''),
+                            'service_charge' => number_format($selectedApplication->service_charge ?? 0, 2, '.', ''),
+                            'id' => $selectedApplication->id,
+                        ]
+                        : null,
+                ) !!},
 
                 init() {
                     this.initNiceSelect();
@@ -306,14 +332,24 @@
                                 });
                             }
                             if (this.items.length === 0) {
-                                this.items.push({ chart_of_account_id: '', description: '', quantity: 1, unit_price: 0 });
+                                this.items.push({
+                                    chart_of_account_id: '',
+                                    description: '',
+                                    quantity: 1,
+                                    unit_price: 0
+                                });
                             }
                             this.calculateTotals();
                         });
                 },
 
                 addItem() {
-                    this.items.push({ chart_of_account_id: '', description: '', quantity: 1, unit_price: 0 });
+                    this.items.push({
+                        chart_of_account_id: '',
+                        description: '',
+                        quantity: 1,
+                        unit_price: 0
+                    });
                 },
 
                 removeItem(index) {
@@ -322,11 +358,15 @@
                 },
 
                 calculateTotals() {
-                    this.grandTotal = this.items.reduce((sum, item) => sum + (parseFloat(item.quantity) * parseFloat(item.unit_price) || 0), 0);
+                    this.grandTotal = this.items.reduce((sum, item) => sum + (parseFloat(item.quantity) * parseFloat(item
+                        .unit_price) || 0), 0);
                 },
 
                 formatCurrency(val) {
-                    return new Intl.NumberFormat('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(val);
+                    return new Intl.NumberFormat('en-US', {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2
+                    }).format(val);
                 },
 
                 submitInvoice() {

@@ -21,7 +21,8 @@
             <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
                 <div class="form-group">
                     <label for="name">Period Name</label>
-                    <input type="text" name="name" id="name" class="form-input" placeholder="e.g. FY 2026-27" value="{{ old('name') }}" required>
+                    <input type="text" name="name" id="name" class="form-input" placeholder="e.g. FY 2026-27"
+                        value="{{ old('name') }}" required>
                     @error('name')
                         <span class="text-danger text-xs mt-1">{{ $message }}</span>
                     @enderror
@@ -29,7 +30,8 @@
                 <div class="form-group">
                     <label for="type">Period Type</label>
                     <select name="type" id="type" class="form-select" required>
-                        <option value="fiscal_year" {{ old('type') == 'fiscal_year' ? 'selected' : '' }}>Fiscal Year</option>
+                        <option value="fiscal_year" {{ old('type') == 'fiscal_year' ? 'selected' : '' }}>Fiscal Year
+                        </option>
                         <option value="monthly" {{ old('type') == 'monthly' ? 'selected' : '' }}>Monthly</option>
                         <option value="quarterly" {{ old('type') == 'quarterly' ? 'selected' : '' }}>Quarterly</option>
                     </select>
@@ -39,14 +41,16 @@
                 </div>
                 <div class="form-group">
                     <label for="start_date">Start Date</label>
-                    <input type="date" name="start_date" id="start_date" class="form-input" value="{{ old('start_date') }}" required>
+                    <input type="date" name="start_date" id="start_date" class="form-input"
+                        value="{{ old('start_date') }}" required>
                     @error('start_date')
                         <span class="text-danger text-xs mt-1">{{ $message }}</span>
                     @enderror
                 </div>
                 <div class="form-group">
                     <label for="end_date">End Date</label>
-                    <input type="date" name="end_date" id="end_date" class="form-input" value="{{ old('end_date') }}" required>
+                    <input type="date" name="end_date" id="end_date" class="form-input" value="{{ old('end_date') }}"
+                        required>
                     @error('end_date')
                         <span class="text-danger text-xs mt-1">{{ $message }}</span>
                     @enderror

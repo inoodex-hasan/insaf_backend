@@ -14,11 +14,6 @@ use Illuminate\Support\Facades\DB;
 
 class InvoiceController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('can:*accountant')->only(['destroy']);
-    }
-
     /**
      * Display a listing of the invoices.
      */

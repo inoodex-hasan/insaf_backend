@@ -180,9 +180,10 @@ Route::prefix('dashboard/accounting-periods')->name('admin.accounting-periods.')
 // Chart of Accounts
 Route::prefix('dashboard/chart-of-accounts')->name('admin.chart-of-accounts.')->group(function () {
     Route::get('/', [App\Http\Controllers\Admin\ChartOfAccountController::class, 'index'])->name('index')->middleware('can:*accountant');
+    Route::get('/{account}/edit', [App\Http\Controllers\Admin\ChartOfAccountController::class, 'edit'])->name('edit')->middleware('can:*accountant');
     Route::post('/', [App\Http\Controllers\Admin\ChartOfAccountController::class, 'store'])->name('store')->middleware('can:*accountant');
-    Route::put('{account}', [App\Http\Controllers\Admin\ChartOfAccountController::class, 'update'])->name('update')->middleware('can:*accountant');
     Route::post('{account}/status', [App\Http\Controllers\Admin\ChartOfAccountController::class, 'toggleStatus'])->name('status')->middleware('can:*accountant');
+    Route::put('{account}', [App\Http\Controllers\Admin\ChartOfAccountController::class, 'update'])->name('update')->middleware('can:*accountant');
     Route::delete('{account}', [App\Http\Controllers\Admin\ChartOfAccountController::class, 'destroy'])->name('destroy')->middleware('can:*accountant');
 });
 

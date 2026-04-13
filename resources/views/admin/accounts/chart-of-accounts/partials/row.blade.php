@@ -39,27 +39,33 @@
     </td>
     <td class="text-center">
         <div class="flex items-center justify-center gap-2">
+            <!-- Edit -->
+            <a href="{{ route('admin.chart-of-accounts.edit', $account) }}"
+                class="btn btn-sm btn-outline-primary text-[10px]">
+                Edit
+            </a>
+
             <!-- Toggle Status -->
-            <form action="{{ route('admin.chart-of-accounts.status', $account) }}" method="POST" class="w-full">
+            <form action="{{ route('admin.chart-of-accounts.status', $account) }}" method="POST">
                 @csrf
                 <button type="submit"
-                    class="btn btn-sm {{ $account->is_active ? 'btn-outline-warning' : 'btn-outline-success' }} w-full text-[10px]">
+                    class="btn btn-sm {{ $account->is_active ? 'btn-outline-warning' : 'btn-outline-success' }} text-[10px]">
                     {{ $account->is_active ? 'Disable' : 'Activate' }}
                 </button>
             </form>
 
             @if (!$account->is_default)
                 <!-- Delete -->
-                <form action="{{ route('admin.chart-of-accounts.destroy', $account) }}" method="POST" class="w-full"
+                <form action="{{ route('admin.chart-of-accounts.destroy', $account) }}" method="POST"
                     onsubmit="return confirm('Deleting this head is irreversible. Continue?')">
                     @csrf
                     @method('DELETE')
-                    <button type="submit" class="btn btn-sm btn-outline-danger w-full text-[10px]">
+                    <button type="submit" class="btn btn-sm btn-outline-danger text-[10px]">
                         Delete
                     </button>
                 </form>
             @else
-                <span class="text-[10px] text-blue-500 font-bold px-1 italic">System Default</span>
+                <span class="text-[10px] text-blue-500 font-bold px-1 italic">System</span>
             @endif
         </div>
     </td>
