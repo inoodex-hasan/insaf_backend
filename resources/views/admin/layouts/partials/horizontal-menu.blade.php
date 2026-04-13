@@ -426,6 +426,7 @@
                     <li><a href="{{ route('admin.chart-of-accounts.index') }}">Chart of Accounts</a></li>
                     <li><a href="{{ route('admin.journal-entries.index') }}">Journal Vouchers</a></li>
                     <li><a href="{{ route('admin.invoices.index') }}">Student Invoices</a></li>
+                    <li><a href="{{ route('admin.bank-reconciliations.index') }}">Bank Reconciliation</a></li>
                 </ul>
             </li>
         @endcan

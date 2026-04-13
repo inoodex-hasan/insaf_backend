@@ -12,7 +12,7 @@ class BankReconciliationItem extends Model
 
     protected $fillable = [
         'reconciliation_id',
-        'journal_entry_id',
+        'journal_entry_item_id',
         'bank_statement_ref',
         'amount',
         'type',
@@ -30,9 +30,9 @@ class BankReconciliationItem extends Model
         return $this->belongsTo(BankReconciliation::class, 'reconciliation_id');
     }
 
-    public function journalEntry(): BelongsTo
+    public function journalEntryItem(): BelongsTo
     {
-        return $this->belongsTo(JournalEntry::class);
+        return $this->belongsTo(JournalEntryItem::class, 'journal_entry_item_id');
     }
 
     public function matchedBy(): BelongsTo

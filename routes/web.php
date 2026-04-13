@@ -207,6 +207,17 @@ Route::prefix('dashboard/invoices')->name('admin.invoices.')->group(function () 
     Route::delete('{invoice}', [App\Http\Controllers\Admin\InvoiceController::class, 'destroy'])->name('destroy')->middleware('can:*accountant');
 });
 
+Route::prefix('dashboard/bank-reconciliations')->name('admin.bank-reconciliations.')->middleware(['auth'])->group(function () {
+    Route::get('/', [App\Http\Controllers\Admin\BankReconciliationController::class, 'index'])->name('index');
+    Route::get('/create', [App\Http\Controllers\Admin\BankReconciliationController::class, 'create'])->name('create');
+    Route::post('/', [App\Http\Controllers\Admin\BankReconciliationController::class, 'store'])->name('store');
+    Route::get('/{reconciliation}', [App\Http\Controllers\Admin\BankReconciliationController::class, 'show'])->name('show');
+    Route::post('/{reconciliation}/match', [App\Http\Controllers\Admin\BankReconciliationController::class, 'matchItem'])->name('match');
+    Route::post('/{reconciliation}/unmatch', [App\Http\Controllers\Admin\BankReconciliationController::class, 'unmatchItem'])->name('unmatch');
+    Route::post('/{reconciliation}/close', [App\Http\Controllers\Admin\BankReconciliationController::class, 'close'])->name('close');
+    Route::delete('/{reconciliation}', [App\Http\Controllers\Admin\BankReconciliationController::class, 'destroy'])->name('destroy');
+});
+
 // Financial Reports
 Route::prefix('dashboard/reports')->name('admin.reports.')->group(function () {
     Route::get('/summary', [App\Http\Controllers\Admin\ReportController::class, 'summary'])->name('summary')->middleware('can:*accountant');

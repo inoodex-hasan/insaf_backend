@@ -32,4 +32,16 @@ class JournalEntryItem extends Model
     {
         return $this->belongsTo(ChartOfAccount::class);
     }
+
+    public function reconciliationItems()
+    {
+        return $this->hasMany(BankReconciliationItem::class, 'journal_entry_item_id');
+    }
+
+    public function isReconciled(): bool
+    {
+        return $this->reconciliationItems()->whereHas('reconciliation', function($q) {
+            $q->where('status', 'closed');
+        })->exists();
+    }
 }
