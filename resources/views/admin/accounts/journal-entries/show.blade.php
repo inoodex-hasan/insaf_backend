@@ -5,8 +5,15 @@
 @push('styles')
     <style>
         @media print {
-            .print\:hidden { display: none !important; }
-            .panel { border: 0 !important; box-shadow: none !important; margin: 0 !important; }
+            .print\:hidden {
+                display: none !important;
+            }
+
+            .panel {
+                border: 0 !important;
+                box-shadow: none !important;
+                margin: 0 !important;
+            }
         }
     </style>
 @endpush
@@ -17,11 +24,13 @@
         <div class="flex gap-2 text-xs">
             <button onclick="window.print()" class="btn btn-outline-primary gap-2 font-bold uppercase">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M17 17h2a2 2 0 0 0 2-2v-4a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v4a2 2 0 0 0 2 2h2m2 4h6a2 2 0 0 0 2-2v-4a2 2 0 0 0-2-2H9a2 2 0 0 0-2 2v4a2 2 0 0 0 2 2zM17 9V5a2 2 0 0 0-2-2H9a2 2 0 0 0-2 2v4" />
+                    <path
+                        d="M17 17h2a2 2 0 0 0 2-2v-4a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v4a2 2 0 0 0 2 2h2m2 4h6a2 2 0 0 0 2-2v-4a2 2 0 0 0-2-2H9a2 2 0 0 0-2 2v4a2 2 0 0 0 2 2zM17 9V5a2 2 0 0 0-2-2H9a2 2 0 0 0-2 2v4" />
                 </svg>
                 Print
             </button>
-            <a href="{{ route('admin.journal-entries.index') }}" class="btn btn-secondary font-bold uppercase">Back to List</a>
+            <a href="{{ route('admin.journal-entries.index') }}" class="btn btn-secondary font-bold uppercase">Back to
+                List</a>
         </div>
     </div>
 
@@ -33,14 +42,18 @@
                 @if(get_setting('app_logo'))
                     <img src="{{ asset('storage/' . get_setting('app_logo')) }}" alt="Logo" class="h-14 w-auto" />
                 @else
-                    <div class="p-3 bg-primary text-white rounded-xl font-black text-2xl uppercase tracking-tighter shadow-md">INS</div>
+                    <div class="p-3 bg-primary text-white rounded-xl font-black text-2xl uppercase tracking-tighter shadow-md">
+                        INS</div>
                 @endif
                 <div>
-                    <h4 class="text-2xl font-black uppercase text-primary tracking-tight">{{ get_setting('app_name', 'Insaf Education') }}</h4>
-                    <p class="text-[10px] text-white-dark font-bold tracking-[3px] uppercase mt-0.5">Consultancy & Agency</p>
+                    <h4 class="text-2xl font-black uppercase text-primary tracking-tight">
+                        {{ get_setting('app_name', 'Insaf Education') }}</h4>
+                    <p class="text-[10px] text-white-dark font-bold tracking-[3px] uppercase mt-0.5">Consultancy & Agency
+                    </p>
                 </div>
             </div>
-            <div class="text-right mt-4 md:mt-0 font-medium text-[10px] tracking-wide text-white-dark flex flex-col justify-end leading-relaxed">
+            <div
+                class="text-right mt-4 md:mt-0 font-medium text-[10px] tracking-wide text-white-dark flex flex-col justify-end leading-relaxed">
                 <p>Haque Tower (Opposite of BRB Hospital), Floor - 6, Panthapath, </p>
                 <p>Dhaka-1205, Bangladesh</p>
                 <p class="text-primary font-bold mt-1">insafimmigration@gmail.com</p>
@@ -54,14 +67,27 @@
                 <div>
                     <p class="text-[10px] text-white-dark font-bold uppercase tracking-[4px] mb-2">Voucher Prepared By:</p>
                     <h4 class="text-xl font-black text-dark dark:text-white-light">{{ $entry->creator->name }}</h4>
-                    <p class="text-xs font-mono font-bold text-primary bg-primary/5 inline-block px-2 py-0.5 rounded mt-1">Accounts Dept.</p>
+                    <p class="text-xs font-mono font-bold text-primary bg-primary/5 inline-block px-2 py-0.5 rounded mt-1">
+                        Accounts Dept.</p>
                 </div>
 
                 <div class="grid grid-cols-2 gap-3">
                     <div>
-                        <p class="text-[10px] text-white-dark font-bold uppercase tracking-widest mb-0.5">Accounting Period</p>
+                        <p class="text-[10px] text-white-dark font-bold uppercase tracking-widest mb-0.5">Accounting Period
+                        </p>
                         <p class="text-sm font-bold text-primary">{{ $entry->period->name }}</p>
                     </div>
+                    @if($entry->application)
+                        <div>
+                            <p class="text-[10px] text-white-dark font-bold uppercase tracking-widest mb-0.5">Related
+                                Application</p>
+                            <a href="{{ route('admin.applications.show', $entry->application) }}"
+                                class="text-sm font-bold text-primary hover:underline">
+                                {{ $entry->application->student->first_name }} {{ $entry->application->student->last_name }}
+                                <span class="block text-[10px] text-white-dark">{{ $entry->application->application_id }}</span>
+                            </a>
+                        </div>
+                    @endif
                 </div>
             </div>
 
@@ -78,7 +104,8 @@
                     </div>
                     <div>
                         <p class="text-[10px] font-bold text-white-dark uppercase tracking-widest mb-0.5">Status</p>
-                        <span class="badge badge-outline-success text-[10px] font-black uppercase">{{ $entry->status }}</span>
+                        <span
+                            class="badge badge-outline-success text-[10px] font-black uppercase">{{ $entry->status }}</span>
                     </div>
                 </div>
             </div>
@@ -99,7 +126,8 @@
                         <tr class="border-b border-white-light/50 dark:border-white-light/10 hover:bg-primary/5 transition-all">
                             <td class="p-4">
                                 <span class="font-bold text-sm text-primary block leading-none mb-1">
-                                    <span class="text-[10px] text-white-dark font-mono bg-white-dark/5 px-1 mr-1 rounded">{{ $item->chartOfAccount->code }}</span>
+                                    <span
+                                        class="text-[10px] text-white-dark font-mono bg-white-dark/5 px-1 mr-1 rounded">{{ $item->chartOfAccount->code }}</span>
                                     {{ $item->chartOfAccount->name }}
                                 </span>
                                 <span class="text-xs text-white-dark italic">{{ $item->description }}</span>
@@ -115,7 +143,8 @@
                 </tbody>
                 <tfoot>
                     <tr class="bg-primary">
-                        <td class="p-5 text-right uppercase text-xs font-bold tracking-[6px] text-black border-r border-black/5 rounded-bl-lg">
+                        <td
+                            class="p-5 text-right uppercase text-xs font-bold tracking-[6px] text-black border-r border-black/5 rounded-bl-lg">
                             Voucher Totals:</td>
                         <td class="p-5 text-right text-black font-black text-2xl font-mono border-r border-black/5">
                             {{ number_format($entry->items->sum('debit'), 2) }}
@@ -133,7 +162,8 @@
             <div>
                 @if($entry->note)
                     <div class="p-5 bg-primary/5 border-l-4 border-primary rounded-r-xl">
-                        <p class="text-[10px] font-bold uppercase tracking-[3px] text-primary mb-2 opacity-60">Narration / Remarks:</p>
+                        <p class="text-[10px] font-bold uppercase tracking-[3px] text-primary mb-2 opacity-60">Narration /
+                            Remarks:</p>
                         <p class="text-sm text-white-dark leading-relaxed italic">"{{ $entry->note }}"</p>
                     </div>
                 @endif

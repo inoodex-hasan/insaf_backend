@@ -21,7 +21,8 @@
                 <thead>
                     <tr>
                         <th>Transaction Date</th>
-                        <th>JV Reference #</th>
+                        <th>Reference #</th>
+                        <th>Student</th>
                         <th>Period</th>
                         <th>Voucher Amount</th>
                         <th>Posted By</th>
@@ -34,6 +35,19 @@
                             <td class="whitespace-nowrap text-xs font-semibold">{{ $entry->date->format('M d, Y') }}</td>
                             <td class="font-bold underline text-primary">
                                 <a href="{{ route('admin.journal-entries.show', $entry) }}">{{ $entry->reference_number }}</a>
+                            </td>
+                            <td class="font-xs">
+                                @if($entry->application)
+                                    <div class="flex flex-col">
+                                        <span
+                                            class="font-bold text-black dark:text-white">{{ $entry->application->student->first_name }}
+                                            {{ $entry->application->student->last_name }}</span>
+                                        <span
+                                            class="text-[10px] text-gray-500 uppercase">{{ $entry->application->application_id }}</span>
+                                    </div>
+                                @else
+                                    <span class="text-gray-400 italic text-[11px]">General Entry</span>
+                                @endif
                             </td>
                             <td>
                                 <span
@@ -56,7 +70,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="6" class="text-center text-gray-400 py-16">
+                            <td colspan="7" class="text-center text-gray-400 py-16">
                                 <div class="flex flex-col items-center">
                                     <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                         stroke-width="1" opacity="0.2">

@@ -23,8 +23,7 @@
             <div class="grid grid-cols-1 gap-5 md:grid-cols-4">
                 <div class="form-group">
                     <label for="date">Voucher Date <span class="text-danger">*</span></label>
-                    <input type="date" name="date" id="date" class="form-input" required
-                        value="{{ date('Y-m-d') }}" />
+                    <input type="date" name="date" id="date" class="form-input" required value="{{ date('Y-m-d') }}" />
                     @error('date')
                         <span class="text-danger text-xs">{{ $message }}</span>
                     @enderror
@@ -46,6 +45,20 @@
                     <input type="text" name="reference_number" id="reference_number" class="form-input"
                         placeholder="Auto-generated" />
                 </div>
+                <div class="form-group">
+                    <label for="application_id">Related Application (Optional)</label>
+                    <select name="application_id" id="application_id" class="form-select">
+                        <option value="">No Application / General Context</option>
+                        @foreach ($applications as $app)
+                            <option value="{{ $app->id }}" {{ request('application_id') == $app->id ? 'selected' : '' }}>
+                                {{ $app->application_id }} - {{ $app->student->first_name }} {{ $app->student->last_name }}
+                            </option>
+                        @endforeach
+                    </select>
+                    @error('application_id')
+                        <span class="text-danger text-xs">{{ $message }}</span>
+                    @enderror
+                </div>
             </div>
 
             <div class="mt-5">
@@ -57,8 +70,7 @@
 
         @if ($errors->has('msg'))
             <div class="mt-4 p-4 border border-danger bg-danger/5 text-danger rounded flex items-center gap-3">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                    stroke-width="2">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <circle cx="12" cy="12" r="10" />
                     <line x1="12" y1="8" x2="12" y2="12" />
                     <line x1="12" y1="16" x2="12.01" y2="16" />
@@ -111,8 +123,8 @@
                             <td class="p-2 text-center">
                                 <button type="button" @click="removeItem(index)" class="text-danger hover:opacity-70"
                                     x-show="items.length > 2">
-                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
-                                        stroke="currentColor" stroke-width="2">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2">
                                         <line x1="18" y1="6" x2="6" y2="18"></line>
                                         <line x1="6" y1="6" x2="18" y2="18"></line>
                                     </svg>
@@ -135,8 +147,8 @@
                             <div class="flex items-center justify-center gap-2">
                                 <span x-text="formatCurrency(difference)"></span>
                                 <template x-if="difference === 0 && totalDebit > 0">
-                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
-                                        stroke="currentColor" stroke-width="3">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="3">
                                         <polyline points="20 6 9 17 4 12"></polyline>
                                     </svg>
                                 </template>
@@ -151,8 +163,7 @@
 
             <div class="mt-6 flex flex-wrap justify-between items-center gap-4">
                 <button type="button" @click="addItem" class="btn btn-outline-info flex items-center gap-2">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                        stroke-width="2">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <line x1="12" y1="5" x2="12" y2="19"></line>
                         <line x1="5" y1="12" x2="19" y2="12"></line>
                     </svg>
@@ -160,8 +171,7 @@
                 </button>
 
                 <div class="flex gap-4">
-                    <button type="reset" @click="window.location.reload()"
-                        class="btn btn-outline-danger">Discard</button>
+                    <button type="reset" @click="window.location.reload()" class="btn btn-outline-danger">Discard</button>
                     <button type="submit" class="btn btn-primary px-12" :disabled="difference !== 0 || totalDebit === 0">
                         Post Voucher
                     </button>
@@ -176,17 +186,17 @@
         function journalForm() {
             return {
                 items: [{
-                        chart_of_account_id: '',
-                        description: '',
-                        debit: 0,
-                        credit: 0
-                    },
-                    {
-                        chart_of_account_id: '',
-                        description: '',
-                        debit: 0,
-                        credit: 0
-                    }
+                    chart_of_account_id: '',
+                    description: '',
+                    debit: 0,
+                    credit: 0
+                },
+                {
+                    chart_of_account_id: '',
+                    description: '',
+                    debit: 0,
+                    credit: 0
+                }
                 ],
                 totalDebit: 0,
                 totalCredit: 0,

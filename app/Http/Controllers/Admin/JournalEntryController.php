@@ -7,6 +7,7 @@ use App\Models\JournalEntry;
 use App\Models\JournalEntryItem;
 use App\Models\ChartOfAccount;
 use App\Models\AccountingPeriod;
+use App\Models\Application;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -23,7 +24,7 @@ class JournalEntryController extends Controller
      */
     public function index()
     {
-        $entries = JournalEntry::with(['period', 'creator'])
+        $entries = JournalEntry::with(['period', 'creator', 'application.student'])
             ->withSum('items as total_amount', 'debit')
             ->orderBy('date', 'desc')
             ->orderBy('id', 'desc')
@@ -41,8 +42,9 @@ class JournalEntryController extends Controller
         $periods = AccountingPeriod::where('status', 'open')
             ->orderBy('start_date', 'desc')
             ->get();
+        $applications = Application::with('student')->latest()->get();
 
-        return view('admin.accounts.journal-entries.create', compact('accounts', 'periods'));
+        return view('admin.accounts.journal-entries.create', compact('accounts', 'periods', 'applications'));
     }
 
     /**
@@ -53,6 +55,7 @@ class JournalEntryController extends Controller
         $request->validate([
             'date' => 'required|date',
             'period_id' => 'required|exists:accounting_periods,id',
+            'application_id' => 'nullable|exists:applications,id',
             'reference_number' => 'nullable|string|max:50',
             'note' => 'nullable|string',
             'items' => 'required|array|min:2',
@@ -82,6 +85,7 @@ class JournalEntryController extends Controller
 
             $entry = JournalEntry::create([
                 'period_id' => $request->period_id,
+                'application_id' => $request->application_id,
                 'date' => $request->date,
                 'reference_number' => $request->reference_number ?? 'JV-' . date('Ymd') . '-' . strtoupper(bin2hex(random_bytes(2))),
                 'note' => $request->note,
@@ -118,7 +122,7 @@ class JournalEntryController extends Controller
      */
     public function show(JournalEntry $entry)
     {
-        $entry->load(['items.chartOfAccount', 'period', 'creator']);
+        $entry->load(['items.chartOfAccount', 'period', 'creator', 'application.student']);
         return view('admin.accounts.journal-entries.show', compact('entry'));
     }
 

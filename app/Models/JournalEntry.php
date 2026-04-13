@@ -13,6 +13,7 @@ class JournalEntry extends Model
 
     protected $fillable = [
         'period_id',
+        'application_id',
         'date',
         'reference_number',
         'note',
@@ -27,6 +28,11 @@ class JournalEntry extends Model
     public function period(): BelongsTo
     {
         return $this->belongsTo(AccountingPeriod::class, 'period_id');
+    }
+
+    public function application(): BelongsTo
+    {
+        return $this->belongsTo(Application::class);
     }
 
     public function items(): HasMany
