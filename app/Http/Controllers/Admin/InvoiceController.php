@@ -14,11 +14,18 @@ use Illuminate\Support\Facades\DB;
 
 class InvoiceController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('can:*accountant')->only(['destroy']);
+    }
+
     /**
      * Display a listing of the invoices.
      */
     public function index()
     {
+        $this->authorize('*consultant|*application|*accountant');
+
         $invoices = Invoice::with(['student', 'application', 'university'])
             ->orderBy('date', 'desc')
             ->orderBy('id', 'desc')
@@ -32,6 +39,7 @@ class InvoiceController extends Controller
      */
     public function create(Request $request)
     {
+        $this->authorize('*consultant|*application|*accountant');
         $students = Student::orderBy('first_name')->get();
         $accounts = ChartOfAccount::where('is_active', true)->orderBy('code')->get();
         $applications = Application::with(['student', 'university', 'course', 'intake'])->orderBy('id', 'desc')->get();
@@ -49,6 +57,7 @@ class InvoiceController extends Controller
      */
     public function store(Request $request)
     {
+        $this->authorize('*consultant|*application|*accountant');
         $request->validate([
             'application_id' => 'required|exists:applications,id',
             'date' => 'required|date',
