@@ -41,7 +41,7 @@ class BankReconciliationController extends Controller
         ]);
 
         $account = OfficeAccount::find($request->account_id);
-        
+
         // System balance is opening balance + sum of all matched credits - sum of all matched debits
         // Initially we set it to current balance as a reference
         $systemBalance = $account->remaining_balance;
@@ -52,7 +52,7 @@ class BankReconciliationController extends Controller
             'statement_balance' => $request->statement_balance,
             'system_balance' => $systemBalance,
             'difference' => $request->statement_balance - $systemBalance,
-            'status' => 'open',
+            'status' => 'draft',
         ]);
 
         return redirect()->route('admin.bank-reconciliations.show', $reconciliation);
@@ -61,15 +61,15 @@ class BankReconciliationController extends Controller
     public function show(BankReconciliation $reconciliation)
     {
         $reconciliation->load(['account.chartOfAccount', 'items.journalEntryItem.journalEntry']);
-        
+
         // Find all unreconciled transactions for this account's ledger
         $unreconciledItems = JournalEntryItem::where('chart_of_account_id', $reconciliation->account->chart_of_account_id)
-            ->whereDoesntHave('reconciliationItems', function($query) {
-                $query->whereHas('reconciliation', function($q) {
+            ->whereDoesntHave('reconciliationItems', function ($query) {
+                $query->whereHas('reconciliation', function ($q) {
                     $q->where('status', 'closed');
                 });
             })
-            ->whereDoesntHave('reconciliationItems', function($query) use ($reconciliation) {
+            ->whereDoesntHave('reconciliationItems', function ($query) use ($reconciliation) {
                 $query->where('reconciliation_id', $reconciliation->id);
             })
             ->with('journalEntry')
@@ -96,7 +96,7 @@ class BankReconciliationController extends Controller
                 'matched_at' => now(),
                 'matched_by' => Auth::id(),
             ]);
-            
+
             $this->updateBalances($reconciliation);
         });
 
@@ -143,16 +143,16 @@ class BankReconciliationController extends Controller
         // In a real accounting system, this would be: 
         // Opening Balance (at start of period) + Sum of matched items
         // For simplicity here, we assume opening balance of account is the base.
-        
+
         $matchedSum = $reconciliation->items()->sum('amount');
         $accountOpeningBalance = $reconciliation->account->opening_balance ?? 0;
-        
+
         // We also need to add all PREVIOUSLY CLOSED reconciliation items for this account
-        $previouslyClosedSum = BankReconciliationItem::whereHas('reconciliation', function($q) use ($reconciliation) {
-                $q->where('account_id', $reconciliation->account_id)
-                  ->where('status', 'closed')
-                  ->where('id', '!=', $reconciliation->id);
-            })->sum('amount');
+        $previouslyClosedSum = BankReconciliationItem::whereHas('reconciliation', function ($q) use ($reconciliation) {
+            $q->where('account_id', $reconciliation->account_id)
+                ->where('status', 'closed')
+                ->where('id', '!=', $reconciliation->id);
+        })->sum('amount');
 
         $systemBalance = $accountOpeningBalance + $previouslyClosedSum + $matchedSum;
 
@@ -167,7 +167,7 @@ class BankReconciliationController extends Controller
         if ($reconciliation->status === 'closed') {
             return redirect()->back()->with('error', 'Cannot delete a closed reconciliation.');
         }
-        
+
         $reconciliation->delete();
         return redirect()->route('admin.bank-reconciliations.index')->with('success', 'Draft reconciliation deleted.');
     }

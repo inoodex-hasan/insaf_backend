@@ -19,8 +19,8 @@ class OfficeAccountController extends Controller
         $this->authorize('*accountant');
 
         $query = OfficeAccount::with(['creator'])
-            ->withSum('incomingTransactions as total_income', 'amount')
-            ->withSum('outgoingTransactions as total_expense', 'amount');
+            ->withSum('incomingTransactions as total_income', 'credit')
+            ->withSum('outgoingTransactions as total_expense', 'debit');
 
         if ($search = $request->get('search')) {
             $query->where(function ($q) use ($search) {

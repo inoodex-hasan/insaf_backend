@@ -72,7 +72,7 @@
                             <tr>
                                 <td>{{ $expense->expense_date->format('M d, Y') }}</td>
                                 <td class="font-semibold">{{ $expense->description }}</td>
-                                <td><span class="badge badge-outline-info">{{ $expense->category ?: 'General' }}</span></td>
+                                <td><span class="badge badge-outline-info">{{ $expense->chartOfAccount->name ?? 'General' }}</span></td>
                                 <td class="font-bold text-danger">{{ number_format($expense->amount, 2) }}</td>
                                 <td>{{ $expense->payment_method ?: '-' }}</td>
                                 <td>

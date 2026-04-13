@@ -49,17 +49,17 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="category">Category <span class="text-danger">*</span></label>
-                    <select name="category" id="category" class="form-select" required>
+                    <label for="chart_of_account_id">Category <span class="text-danger">*</span></label>
+                    <select name="chart_of_account_id" id="chart_of_account_id" class="form-select" required>
                         <option value="">Select Category</option>
                         @foreach ($categories as $category)
-                            <option value="{{ $category->name }}"
-                                {{ old('category') == $category->name ? 'selected' : '' }}>
-                                {{ $category->name }}
+                            <option value="{{ $category->id }}"
+                                {{ old('chart_of_account_id') == $category->id ? 'selected' : '' }}>
+                                {{ $category->name }} ({{ $category->code }})
                             </option>
                         @endforeach
                     </select>
-                    @error('category')
+                    @error('chart_of_account_id')
                         <span class="text-danger text-sm">{{ $message }}</span>
                     @enderror
                 </div>

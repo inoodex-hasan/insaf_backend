@@ -37,12 +37,7 @@ class OfficeAccount extends Model
      */
     public function journalEntryItems()
     {
-        return $this->hasManyThrough(
-            JournalEntryItem::class,
-            ChartOfAccount::class,
-            'id',
-            'chart_of_account_id'
-        )->where('chart_of_accounts.office_account_id', $this->id);
+        return $this->hasMany(JournalEntryItem::class, 'chart_of_account_id', 'chart_of_account_id');
     }
 
     protected static function booted()
@@ -62,6 +57,22 @@ class OfficeAccount extends Model
     public function chartOfAccount()
     {
         return $this->belongsTo(ChartOfAccount::class);
+    }
+
+    /**
+     * Relationship for incoming transactions (Credits)
+     */
+    public function incomingTransactions()
+    {
+        return $this->journalEntryItems()->where('journal_entry_items.credit', '>', 0);
+    }
+
+    /**
+     * Relationship for outgoing transactions (Debits)
+     */
+    public function outgoingTransactions()
+    {
+        return $this->journalEntryItems()->where('journal_entry_items.debit', '>', 0);
     }
 
     public function incomingJournalEntries()

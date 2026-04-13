@@ -69,13 +69,14 @@ class ExpenseController extends Controller
     public function create()
     {
         $this->authorize('*accountant');
-        $accounts = ChartOfAccount::where('is_active', true)
+        $categories = ChartOfAccount::where('is_active', true)
             ->where('type', 'expense')
             ->orderBy('code')
             ->get();
-        $officeAccounts = OfficeAccount::where('status', 'active')->get();
-        $pendingsSalaries = Salary::whereIn('payment_status', ['pending', 'partial'])->get();
-        return view('admin.expenses.create', compact('accounts', 'officeAccounts', 'pendingsSalaries'));
+        $accounts = OfficeAccount::where('status', 'active')->get();
+        $pendings_salaries = Salary::whereIn('payment_status', ['pending', 'partial'])->get();
+
+        return view('admin.expenses.create', compact('categories', 'accounts', 'pendings_salaries'));
     }
 
     public function store(Request $request)
@@ -110,12 +111,13 @@ class ExpenseController extends Controller
     public function edit(Expense $expense)
     {
         $this->authorize('*accountant');
-        $accounts = ChartOfAccount::where('is_active', true)
+        $categories = ChartOfAccount::where('is_active', true)
             ->where('type', 'expense')
             ->orderBy('code')
             ->get();
-        $officeAccounts = OfficeAccount::where('status', 'active')->get();
-        return view('admin.expenses.edit', compact('expense', 'accounts', 'officeAccounts'));
+        $accounts = OfficeAccount::where('status', 'active')->get();
+
+        return view('admin.expenses.edit', compact('expense', 'categories', 'accounts'));
     }
 
     public function update(Request $request, Expense $expense)
