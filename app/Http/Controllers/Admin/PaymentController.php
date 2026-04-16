@@ -7,19 +7,11 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 use App\Http\Controllers\Controller;
 use App\Models\{Application, Invoice, OfficeAccount, Payment, Setting, Student, User, JournalEntry, JournalEntryItem, AccountingPeriod, ChartOfAccount};
-use App\Services\CommissionService;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\DB;
 
 class PaymentController extends Controller
 {
-    protected $commissionService;
-
-    public function __construct(CommissionService $commissionService)
-    {
-        $this->commissionService = $commissionService;
-    }
-
     public function index(Request $request)
     {
         $this->authorize('*accountant');
@@ -131,10 +123,6 @@ class PaymentController extends Controller
                 }
             }
 
-            if ($validated['payment_status'] === 'completed') {
-                $this->commissionService->calculateCommissions($payment);
-            }
-
             DB::commit();
             return redirect()
                 ->route('admin.payments.index')
@@ -167,10 +155,6 @@ class PaymentController extends Controller
         $validated['student_id'] = $application->student_id;
 
         $payment->update($validated);
-
-        if ($payment->payment_status === 'completed') {
-            $this->commissionService->calculateCommissions($payment);
-        }
 
         return redirect()
             ->route('admin.payments.index')

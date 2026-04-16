@@ -34,7 +34,6 @@ class User extends Authenticatable
         'bank_name',
         'bank_branch',
         'ifsc_code',
-        'commission_percentage',
     ];
 
     /**

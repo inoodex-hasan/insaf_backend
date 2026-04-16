@@ -37,17 +37,6 @@
                                 :class="{ 'text-primary border-primary': activeTab === 'seo', 'text-gray-500 hover:text-gray-600 dark:text-gray-400 dark:hover:text-gray-300': activeTab !== 'seo' }"
                                 class="inline-block p-4 border-b-2 border-transparent rounded-t-lg">SEO</a>
                         </li> --}}
-                        {{-- <li class="mr-2">
-                            <a href="#" @click.prevent="activeTab = 'commissions'"
-                                :class="{ 'text-primary border-primary': activeTab === 'commissions', 'text-gray-500 hover:text-gray-600 dark:text-gray-400 dark:hover:text-gray-300': activeTab !== 'commissions' }"
-                                class="inline-block p-4 border-b-2 border-transparent rounded-t-lg">Commissions</a>
-                        </li> --}}
-                        <li class="mr-2">
-                            <a href="#" @click.prevent="activeTab = 'marketing_commissions'"
-                                :class="{ 'text-primary border-primary': activeTab === 'marketing_commissions', 'text-gray-500 hover:text-gray-600 dark:text-gray-400 dark:hover:text-gray-300': activeTab !== 'marketing_commissions' }"
-                                class="inline-block p-4 border-b-2 border-transparent rounded-t-lg">Marketing
-                                Commissions</a>
-                        </li>
                     </ul>
 
                     <div class="mt-5">
@@ -177,56 +166,6 @@
                                 </div>
                             </div>
                         </div> --}}
-
-                        <!-- Commissions Tab -->
-
-                        <!-- Marketing Commissions Tab -->
-                        <div x-show="activeTab === 'marketing_commissions'" style="display: none;">
-                            <div class="mb-5">
-                                <h5 class="mb-3 text-base font-semibold">Individual Marketing Employee Commissions</h5>
-                                <p class="mb-4 text-sm text-gray-500">Set individual commission percentages for each
-                                    marketing team member.</p>
-                            </div>
-                            <div class="overflow-x-auto">
-                                <table class="w-full border-collapse">
-                                    <thead>
-                                        <tr class="border-b bg-gray-50 dark:bg-gray-800">
-                                            <th class="px-4 py-3 text-left text-sm font-semibold">Employee Name</th>
-                                            <th class="px-4 py-3 text-left text-sm font-semibold">Email</th>
-                                            <th class="px-4 py-3 text-left text-sm font-semibold">Commission (%)</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @php
-                                            $marketingEmployees = \App\Models\User::query()
-                                                ->whereHas('roles', function ($q) {
-                                                    $q->where('name', 'marketing');
-                                                })
-                                                ->orderBy('name')
-                                                ->get();
-                                        @endphp
-                                        @forelse ($marketingEmployees as $employee)
-                                            <tr class="border-b hover:bg-gray-50 dark:hover:bg-gray-800">
-                                                <td class="px-4 py-3 text-sm">{{ $employee->name }}</td>
-                                                <td class="px-4 py-3 text-sm">{{ $employee->email }}</td>
-                                                <td class="px-4 py-3 text-sm">
-                                                    <input type="number" step="0.01" min="0" max="100"
-                                                        name="employee_commissions[{{ $employee->id }}]"
-                                                        value="{{ $employee->commission_percentage ?? 0 }}"
-                                                        class="form-input w-24 text-sm" />
-                                                </td>
-                                            </tr>
-                                        @empty
-                                            <tr>
-                                                <td colspan="3" class="px-4 py-3 text-center text-sm text-gray-500">
-                                                    No marketing employees found.
-                                                </td>
-                                            </tr>
-                                        @endforelse
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
                     </div>
                 </div>
                 <div class="mt-8">

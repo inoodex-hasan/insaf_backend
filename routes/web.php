@@ -88,8 +88,11 @@ Route::prefix('dashboard/payments')->name('admin.payments.')->group(function () 
 // Commission Management
 Route::prefix('dashboard/commissions')->name('admin.commissions.')->middleware('can:*accountant')->group(function () {
     Route::get('/', [CommissionController::class, 'index'])->name('index');
+    Route::post('application/{application}', [CommissionController::class, 'store'])->name('store');
     Route::post('{commission}/update-status', [CommissionController::class, 'updateStatus'])->name('update-status');
+    Route::delete('{commission}', [CommissionController::class, 'destroy'])->name('destroy');
 });
+
 
 // Role Management Overrides
 Route::prefix('dashboard/roles')->name('tyro-dashboard.roles.')->group(function () {
@@ -273,8 +276,8 @@ Route::prefix('dashboard/applications')->name('admin.applications.')->group(func
     // Route::get('/{application}/invoice', [ApplicationController::class, 'invoice'])->name('invoice')->middleware('can:*consultant|*application');
     // Route::get('/invoices', [ApplicationController::class, 'invoiceIndex'])->name('invoice-index')->middleware('can:*consultant|*application');
     Route::get('/', [ApplicationController::class, 'index'])->name('index')->middleware('can:*consultant|*application');
-    Route::get('/create', [ApplicationController::class, 'create'])->name('create')->middleware('can:*consultant');
-    Route::post('/', [ApplicationController::class, 'store'])->name('store')->middleware('can:*consultant');
+    Route::get('/create', [ApplicationController::class, 'create'])->name('create')->middleware('can:*application|*consultant');
+    Route::post('/', [ApplicationController::class, 'store'])->name('store')->middleware('can:*application|*consultant');
     Route::get('{application}/edit', [ApplicationController::class, 'edit'])->name('edit')->middleware('can:*consultant|*application');
     Route::put('{application}', [ApplicationController::class, 'update'])->name('update')->middleware('can:*consultant|*application');
     Route::delete('{application}', [ApplicationController::class, 'destroy'])->name('destroy')->middleware('can:*consultant');

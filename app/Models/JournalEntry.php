@@ -59,9 +59,4 @@ class JournalEntry extends Model
     {
         return $this->hasMany(Salary::class);
     }
-
-    public function commissions(): HasMany
-    {
-        return $this->hasMany(Commission::class);
-    }
 }

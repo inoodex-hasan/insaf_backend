@@ -132,4 +132,9 @@ class Application extends Model
     {
         return $this->hasMany(VfsChecklist::class);
     }
+
+    public function commissions()
+    {
+        return $this->hasMany(Commission::class);
+    }
 }

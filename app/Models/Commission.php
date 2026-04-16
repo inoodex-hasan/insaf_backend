@@ -2,39 +2,35 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Commission extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'payment_id',
+        'application_id',
         'user_id',
-        'amount',
         'percentage',
+        'amount',
         'status',
-        'journal_entry_id',
+        'notes',
     ];
 
     protected $casts = [
-        'amount' => 'decimal:2',
         'percentage' => 'decimal:2',
+        'amount' => 'decimal:2',
     ];
 
-    public function payment()
+    public function application(): BelongsTo
     {
-        return $this->belongsTo(Payment::class);
+        return $this->belongsTo(Application::class);
     }
 
-    public function user()
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
-    }
-
-    public function journalEntry()
-    {
-        return $this->belongsTo(JournalEntry::class);
     }
 }

@@ -379,6 +379,81 @@
                     </table>
                 </div>
             </div>
+
+            {{-- Commission Section --}}
+            @php
+                $totalPaid = $application->payments->where('payment_status', 'completed')->sum('amount');
+                $existingCommission = $application->commissions->first();
+            @endphp
+            <div class="panel mt-6">
+                <div class="flex items-center justify-between mb-5">
+                    <h5 class="text-lg font-semibold dark:text-white-light uppercase">Commission</h5>
+                    @if($existingCommission)
+                        <span class="badge {{ $existingCommission->status === 'paid' ? 'badge-outline-success' : 'badge-outline-warning' }}">
+                            {{ ucfirst($existingCommission->status) }}
+                        </span>
+                    @endif
+                </div>
+
+                <form action="{{ route('admin.commissions.store', $application) }}" method="POST">
+                    @csrf
+                    <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
+                        <div class="form-group">
+                            <label for="user_id">Commission To</label>
+                            <select name="user_id" id="user_id" class="form-select" required>
+                                <option value="">Select Employee</option>
+                                @foreach(\App\Models\User::orderBy('name')->get() as $user)
+                                    <option value="{{ $user->id }}" {{ $existingCommission && $existingCommission->user_id == $user->id ? 'selected' : '' }}>
+                                        {{ $user->name }} ({{ $user->email }})
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="percentage">Commission Percentage (%)</label>
+                            <input type="number" name="percentage" id="percentage" step="0.01" min="0" max="100"
+                                class="form-input" value="{{ $existingCommission ? $existingCommission->percentage : 0 }}" required />
+                        </div>
+
+                        <div class="form-group">
+                            <label>Calculated Amount</label>
+                            <input type="text" id="calculated_amount" class="form-input bg-gray-100 dark:bg-black/20"
+                                value="BDT {{ number_format($totalPaid, 2) }}" readonly />
+                            <span class="text-xs text-white-dark mt-1">Based on total paid: BDT {{ number_format($totalPaid, 2) }}</span>
+                        </div>
+
+                        <div class="form-group md:col-span-3">
+                            <label for="commission_notes">Notes</label>
+                            <textarea name="notes" id="commission_notes" class="form-input" rows="2"
+                                placeholder="Optional notes...">{{ $existingCommission ? $existingCommission->notes : '' }}</textarea>
+                        </div>
+                    </div>
+
+                    @if($existingCommission)
+                        <div class="mt-4 flex items-center justify-between">
+                            <div class="text-sm">
+                                <span class="font-semibold">Commission Amount:</span>
+                                BDT {{ number_format($existingCommission->amount, 2) }}
+                                <span class="ml-2">({{ $existingCommission->percentage }}% of BDT {{ number_format($totalPaid, 2) }})</span>
+                            </div>
+                            <div class="flex gap-2">
+                                <button type="button" onclick="updateCommissionStatus({{ $existingCommission->id }})"
+                                    class="btn btn-sm {{ $existingCommission->status === 'pending' ? 'btn-success' : 'btn-warning' }}">
+                                    Mark as {{ $existingCommission->status === 'pending' ? 'Paid' : 'Pending' }}
+                                </button>
+                                <a href="{{ route('admin.commissions.index') }}" class="btn btn-sm btn-outline-info">View All</a>
+                            </div>
+                        </div>
+                    @endif
+
+                    <div class="mt-6">
+                        <button type="submit" class="btn btn-primary">
+                            {{ $existingCommission ? 'Update Commission' : 'Set Commission' }}
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
 @endsection
 
@@ -529,6 +604,39 @@
 
                 // Initial calculation
                 // calculateBDT();  // Removed
+
+                // Commission percentage to amount calculator
+                const percentageInput = document.getElementById('percentage');
+                const calculatedAmountInput = document.getElementById('calculated_amount');
+                const totalPaidValue = {{ $totalPaid }};
+
+                if (percentageInput) {
+                    percentageInput.addEventListener('input', function() {
+                        const pct = parseFloat(this.value) || 0;
+                        const amount = (totalPaidValue * pct) / 100;
+                        calculatedAmountInput.value = `BDT ${amount.toFixed(2)}`;
+                    });
+                }
             });
+
+            function updateCommissionStatus(commissionId) {
+                const currentStatus = '{{ $existingCommission ? $existingCommission->status : 'pending' }}';
+                const newStatus = currentStatus === 'pending' ? 'paid' : 'pending';
+
+                fetch(`{{ url('dashboard/commissions') }}/${commissionId}/update-status`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    body: JSON.stringify({ status: newStatus })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        window.location.reload();
+                    }
+                });
+            }
         </script>
     @endpush

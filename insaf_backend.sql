@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Apr 14, 2026 at 06:23 PM
+-- Generation Time: Apr 15, 2026 at 06:21 PM
 -- Server version: 8.4.3
 -- PHP Version: 8.3.28
 
@@ -98,7 +98,7 @@ CREATE TABLE `applications` (
 --
 
 INSERT INTO `applications` (`id`, `application_id`, `student_id`, `university_id`, `course_id`, `course_intake_id`, `tuition_fee`, `tuition_fee_status`, `service_charge_status`, `application_priority`, `internal_notes`, `documents_checklist`, `final_status`, `security_deposit_status`, `cvu_fee_status`, `admission_fee_status`, `final_payment_status`, `emgs_payment_status`, `total_fee`, `status`, `offer_letter_received`, `offer_letter_received_date`, `vfs_appointment`, `vfs_appointment_date`, `file_submission`, `file_submission_date`, `visa_status`, `visa_decision_date`, `visa_approval_date`, `notes`, `created_by`, `created_at`, `updated_at`) VALUES
-(10, 'APP-2026-00001', 6, 2, 2, 2, 0.00, 'pending', 'pending', 'normal', NULL, NULL, 'pending', 0, 0, 0, 0, 0, 100000.00, 'pending', 0, NULL, 0, NULL, 0, NULL, 'not_applied', NULL, NULL, NULL, 3, '2026-02-22 11:22:42', '2026-02-22 11:22:42');
+(11, 'APP-2026-00001', 7, 3, 4, 4, NULL, 'pending', 'pending', 'normal', NULL, NULL, 'pending', 0, 0, 0, 0, 0, 0.00, 'pending', 0, NULL, 0, NULL, 0, NULL, 'not_applied', NULL, NULL, NULL, 3, '2026-04-15 02:17:11', '2026-04-15 02:17:11');
 
 -- --------------------------------------------------------
 
@@ -190,10 +190,12 @@ CREATE TABLE `cache` (
 --
 
 INSERT INTO `cache` (`key`, `value`, `expiration`) VALUES
-('admin-dashboard-cache-tyro:user-4:privileges', 'a:4:{i:0;s:11:\"*accountant\";i:1;s:8:\"*payment\";i:2;s:10:\"*comission\";i:3;s:8:\"*invoice\";}', 1776137547),
-('admin-dashboard-cache-tyro:user-4:roles', 'a:1:{i:0;s:10:\"accountant\";}', 1776137547),
-('admin-dashboard-cache-tyro:user-6:privileges', 'a:1:{i:0;s:12:\"*application\";}', 1776062567),
-('admin-dashboard-cache-tyro:user-6:roles', 'a:1:{i:0;s:11:\"application\";}', 1776062567);
+('admin-dashboard-cache-tyro:user-3:privileges', 'a:2:{i:0;s:11:\"*consultant\";i:1;s:8:\"*invoice\";}', 1776253775),
+('admin-dashboard-cache-tyro:user-3:roles', 'a:1:{i:0;s:10:\"consultant\";}', 1776253775),
+('admin-dashboard-cache-tyro:user-4:privileges', 'a:4:{i:0;s:11:\"*accountant\";i:1;s:8:\"*payment\";i:2;s:10:\"*comission\";i:3;s:8:\"*invoice\";}', 1776277166),
+('admin-dashboard-cache-tyro:user-4:roles', 'a:1:{i:0;s:10:\"accountant\";}', 1776277166),
+('admin-dashboard-cache-tyro:user-6:privileges', 'a:1:{i:0;s:12:\"*application\";}', 1776277243),
+('admin-dashboard-cache-tyro:user-6:roles', 'a:1:{i:0;s:11:\"application\";}', 1776277243);
 
 -- --------------------------------------------------------
 
@@ -238,7 +240,9 @@ INSERT INTO `chart_of_accounts` (`id`, `parent_id`, `code`, `name`, `type`, `is_
 (6, NULL, '41001', 'Student Fees', 'revenue', 1, 0, '2026-04-07 23:31:47', '2026-04-07 23:31:47'),
 (7, NULL, '10001', 'Furnitures', 'asset', 1, 0, '2026-04-12 05:19:04', '2026-04-12 21:25:25'),
 (8, NULL, '41002', 'Security Deposit Fee', 'revenue', 1, 0, '2026-04-12 21:50:09', '2026-04-13 01:34:35'),
-(9, NULL, '20001', 'Cash In Hand', 'asset', 1, 0, '2026-04-13 00:49:29', '2026-04-13 01:26:08');
+(9, NULL, '20001', 'Cash In Hand', 'asset', 1, 0, '2026-04-13 00:49:29', '2026-04-13 01:26:08'),
+(10, NULL, '20002', 'Bank', 'asset', 1, 0, '2026-04-15 05:57:02', '2026-04-15 05:57:02'),
+(11, NULL, '20003', 'MFS (bKash)', 'asset', 1, 0, '2026-04-15 05:58:08', '2026-04-15 05:58:08');
 
 -- --------------------------------------------------------
 
@@ -248,23 +252,15 @@ INSERT INTO `chart_of_accounts` (`id`, `parent_id`, `code`, `name`, `type`, `is_
 
 CREATE TABLE `commissions` (
   `id` bigint UNSIGNED NOT NULL,
-  `payment_id` bigint UNSIGNED NOT NULL,
+  `application_id` bigint UNSIGNED NOT NULL,
   `user_id` bigint UNSIGNED NOT NULL,
-  `amount` decimal(15,2) NOT NULL,
   `percentage` decimal(5,2) NOT NULL,
-  `status` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'pending',
-  `journal_entry_id` bigint UNSIGNED DEFAULT NULL,
+  `amount` decimal(15,2) NOT NULL DEFAULT '0.00',
+  `status` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'pending',
+  `notes` text COLLATE utf8mb4_unicode_ci,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Dumping data for table `commissions`
---
-
-INSERT INTO `commissions` (`id`, `payment_id`, `user_id`, `amount`, `percentage`, `status`, `journal_entry_id`, `created_at`, `updated_at`) VALUES
-(7, 19, 2, 1500.00, 3.00, 'pending', NULL, '2026-02-22 11:28:46', '2026-02-22 11:30:28'),
-(8, 20, 2, 1500.00, 3.00, 'pending', NULL, '2026-02-22 23:14:32', '2026-02-22 23:14:32');
 
 -- --------------------------------------------------------
 
@@ -287,8 +283,8 @@ CREATE TABLE `countries` (
 --
 
 INSERT INTO `countries` (`id`, `name`, `code`, `currency`, `status`, `created_at`, `updated_at`) VALUES
-(1, 'UK', NULL, NULL, 1, '2026-02-17 07:00:59', '2026-02-17 07:19:24'),
-(2, 'Australia', NULL, NULL, 1, '2026-02-18 02:51:17', '2026-02-18 02:51:17');
+(4, 'Malta', NULL, NULL, 1, '2026-04-14 23:35:04', '2026-04-14 23:35:04'),
+(5, 'Malaysia', NULL, NULL, 1, '2026-04-14 23:48:04', '2026-04-14 23:48:04');
 
 -- --------------------------------------------------------
 
@@ -313,8 +309,8 @@ CREATE TABLE `courses` (
 --
 
 INSERT INTO `courses` (`id`, `university_id`, `name`, `degree_level`, `duration`, `tuition_fee`, `status`, `created_at`, `updated_at`) VALUES
-(1, 1, 'Data Analyst', 'Masters', '1 year', 440.00, 1, '2026-02-17 07:03:21', '2026-02-22 04:01:21'),
-(2, 2, 'Cyber Security', 'Masters', '6 Month', 1200.00, 1, '2026-02-18 04:18:36', '2026-02-22 04:01:09');
+(3, 4, 'Law', 'Masters', '6 Month', NULL, 1, '2026-04-14 23:42:41', '2026-04-15 00:07:46'),
+(4, 3, 'Cyber Security', 'Masters', '6 Month', NULL, 1, '2026-04-15 00:06:14', '2026-04-15 00:07:32');
 
 -- --------------------------------------------------------
 
@@ -339,8 +335,8 @@ CREATE TABLE `course_intakes` (
 --
 
 INSERT INTO `course_intakes` (`id`, `course_id`, `intake_name`, `application_start_date`, `application_deadline`, `class_start_date`, `status`, `created_at`, `updated_at`) VALUES
-(1, 1, 'Summer 2026', '2026-03-01', '2026-03-31', NULL, 1, '2026-02-17 07:03:48', '2026-02-22 03:59:35'),
-(2, 2, 'Spring 26', '2026-01-03', NULL, NULL, 1, '2026-02-18 22:59:18', '2026-02-18 22:59:18');
+(3, 3, 'Summer 2026', '2026-05-01', '2026-05-31', NULL, 1, '2026-04-14 23:47:34', '2026-04-14 23:47:34'),
+(4, 4, 'Summer 2026', '2026-04-01', '2026-04-30', NULL, 1, '2026-04-15 00:11:26', '2026-04-15 00:11:56');
 
 -- --------------------------------------------------------
 
@@ -448,7 +444,8 @@ CREATE TABLE `invoices` (
 --
 
 INSERT INTO `invoices` (`id`, `student_id`, `application_id`, `university_id`, `invoice_number`, `date`, `due_date`, `total_amount`, `status`, `notes`, `created_at`, `updated_at`) VALUES
-(1, 6, 10, 2, 'INV-20260413-C5A2', '2026-04-13', '2026-04-20', 5000.00, 'sent', NULL, '2026-04-13 00:17:03', '2026-04-13 00:29:43');
+(2, 7, 11, 3, 'INV-20260415-BEA2', '2026-04-15', '2026-04-22', 5000.00, 'paid', NULL, '2026-04-15 02:22:38', '2026-04-15 04:45:19'),
+(3, 7, 11, 3, 'INV-20260415-938E', '2026-04-15', '2026-04-22', 12000.00, 'draft', NULL, '2026-04-15 05:43:42', '2026-04-15 05:45:16');
 
 -- --------------------------------------------------------
 
@@ -475,7 +472,8 @@ CREATE TABLE `invoice_items` (
 --
 
 INSERT INTO `invoice_items` (`id`, `invoice_id`, `chart_of_account_id`, `description`, `quantity`, `unit_price`, `subtotal`, `tax_amount`, `total`, `created_at`, `updated_at`) VALUES
-(2, 1, 8, 'test', 1.00, 5000.00, 5000.00, 0.00, 5000.00, '2026-04-13 00:29:43', '2026-04-13 00:29:43');
+(4, 2, 8, 'security fee from student', 1.00, 5000.00, 5000.00, 0.00, 5000.00, '2026-04-15 04:45:19', '2026-04-15 04:45:19'),
+(7, 3, 6, 'student fee from student', 1.00, 12000.00, 12000.00, 0.00, 12000.00, '2026-04-15 05:45:16', '2026-04-15 05:45:16');
 
 -- --------------------------------------------------------
 
@@ -536,7 +534,9 @@ CREATE TABLE `journal_entries` (
 --
 
 INSERT INTO `journal_entries` (`id`, `period_id`, `application_id`, `date`, `reference_number`, `note`, `status`, `created_by`, `created_at`, `updated_at`) VALUES
-(1, 1, NULL, '2026-04-13', 'JV-20260413-D58D', NULL, 'posted', 4, '2026-04-13 00:51:33', '2026-04-13 00:51:33');
+(2, 1, 11, '2026-04-15', 'JV-20260415-A725', 'security deposit fee', 'posted', 4, '2026-04-15 04:47:44', '2026-04-15 04:47:44'),
+(3, 1, 11, '2026-04-15', 'JV-20260415-637F', 'partial payment', 'posted', 4, '2026-04-15 05:53:52', '2026-04-15 05:53:52'),
+(4, 1, 11, '2026-04-15', 'JV-20260415-EF4C', NULL, 'posted', 4, '2026-04-15 06:01:48', '2026-04-15 06:01:48');
 
 -- --------------------------------------------------------
 
@@ -560,8 +560,12 @@ CREATE TABLE `journal_entry_items` (
 --
 
 INSERT INTO `journal_entry_items` (`id`, `journal_entry_id`, `chart_of_account_id`, `debit`, `credit`, `description`, `created_at`, `updated_at`) VALUES
-(1, 1, 9, 10000.00, 0.00, 'security fee from student', '2026-04-13 00:51:33', '2026-04-13 00:51:33'),
-(2, 1, 8, 0.00, 10000.00, 'security fee from student', '2026-04-13 00:51:33', '2026-04-13 00:51:33');
+(3, 2, 8, 5000.00, 0.00, 'security fee from student', '2026-04-15 04:47:44', '2026-04-15 04:47:44'),
+(4, 2, 9, 0.00, 5000.00, 'security fee from student', '2026-04-15 04:47:44', '2026-04-15 04:47:44'),
+(5, 3, 6, 8000.00, 0.00, 'student fee from student', '2026-04-15 05:53:52', '2026-04-15 05:53:52'),
+(6, 3, 9, 0.00, 8000.00, 'student fee from student', '2026-04-15 05:53:52', '2026-04-15 05:53:52'),
+(7, 4, 11, 4000.00, 0.00, 'due payment', '2026-04-15 06:01:48', '2026-04-15 06:01:48'),
+(8, 4, 6, 0.00, 4000.00, 'due payment', '2026-04-15 06:01:48', '2026-04-15 06:01:48');
 
 -- --------------------------------------------------------
 
@@ -594,8 +598,7 @@ CREATE TABLE `leads` (
 --
 
 INSERT INTO `leads` (`id`, `student_name`, `email`, `phone`, `current_education`, `preferred_country`, `preferred_course`, `source`, `status`, `notes`, `last_contacted_at`, `next_follow_up_at`, `follow_up_history`, `created_by`, `consultant_id`, `created_at`, `updated_at`) VALUES
-(5, 'Rahim', 'rahim@example.com', '01234567890', 'HSC', NULL, NULL, 'Phone', 'pending', NULL, NULL, '2026-02-24 18:00:00', NULL, 2, NULL, '2026-02-21 22:53:14', '2026-02-21 22:53:14'),
-(6, 'Hasan', 'hasan@example.com', '0120320020', 'JSC', NULL, NULL, 'Phone', 'pending', NULL, NULL, '2026-04-09 18:00:00', '[\"2026-02-25\", \"2026-04-10\"]', 2, NULL, '2026-02-22 03:55:24', '2026-04-09 07:15:51');
+(7, 'Md Hasan', 'hasan@example.com', '01234567890', 'HSC', 4, 4, 'Phone', 'pending', NULL, NULL, '2026-04-29 18:00:00', '[\"2026-04-30\"]', 2, NULL, '2026-04-15 00:20:21', '2026-04-15 00:20:21');
 
 -- --------------------------------------------------------
 
@@ -741,7 +744,10 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (84, '2026_04_11_050000_fix_journal_entries_and_office_accounts', 42),
 (85, '2026_04_12_103504_fix_accounting_periods_old_columns', 43),
 (86, '2026_04_13_075942_fix_bank_reconciliation_items_table', 44),
-(87, '2026_04_13_104949_add_application_id_to_journal_entries', 45);
+(87, '2026_04_13_104949_add_application_id_to_journal_entries', 45),
+(88, '2026_04_15_040630_create_vfs_checklists_table', 46),
+(89, '2026_04_15_180449_drop_commissions_table', 47),
+(90, '2026_04_15_180930_create_commissions_table', 47);
 
 -- --------------------------------------------------------
 
@@ -768,6 +774,7 @@ INSERT INTO `notifications` (`id`, `type`, `notifiable_type`, `notifiable_id`, `
 ('1b8dac70-217e-4509-a24a-e341a5650b5b', 'App\\Notifications\\NewApplicationNotification', 'App\\Models\\User', 6, '{\"application_id\":4,\"application_number\":\"APP-2026-00001\",\"student_name\":\"Md Rahim\",\"created_by\":\"Consultant\",\"message\":\"New application APP-2026-00001 created by Consultant\",\"link\":\"http:\\/\\/127.0.0.1:8000\\/dashboard\\/applications\\/4\\/edit\"}', '2026-02-21 23:09:23', '2026-02-21 23:04:30', '2026-02-21 23:09:23'),
 ('272cfc76-a9c4-42ed-a739-6e6fc772464d', 'App\\Notifications\\NewApplicationNotification', 'App\\Models\\User', 6, '{\"application_id\":8,\"application_number\":\"APP-2026-00001\",\"student_name\":\"Md Hasan\",\"created_by\":\"Consultant\",\"message\":\"New application APP-2026-00001 created by Consultant\",\"link\":\"http:\\/\\/127.0.0.1:8000\\/dashboard\\/applications\\/8\\/edit\"}', '2026-04-10 23:13:06', '2026-02-22 10:56:38', '2026-04-10 23:13:06'),
 ('3b9c3a71-77f6-42b1-a0c1-3fa6e9da4486', 'App\\Notifications\\NewLeadSubmitted', 'App\\Models\\User', 3, '{\"lead_id\":6,\"student_name\":\"Hasan\",\"phone\":\"0120320020\",\"created_by\":\"Marketing\",\"message\":\"New lead submitted by Marketing\",\"link\":\"http:\\/\\/127.0.0.1:8000\\/dashboard\\/marketing\\/leads\\/6\"}', '2026-02-22 10:56:19', '2026-02-22 03:55:24', '2026-02-22 10:56:19'),
+('3d8759c4-3a76-4f5c-a99a-e1957c4f7282', 'App\\Notifications\\NewApplicationNotification', 'App\\Models\\User', 6, '{\"application_id\":11,\"application_number\":\"APP-2026-00001\",\"student_name\":\"Md Hasan\",\"created_by\":\"Consultant\",\"message\":\"New application APP-2026-00001 created by Consultant\",\"link\":\"http:\\/\\/127.0.0.1:8000\\/dashboard\\/applications\\/11\\/edit\"}', '2026-04-15 03:41:56', '2026-04-15 02:17:11', '2026-04-15 03:41:56'),
 ('4919412a-a1be-4937-b3e5-477292752eaa', 'App\\Notifications\\NewLeadSubmitted', 'App\\Models\\User', 3, '{\"lead_id\":4,\"student_name\":\"Ashraful Islam\",\"phone\":\"01195674368\",\"created_by\":\"Marketing\",\"message\":\"New lead submitted by Marketing\",\"link\":\"http:\\/\\/127.0.0.1:8000\\/dashboard\\/marketing\\/leads\\/4\"}', '2026-02-18 05:00:58', '2026-02-18 05:00:49', '2026-02-18 05:00:58'),
 ('4aeba9c4-3e3a-4d9d-bbcd-83bb23f1bb8f', 'App\\Notifications\\NewApplicationNotification', 'App\\Models\\User', 6, '{\"application_id\":10,\"application_number\":\"APP-2026-00001\",\"student_name\":\"Md Hasan\",\"created_by\":\"Consultant\",\"message\":\"New application APP-2026-00001 created by Consultant\",\"link\":\"http:\\/\\/127.0.0.1:8000\\/dashboard\\/applications\\/10\\/edit\"}', '2026-04-10 23:13:06', '2026-02-22 11:22:42', '2026-04-10 23:13:06'),
 ('50ac2d91-74ed-455f-9787-95c679ac268a', 'App\\Notifications\\NewApplicationNotification', 'App\\Models\\User', 6, '{\"application_id\":5,\"application_number\":\"APP-2026-00001\",\"student_name\":\"Md Hasan\",\"created_by\":\"Consultant\",\"message\":\"New application APP-2026-00001 created by Consultant\",\"link\":\"http:\\/\\/127.0.0.1:8000\\/dashboard\\/applications\\/5\\/edit\"}', '2026-02-22 02:55:59', '2026-02-22 00:03:14', '2026-02-22 02:55:59'),
@@ -777,7 +784,8 @@ INSERT INTO `notifications` (`id`, `type`, `notifiable_type`, `notifiable_id`, `
 ('cf7c7ea3-4775-4be3-bbaa-7df4b4e3162e', 'App\\Notifications\\NewApplicationNotification', 'App\\Models\\User', 6, '{\"application_id\":9,\"application_number\":\"APP-2026-00002\",\"student_name\":\"Md Rakib\",\"created_by\":\"Consultant\",\"message\":\"New application APP-2026-00002 created by Consultant\",\"link\":\"http:\\/\\/127.0.0.1:8000\\/dashboard\\/applications\\/9\\/edit\"}', '2026-04-10 23:13:06', '2026-02-22 10:56:57', '2026-04-10 23:13:06'),
 ('e7e77362-16c9-47f6-b9f7-1e5972367bdb', 'App\\Notifications\\NewApplicationNotification', 'App\\Models\\User', 6, '{\"application_id\":6,\"application_number\":\"APP-2026-00002\",\"student_name\":\"Md Rakib\",\"created_by\":\"Consultant\",\"message\":\"New application APP-2026-00002 created by Consultant\",\"link\":\"http:\\/\\/127.0.0.1:8000\\/dashboard\\/applications\\/6\\/edit\"}', '2026-04-10 23:13:06', '2026-02-22 03:58:53', '2026-04-10 23:13:06'),
 ('ebe6636b-5a5f-4e95-b12b-02211b342c2e', 'App\\Notifications\\NewLeadSubmitted', 'App\\Models\\User', 3, '{\"lead_id\":5,\"student_name\":\"Rahim\",\"phone\":\"01234567890\",\"created_by\":\"Marketing\",\"message\":\"New lead submitted by Marketing\",\"link\":\"http:\\/\\/127.0.0.1:8000\\/dashboard\\/marketing\\/leads\\/5\"}', '2026-02-21 22:54:19', '2026-02-21 22:53:16', '2026-02-21 22:54:19'),
-('f331d0ec-990f-4465-b30e-12f38e376fd1', 'App\\Notifications\\NewLeadSubmitted', 'App\\Models\\User', 3, '{\"lead_id\":3,\"student_name\":\"Hasan\",\"phone\":\"0101010101010\",\"created_by\":\"Marketing\",\"message\":\"New lead submitted by Marketing\",\"link\":\"http:\\/\\/127.0.0.1:8000\\/dashboard\\/marketing\\/leads\\/3\"}', '2026-02-18 04:24:14', '2026-02-18 04:22:05', '2026-02-18 04:24:14');
+('f331d0ec-990f-4465-b30e-12f38e376fd1', 'App\\Notifications\\NewLeadSubmitted', 'App\\Models\\User', 3, '{\"lead_id\":3,\"student_name\":\"Hasan\",\"phone\":\"0101010101010\",\"created_by\":\"Marketing\",\"message\":\"New lead submitted by Marketing\",\"link\":\"http:\\/\\/127.0.0.1:8000\\/dashboard\\/marketing\\/leads\\/3\"}', '2026-02-18 04:24:14', '2026-02-18 04:22:05', '2026-02-18 04:24:14'),
+('f82fcdd3-7af1-43c9-b014-4a94fb2562d1', 'App\\Notifications\\NewLeadSubmitted', 'App\\Models\\User', 3, '{\"lead_id\":7,\"student_name\":\"Md Hasan\",\"phone\":\"01234567890\",\"created_by\":\"Marketing\",\"message\":\"New lead submitted by Marketing\",\"link\":\"http:\\/\\/127.0.0.1:8000\\/dashboard\\/marketing\\/leads\\/7\"}', '2026-04-15 01:38:00', '2026-04-15 00:20:26', '2026-04-15 01:38:00');
 
 -- --------------------------------------------------------
 
@@ -851,8 +859,9 @@ CREATE TABLE `payments` (
 --
 
 INSERT INTO `payments` (`id`, `student_id`, `application_id`, `invoice_id`, `amount`, `payment_type`, `payment_date`, `collected_by`, `receipt_number`, `payment_status`, `office_account_id`, `journal_entry_id`, `created_at`, `updated_at`, `notes`) VALUES
-(19, 6, 10, NULL, 50000.00, 'partial', '2026-02-22 00:00:00', 4, 'REC-20260222-0002', 'pending', 1, NULL, '2026-02-22 11:28:46', '2026-02-22 23:13:49', 'test'),
-(20, 6, 10, NULL, 50000.00, 'final', '2026-02-23 00:00:00', 4, 'REC-20260223-0001', 'completed', 2, NULL, '2026-02-22 23:14:32', '2026-02-22 23:14:32', 'payment done');
+(21, 7, 11, 2, 5000.00, 'advance', '2026-04-15 00:00:00', 4, 'REC-20260415-0001', 'completed', 2, NULL, '2026-04-15 04:43:46', '2026-04-15 04:43:46', 'security deposit fee'),
+(22, 7, 11, 3, 8000.00, 'partial', '2026-04-15 00:00:00', 4, 'REC-20260415-0002', 'pending', 3, NULL, '2026-04-15 05:50:35', '2026-04-15 05:50:35', 'partial payment'),
+(23, 7, 11, 3, 4000.00, 'final', '2026-04-15 00:00:00', 4, 'REC-20260415-0003', 'completed', 1, NULL, '2026-04-15 05:56:12', '2026-04-15 05:56:12', NULL);
 
 -- --------------------------------------------------------
 
@@ -1025,7 +1034,7 @@ CREATE TABLE `sessions` (
 --
 
 INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, `last_activity`) VALUES
-('0znXjD2A62uLZmOO7kCxcYKKWH0FPpjWOJfD631S', 4, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:149.0) Gecko/20100101 Firefox/149.0', 'YTo1OntzOjY6Il90b2tlbiI7czo0MDoiZUZtYkszb2c3SGNWcDJoNFNIanZLdEsyaTZzN05HSGJMckl6S1ZUcyI7czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6MzE6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC9kYXNoYm9hcmQiO3M6NToicm91dGUiO3M6MjA6InR5cm8tZGFzaGJvYXJkLmluZGV4Ijt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czoxMDoidHlyby1sb2dpbiI7YToxOntzOjc6ImNhcHRjaGEiO2E6MDp7fX1zOjUwOiJsb2dpbl93ZWJfNTliYTM2YWRkYzJiMmY5NDAxNTgwZjAxNGM3ZjU4ZWE0ZTMwOTg5ZCI7aTo0O30=', 1776137397);
+('GjrS20RTYfIGpOWZoCHJMxuUsl4rrcBNnEDPjyj8', 6, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:149.0) Gecko/20100101 Firefox/149.0', 'YTo1OntzOjY6Il90b2tlbiI7czo0MDoiZUQ3YXVMSTd3VVYyY3MwZmZDUEpsU0M0OWtpSERxMzI4dnk3MzEyWiI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czoxMDoidHlyby1sb2dpbiI7YToxOntzOjc6ImNhcHRjaGEiO2E6MDp7fX1zOjk6Il9wcmV2aW91cyI7YToyOntzOjM6InVybCI7czo1MjoiaHR0cDovLzEyNy4wLjAuMTo4MDAwL2Rhc2hib2FyZC9hcHBsaWNhdGlvbnMvMTEvZWRpdCI7czo1OiJyb3V0ZSI7czoyMzoiYWRtaW4uYXBwbGljYXRpb25zLmVkaXQiO31zOjUwOiJsb2dpbl93ZWJfNTliYTM2YWRkYzJiMmY5NDAxNTgwZjAxNGM3ZjU4ZWE0ZTMwOTg5ZCI7aTo2O30=', 1776277223);
 
 -- --------------------------------------------------------
 
@@ -1128,7 +1137,7 @@ CREATE TABLE `students` (
 --
 
 INSERT INTO `students` (`id`, `first_name`, `last_name`, `father_name`, `mother_name`, `passport_number`, `passport_validity`, `translation_documents`, `email`, `password`, `phone`, `sponsor_phone`, `address`, `dob`, `ssc_result`, `hsc_result`, `ielts_score`, `subject`, `country_id`, `university_id`, `course_id`, `course_intake_id`, `current_stage`, `current_status`, `assigned_marketing_id`, `assigned_consultant_id`, `assigned_application_id`, `created_by`, `documents`, `created_at`, `updated_at`) VALUES
-(6, 'Md', 'Hasan', 'Moniruzzaman', 'Monira Begum', '123456789', NULL, NULL, 'test1@example.com', NULL, '01200000000', NULL, 'Dhaka', '2005-01-01', '4.00', '3.75', '5.5', NULL, 2, 2, 2, 2, NULL, NULL, 2, NULL, NULL, 3, '[{\"name\": \"file-sample_150kB.pdf\", \"path\": \"documents/students/J7A1jQi8fSmhlRDyTcnPVpb4qiMKD0YGqkZHT54J.pdf\"}]', '2026-02-22 11:21:20', '2026-02-22 11:21:20');
+(7, 'Md', 'Hasan', 'Md Rahim', 'Mrs Rahima', 'AB123456`', '2030-01-01', '[{\"name\": \"VFS CHECK LIST.pdf\", \"path\": \"documents/students/translations/15v1lUwyNhTvnlTP33qD68vYtHGoNF2jJehKE9dl.pdf\"}]', 'hasan@example.com', '$2y$12$vZPjQ.bMKThLFVHNBnM/r.NkCBdH0af7LY4DBdfiEKIVqCg9BIDJS', '01234567890', '01200000000', 'Mirpur, Dhaka', '2000-10-10', NULL, NULL, NULL, NULL, 4, 3, 4, 4, NULL, NULL, NULL, NULL, NULL, 2, '[{\"name\": \"sample.pdf\", \"path\": \"documents/students/znAM7aIUI4HQL00DpN6nSqr1ibahbGZCx3eDKSdK.pdf\"}]', '2026-04-15 00:57:18', '2026-04-15 01:40:07');
 
 -- --------------------------------------------------------
 
@@ -1262,7 +1271,29 @@ INSERT INTO `tyro_audit_logs` (`id`, `user_id`, `event`, `auditable_type`, `audi
 (91, 6, 'user.login', 'App\\Models\\User', 6, NULL, '{\"email\": \"application@example.com\"}', '{\"ip\": \"127.0.0.1\", \"is_console\": false, \"user_agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36\"}', '2026-04-13 06:27:59'),
 (92, 6, 'user.logout', 'App\\Models\\User', 6, NULL, '{\"email\": \"application@example.com\"}', '{\"ip\": \"127.0.0.1\", \"is_console\": false, \"user_agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36\"}', '2026-04-13 06:29:09'),
 (93, 4, 'user.login', 'App\\Models\\User', 4, NULL, '{\"email\": \"accountant@example.com\"}', '{\"ip\": \"127.0.0.1\", \"is_console\": false, \"user_agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36\"}', '2026-04-13 06:29:17'),
-(94, 4, 'user.login', 'App\\Models\\User', 4, NULL, '{\"email\": \"accountant@example.com\"}', '{\"ip\": \"127.0.0.1\", \"is_console\": false, \"user_agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:149.0) Gecko/20100101 Firefox/149.0\"}', '2026-04-14 03:20:46');
+(94, 4, 'user.login', 'App\\Models\\User', 4, NULL, '{\"email\": \"accountant@example.com\"}', '{\"ip\": \"127.0.0.1\", \"is_console\": false, \"user_agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36\"}', '2026-04-15 03:18:25'),
+(95, 4, 'user.logout', 'App\\Models\\User', 4, NULL, '{\"email\": \"accountant@example.com\"}', '{\"ip\": \"127.0.0.1\", \"is_console\": false, \"user_agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36\"}', '2026-04-15 04:00:42'),
+(96, 6, 'user.login', 'App\\Models\\User', 6, NULL, '{\"email\": \"application@example.com\"}', '{\"ip\": \"127.0.0.1\", \"is_console\": false, \"user_agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36\"}', '2026-04-15 04:01:08'),
+(97, 6, 'user.logout', 'App\\Models\\User', 6, NULL, '{\"email\": \"application@example.com\"}', '{\"ip\": \"127.0.0.1\", \"is_console\": false, \"user_agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36\"}', '2026-04-15 05:34:14'),
+(98, 5, 'user.login', 'App\\Models\\User', 5, NULL, '{\"email\": \"editor@example.com\"}', '{\"ip\": \"127.0.0.1\", \"is_console\": false, \"user_agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36\"}', '2026-04-15 05:34:28'),
+(99, 5, 'user.logout', 'App\\Models\\User', 5, NULL, '{\"email\": \"editor@example.com\"}', '{\"ip\": \"127.0.0.1\", \"is_console\": false, \"user_agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36\"}', '2026-04-15 06:12:33'),
+(100, 2, 'user.login', 'App\\Models\\User', 2, NULL, '{\"email\": \"marketing@example.com\"}', '{\"ip\": \"127.0.0.1\", \"is_console\": false, \"user_agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36\"}', '2026-04-15 06:13:58'),
+(101, 2, 'user.logout', 'App\\Models\\User', 2, NULL, '{\"email\": \"marketing@example.com\"}', '{\"ip\": \"127.0.0.1\", \"is_console\": false, \"user_agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36\"}', '2026-04-15 07:33:12'),
+(102, 3, 'user.login', 'App\\Models\\User', 3, NULL, '{\"email\": \"consultant@example.com\"}', '{\"ip\": \"127.0.0.1\", \"is_console\": false, \"user_agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36\"}', '2026-04-15 07:33:30'),
+(103, 5, 'user.login', 'App\\Models\\User', 5, NULL, '{\"email\": \"editor@example.com\"}', '{\"ip\": \"127.0.0.1\", \"is_console\": false, \"user_agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36\"}', '2026-04-15 07:43:36'),
+(104, 3, 'user.logout', 'App\\Models\\User', 3, NULL, '{\"email\": \"consultant@example.com\"}', '{\"ip\": \"127.0.0.1\", \"is_console\": false, \"user_agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36\"}', '2026-04-15 08:23:24'),
+(105, 3, 'user.login', 'App\\Models\\User', 3, NULL, '{\"email\": \"consultant@example.com\"}', '{\"ip\": \"127.0.0.1\", \"is_console\": false, \"user_agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36\"}', '2026-04-15 08:23:42'),
+(106, 3, 'user.logout', 'App\\Models\\User', 3, NULL, '{\"email\": \"consultant@example.com\"}', '{\"ip\": \"127.0.0.1\", \"is_console\": false, \"user_agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36\"}', '2026-04-15 09:41:20'),
+(107, 6, 'user.login', 'App\\Models\\User', 6, NULL, '{\"email\": \"application@example.com\"}', '{\"ip\": \"127.0.0.1\", \"is_console\": false, \"user_agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36\"}', '2026-04-15 09:41:32'),
+(108, 6, 'user.logout', 'App\\Models\\User', 6, NULL, '{\"email\": \"application@example.com\"}', '{\"ip\": \"127.0.0.1\", \"is_console\": false, \"user_agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36\"}', '2026-04-15 09:42:09'),
+(109, 4, 'user.login', 'App\\Models\\User', 4, NULL, '{\"email\": \"accountant@example.com\"}', '{\"ip\": \"127.0.0.1\", \"is_console\": false, \"user_agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36\"}', '2026-04-15 09:42:20'),
+(110, 4, 'user.logout', 'App\\Models\\User', 4, NULL, '{\"email\": \"accountant@example.com\"}', '{\"ip\": \"127.0.0.1\", \"is_console\": false, \"user_agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36\"}', '2026-04-15 11:44:23'),
+(111, 3, 'user.login', 'App\\Models\\User', 3, NULL, '{\"email\": \"consultant@example.com\"}', '{\"ip\": \"127.0.0.1\", \"is_console\": false, \"user_agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36\"}', '2026-04-15 11:44:34'),
+(112, 3, 'user.logout', 'App\\Models\\User', 3, NULL, '{\"email\": \"consultant@example.com\"}', '{\"ip\": \"127.0.0.1\", \"is_console\": false, \"user_agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36\"}', '2026-04-15 11:47:10'),
+(113, 4, 'user.login', 'App\\Models\\User', 4, NULL, '{\"email\": \"accountant@example.com\"}', '{\"ip\": \"127.0.0.1\", \"is_console\": false, \"user_agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36\"}', '2026-04-15 11:47:19'),
+(114, 4, 'user.login', 'App\\Models\\User', 4, NULL, '{\"email\": \"accountant@example.com\"}', '{\"ip\": \"127.0.0.1\", \"is_console\": false, \"user_agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:149.0) Gecko/20100101 Firefox/149.0\"}', '2026-04-15 18:00:17'),
+(115, 4, 'user.logout', 'App\\Models\\User', 4, NULL, '{\"email\": \"accountant@example.com\"}', '{\"ip\": \"127.0.0.1\", \"is_console\": false, \"user_agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:149.0) Gecko/20100101 Firefox/149.0\"}', '2026-04-15 18:15:33'),
+(116, 6, 'user.login', 'App\\Models\\User', 6, NULL, '{\"email\": \"application@example.com\"}', '{\"ip\": \"127.0.0.1\", \"is_console\": false, \"user_agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:149.0) Gecko/20100101 Firefox/149.0\"}', '2026-04-15 18:15:41');
 
 -- --------------------------------------------------------
 
@@ -1289,8 +1320,8 @@ CREATE TABLE `universities` (
 --
 
 INSERT INTO `universities` (`id`, `country_id`, `name`, `short_name`, `website`, `email`, `phone`, `address`, `status`, `created_at`, `updated_at`) VALUES
-(1, 1, 'Aston University', 'abc', 'https://www.aston.ac.uk/', 'test@test.com', '01200000000', 'Uk', 1, '2026-02-17 07:02:22', '2026-02-22 03:54:58'),
-(2, 2, 'Australian Catholic University', 'Catholic', 'https://www.acu.edu.au/', 'test1@example.com', '01098765432', 'Sydney', 1, '2026-02-18 03:44:25', '2026-02-18 03:44:25');
+(3, 4, 'University of Malta', NULL, 'https://www.um.edu.mt/', 'info@um.edu.mt', '+356 2340 2340', 'University of Malta, Msida MSD 2080, Malta', 1, '2026-04-14 23:36:55', '2026-04-14 23:36:55'),
+(4, 5, 'Universiti Malaya', NULL, 'https://www.um.edu.my/', 'umcced@um.edu.my', '+603-2246 3633', 'Level 9, Chancellery Universiti Malaya, Lingkungan Budi, 50603 Kuala Lumpur,', 1, '2026-04-14 23:51:01', '2026-04-14 23:51:01');
 
 -- --------------------------------------------------------
 
@@ -1318,21 +1349,20 @@ CREATE TABLE `users` (
   `account_number` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `bank_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `bank_branch` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `routing_number` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `commission_percentage` decimal(5,2) DEFAULT NULL
+  `routing_number` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `name`, `email`, `basic_salary`, `email_verified_at`, `password`, `two_factor_secret`, `two_factor_recovery_codes`, `two_factor_confirmed_at`, `remember_token`, `created_at`, `updated_at`, `suspended_at`, `suspension_reason`, `profile_photo_path`, `use_gravatar`, `account_number`, `bank_name`, `bank_branch`, `routing_number`, `commission_percentage`) VALUES
-(1, 'Inoodex', 'hello@inoodex.com', 15000.00, NULL, '$2y$12$bZ9YAxTXRcahQbLiZ6d8q.cXUkxAbriZ.WtNmnNPrwcOA0PppnPJO', NULL, NULL, NULL, NULL, '2026-02-16 03:09:49', '2026-02-22 04:14:08', NULL, NULL, NULL, 0, '12345678', 'Islami Bank Bangladesh', 'Banani', '1234', NULL),
-(2, 'Marketing', 'marketing@example.com', 18000.00, NULL, '$2y$12$ei9LSrLrIhng1FNUsEZztOnKxDIZ3stVVswIXvKK8Dvphk3pTs5BO', NULL, NULL, NULL, NULL, '2026-02-17 12:46:55', '2026-02-23 02:49:28', NULL, NULL, NULL, 0, '521654651', 'Islami Bank Bangladesh', 'Banani', '57868', 3.00),
-(3, 'Consultant', 'consultant@example.com', 12000.00, NULL, '$2y$12$m3ZggFrGDw7maLPG1tU8DuKDOTSWUUeSzEFcW1fSfK7xCHJmwJTVW', NULL, NULL, NULL, NULL, '2026-02-17 12:49:33', '2026-02-22 04:14:08', NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL),
-(4, 'Accountant', 'accountant@example.com', 20000.00, NULL, '$2y$12$eF1/DUs.OmbYrUHoLL0Z.uO5HCJSsdaYSknKdu6Sl1tnYF.dhRC.G', NULL, NULL, NULL, NULL, '2026-02-17 23:01:58', '2026-02-22 04:14:08', NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL),
-(5, 'Editor', 'editor@example.com', 12000.00, NULL, '$2y$12$cmDPJgBl7B/V8acxTv3Ej.15/p9DkpiY/G/cSFL9j2iwTkKmbbjXW', NULL, NULL, NULL, NULL, '2026-02-18 02:45:29', '2026-02-23 01:15:26', '2026-02-23 01:15:26', 'test', NULL, 0, NULL, NULL, NULL, NULL, NULL),
-(6, 'Application', 'application@example.com', 15000.00, NULL, '$2y$12$vZrAn3nHsyH1FOtRvuBW4elSdagHiBA4YnoI2.QdnHkYqeI6MmL1e', NULL, NULL, NULL, NULL, '2026-02-18 22:39:12', '2026-02-22 04:14:08', NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `users` (`id`, `name`, `email`, `basic_salary`, `email_verified_at`, `password`, `two_factor_secret`, `two_factor_recovery_codes`, `two_factor_confirmed_at`, `remember_token`, `created_at`, `updated_at`, `suspended_at`, `suspension_reason`, `profile_photo_path`, `use_gravatar`, `account_number`, `bank_name`, `bank_branch`, `routing_number`) VALUES
+(1, 'Inoodex', 'hello@inoodex.com', 15000.00, NULL, '$2y$12$bZ9YAxTXRcahQbLiZ6d8q.cXUkxAbriZ.WtNmnNPrwcOA0PppnPJO', NULL, NULL, NULL, NULL, '2026-02-16 03:09:49', '2026-02-22 04:14:08', NULL, NULL, NULL, 0, '12345678', 'Islami Bank Bangladesh', 'Banani', '1234'),
+(2, 'Marketing', 'marketing@example.com', 18000.00, NULL, '$2y$12$ei9LSrLrIhng1FNUsEZztOnKxDIZ3stVVswIXvKK8Dvphk3pTs5BO', NULL, NULL, NULL, NULL, '2026-02-17 12:46:55', '2026-02-23 02:49:28', NULL, NULL, NULL, 0, '521654651', 'Islami Bank Bangladesh', 'Banani', '57868'),
+(3, 'Consultant', 'consultant@example.com', 12000.00, NULL, '$2y$12$m3ZggFrGDw7maLPG1tU8DuKDOTSWUUeSzEFcW1fSfK7xCHJmwJTVW', NULL, NULL, NULL, NULL, '2026-02-17 12:49:33', '2026-02-22 04:14:08', NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL),
+(4, 'Accountant', 'accountant@example.com', 20000.00, NULL, '$2y$12$eF1/DUs.OmbYrUHoLL0Z.uO5HCJSsdaYSknKdu6Sl1tnYF.dhRC.G', NULL, NULL, NULL, NULL, '2026-02-17 23:01:58', '2026-02-22 04:14:08', NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL),
+(5, 'Editor', 'editor@example.com', 12000.00, NULL, '$2y$12$cmDPJgBl7B/V8acxTv3Ej.15/p9DkpiY/G/cSFL9j2iwTkKmbbjXW', NULL, NULL, NULL, NULL, '2026-02-18 02:45:29', '2026-02-23 01:15:26', '2026-02-23 01:15:26', 'test', NULL, 0, NULL, NULL, NULL, NULL),
+(6, 'Application', 'application@example.com', 15000.00, NULL, '$2y$12$vZrAn3nHsyH1FOtRvuBW4elSdagHiBA4YnoI2.QdnHkYqeI6MmL1e', NULL, NULL, NULL, NULL, '2026-02-18 22:39:12', '2026-02-22 04:14:08', NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -1359,6 +1389,24 @@ INSERT INTO `user_roles` (`id`, `user_id`, `role_id`, `created_at`, `updated_at`
 (4, 4, 4, '2026-02-17 23:03:02', '2026-02-17 23:03:02'),
 (5, 5, 5, '2026-02-18 02:45:29', '2026-02-18 02:45:29'),
 (6, 6, 6, '2026-02-18 22:47:11', '2026-02-18 22:47:11');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `vfs_checklists`
+--
+
+CREATE TABLE `vfs_checklists` (
+  `id` bigint UNSIGNED NOT NULL,
+  `application_id` bigint UNSIGNED NOT NULL,
+  `checklist_item` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `is_checked` tinyint(1) NOT NULL DEFAULT '0',
+  `checked_by` bigint UNSIGNED DEFAULT NULL,
+  `checked_at` timestamp NULL DEFAULT NULL,
+  `notes` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Indexes for dumped tables
@@ -1436,9 +1484,8 @@ ALTER TABLE `chart_of_accounts`
 --
 ALTER TABLE `commissions`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `commissions_payment_id_foreign` (`payment_id`),
-  ADD KEY `commissions_user_id_foreign` (`user_id`),
-  ADD KEY `commissions_journal_entry_id_foreign` (`journal_entry_id`);
+  ADD KEY `commissions_application_id_foreign` (`application_id`),
+  ADD KEY `commissions_user_id_foreign` (`user_id`);
 
 --
 -- Indexes for table `countries`
@@ -1732,6 +1779,14 @@ ALTER TABLE `user_roles`
   ADD KEY `user_roles_role_id_foreign` (`role_id`);
 
 --
+-- Indexes for table `vfs_checklists`
+--
+ALTER TABLE `vfs_checklists`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `vfs_checklists_application_id_foreign` (`application_id`),
+  ADD KEY `vfs_checklists_checked_by_foreign` (`checked_by`);
+
+--
 -- AUTO_INCREMENT for dumped tables
 --
 
@@ -1745,7 +1800,7 @@ ALTER TABLE `accounting_periods`
 -- AUTO_INCREMENT for table `applications`
 --
 ALTER TABLE `applications`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `bank_reconciliations`
@@ -1769,31 +1824,31 @@ ALTER TABLE `budgets`
 -- AUTO_INCREMENT for table `chart_of_accounts`
 --
 ALTER TABLE `chart_of_accounts`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `commissions`
 --
 ALTER TABLE `commissions`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `countries`
 --
 ALTER TABLE `countries`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `courses`
 --
 ALTER TABLE `courses`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `course_intakes`
 --
 ALTER TABLE `course_intakes`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `expenses`
@@ -1823,13 +1878,13 @@ ALTER TABLE `invitation_referrals`
 -- AUTO_INCREMENT for table `invoices`
 --
 ALTER TABLE `invoices`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `invoice_items`
 --
 ALTER TABLE `invoice_items`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `jobs`
@@ -1841,19 +1896,19 @@ ALTER TABLE `jobs`
 -- AUTO_INCREMENT for table `journal_entries`
 --
 ALTER TABLE `journal_entries`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `journal_entry_items`
 --
 ALTER TABLE `journal_entry_items`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `leads`
 --
 ALTER TABLE `leads`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `marketing_campaigns`
@@ -1877,7 +1932,7 @@ ALTER TABLE `marketing_videos`
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=88;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=91;
 
 --
 -- AUTO_INCREMENT for table `office_accounts`
@@ -1889,7 +1944,7 @@ ALTER TABLE `office_accounts`
 -- AUTO_INCREMENT for table `payments`
 --
 ALTER TABLE `payments`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
 -- AUTO_INCREMENT for table `personal_access_tokens`
@@ -1937,7 +1992,7 @@ ALTER TABLE `social_accounts`
 -- AUTO_INCREMENT for table `students`
 --
 ALTER TABLE `students`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `taxes`
@@ -1949,13 +2004,13 @@ ALTER TABLE `taxes`
 -- AUTO_INCREMENT for table `tyro_audit_logs`
 --
 ALTER TABLE `tyro_audit_logs`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=95;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=117;
 
 --
 -- AUTO_INCREMENT for table `universities`
 --
 ALTER TABLE `universities`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `users`
@@ -1968,6 +2023,12 @@ ALTER TABLE `users`
 --
 ALTER TABLE `user_roles`
   MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+
+--
+-- AUTO_INCREMENT for table `vfs_checklists`
+--
+ALTER TABLE `vfs_checklists`
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
 
 --
 -- Constraints for dumped tables
@@ -2021,8 +2082,7 @@ ALTER TABLE `chart_of_accounts`
 -- Constraints for table `commissions`
 --
 ALTER TABLE `commissions`
-  ADD CONSTRAINT `commissions_journal_entry_id_foreign` FOREIGN KEY (`journal_entry_id`) REFERENCES `journal_entries` (`id`),
-  ADD CONSTRAINT `commissions_payment_id_foreign` FOREIGN KEY (`payment_id`) REFERENCES `payments` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `commissions_application_id_foreign` FOREIGN KEY (`application_id`) REFERENCES `applications` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `commissions_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
 
 --
@@ -2180,6 +2240,13 @@ ALTER TABLE `universities`
 ALTER TABLE `user_roles`
   ADD CONSTRAINT `user_roles_role_id_foreign` FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `user_roles_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `vfs_checklists`
+--
+ALTER TABLE `vfs_checklists`
+  ADD CONSTRAINT `vfs_checklists_application_id_foreign` FOREIGN KEY (`application_id`) REFERENCES `applications` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `vfs_checklists_checked_by_foreign` FOREIGN KEY (`checked_by`) REFERENCES `users` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

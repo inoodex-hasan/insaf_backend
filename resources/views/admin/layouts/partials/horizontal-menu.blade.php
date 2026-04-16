@@ -388,10 +388,8 @@
                     </div>
                 </a>
                 <ul class="sub-menu">
-                    @can('*consultant')
-                        <li><a href="{{ route('admin.applications.create') }}">Add Application</a></li>
-                    @endcan
                     @canany(['*consultant', '*application'])
+                        <li><a href="{{ route('admin.applications.create') }}">Add Application</a></li>
                         <li><a href="{{ route('admin.applications.index') }}">Application List</a></li>
                     @endcanany
                 </ul>
@@ -553,9 +551,6 @@
                                 <li><a href="{{ route('admin.salaries.index') }}"
                                         class="block px-4 py-2 hover:bg-gray-100">Salary
                                         List</a></li>
-                                <li><a href="{{ route('admin.commissions.index') }}"
-                                        class="block px-4 py-2 hover:bg-gray-100">Commission List</a></li>
-                            </ul>
                         </li>
 
                         {{-- Expenses Flyout --}}
