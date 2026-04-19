@@ -6,18 +6,23 @@
     <div class="panel">
         <div class="mb-5 flex items-center justify-between">
             <h5 class="text-lg font-semibold dark:text-white-light">Commission Management</h5>
+            <a href="{{ route('admin.commissions.create') }}" class="btn btn-primary">Add Commission</a>
         </div>
 
         <div class="mb-5">
-            <form method="GET" class="flex gap-4 mb-4">
-                <input type="text" name="search" value="{{ request('search') }}" placeholder="Search by employee, student, application..."
-                    class="form-input flex-1" />
-                <select name="status" class="form-select">
-                    <option value="">All Status</option>
-                    <option value="pending" {{ request('status') === 'pending' ? 'selected' : '' }}>Pending</option>
-                    <option value="paid" {{ request('status') === 'paid' ? 'selected' : '' }}>Paid</option>
-                </select>
-                <button type="submit" class="btn btn-primary">Search</button>
+            <form method="GET" class="flex flex-col md:flex-row gap-4 mb-4">
+                <div class="flex-1">
+                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Search by employee, student, application..."
+                        class="form-input w-full" />
+                </div>
+                <div class="w-full md:w-40">
+                    <select name="status" class="form-select w-full">
+                        <option value="">All Status</option>
+                        <option value="pending" {{ request('status') === 'pending' ? 'selected' : '' }}>Pending</option>
+                        <option value="paid" {{ request('status') === 'paid' ? 'selected' : '' }}>Paid</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary whitespace-nowrap">Search</button>
             </form>
 
             <div class="table-responsive">
@@ -63,7 +68,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="8" class="text-center py-4 text-gray-500">No commissions found.</td>
+                                <td colspan="7" class="text-center py-4 text-gray-500">No commissions found.</td>
                             </tr>
                         @endforelse
                     </tbody>

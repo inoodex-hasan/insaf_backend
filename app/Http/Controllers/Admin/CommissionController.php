@@ -34,7 +34,30 @@ class CommissionController extends Controller
 
         $commissions = $query->latest()->paginate(15)->withQueryString();
 
-        return view('admin.commissions.index', compact('commissions'));
+        return view('admin.accounts.commissions.index', compact('commissions'));
+    }
+
+    public function create()
+    {
+        $this->authorize('*accountant');
+        return view('admin.accounts.commissions.create');
+    }
+
+    public function storeStandalone(Request $request)
+    {
+        $this->authorize('*accountant');
+
+        $validated = $request->validate([
+            'application_id' => 'required|exists:applications,id',
+            'user_id' => 'required|exists:users,id',
+            'amount' => 'required|numeric|min:0',
+            'status' => 'required|in:pending,paid',
+            'notes' => 'nullable|string|max:1000',
+        ]);
+
+        Commission::create($validated);
+
+        return redirect()->route('admin.commissions.index')->with('success', 'Commission created successfully.');
     }
 
     public function store(Request $request, Application $application)
@@ -43,16 +66,10 @@ class CommissionController extends Controller
 
         $validated = $request->validate([
             'user_id' => 'required|exists:users,id',
-            'percentage' => 'required|numeric|min:0|max:100',
+            'amount' => 'required|numeric|min:0',
             'notes' => 'nullable|string|max:1000',
         ]);
 
-        // Calculate total paid from completed payments
-        $totalPaid = Payment::where('application_id', $application->id)
-            ->where('payment_status', 'completed')
-            ->sum('amount');
-
-        $validated['amount'] = ($totalPaid * $validated['percentage']) / 100;
         $validated['application_id'] = $application->id;
         $validated['status'] = 'pending';
 

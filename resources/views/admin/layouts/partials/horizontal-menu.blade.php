@@ -551,6 +551,7 @@
                                 <li><a href="{{ route('admin.salaries.index') }}"
                                         class="block px-4 py-2 hover:bg-gray-100">Salary
                                         List</a></li>
+                            </ul>
                         </li>
 
                         {{-- Expenses Flyout --}}
@@ -608,6 +609,9 @@
 
                             </ul>
                         </li>
+
+                        {{-- Commissions --}}
+                        <li><a href="{{ route('admin.commissions.index') }}">Commissions</a></li>
                     @endcan
                 </ul>
             </li>

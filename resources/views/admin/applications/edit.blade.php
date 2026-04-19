@@ -4,7 +4,7 @@
 
 @section('content')
     @php
-        $canEdit = auth()->user()->hasRole('consultant');
+        $canEdit = auth()->user()->hasRole('application');
         $canEditStatus = auth()->user()->hasRole('application');
     @endphp
     <div>
@@ -132,7 +132,7 @@
                         <label for="status">Application Status</label>
                         <select name="status" id="status"
                             class="form-select {{ !($canEdit || $canEditStatus) ? 'bg-gray-100 dark:bg-black/20' : '' }}" {{ !($canEdit || $canEditStatus) ? 'disabled' : '' }} required>
-                            @foreach (['pending', 'ready_for_apply', 'applied', 'under_review', 'offer_issued', 'conditional_offer', 'unconditional_offer', 'rejected', 'withdrawn', 'visa_processing', 'enrolled'] as $status)
+                            @foreach (['pending', 'need_revision','ready_for_apply', 'applied', 'under_review', 'offer_issued', 'conditional_offer', 'unconditional_offer', 'rejected', 'withdrawn', 'visa_processing', 'enrolled'] as $status)
                                 <option value="{{ $status }}" {{ old('status', $application->status) == $status ? 'selected' : '' }}>
                                     {{ ucfirst(str_replace('_', ' ', $status)) }}
                                 </option>
@@ -254,7 +254,7 @@
                         </div>
 
                         {{-- Application Priority --}}
-                        <div class="form-group">
+                        <!-- <div class="form-group">
                             <label for="application_priority">Application Priority</label>
                             <select name="application_priority" id="application_priority"
                                 class="form-select {{ !$canEdit ? 'bg-gray-100 dark:bg-black/20' : '' }}" {{ !$canEdit ? 'disabled' : '' }}>
@@ -264,7 +264,7 @@
                                     </option>
                                 @endforeach
                             </select>
-                        </div>
+                        </div> -->
 
                         {{-- Final Status --}}
                         <div class="form-group">
@@ -381,7 +381,7 @@
             </div>
 
             {{-- Commission Section --}}
-            @php
+            <!-- @php
                 $totalPaid = $application->payments->where('payment_status', 'completed')->sum('amount');
                 $existingCommission = $application->commissions->first();
             @endphp
@@ -411,16 +411,16 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="percentage">Commission Percentage (%)</label>
-                            <input type="number" name="percentage" id="percentage" step="0.01" min="0" max="100"
-                                class="form-input" value="{{ $existingCommission ? $existingCommission->percentage : 0 }}" required />
+                            <label for="amount">Commission Amount (BDT)</label>
+                            <input type="number" name="amount" id="amount" step="0.01" min="0"
+                                class="form-input" value="{{ $existingCommission ? $existingCommission->amount : 0 }}" required />
                         </div>
 
                         <div class="form-group">
-                            <label>Calculated Amount</label>
-                            <input type="text" id="calculated_amount" class="form-input bg-gray-100 dark:bg-black/20"
+                            <label>Total Paid</label>
+                            <input type="text" id="total_paid_display" class="form-input bg-gray-100 dark:bg-black/20"
                                 value="BDT {{ number_format($totalPaid, 2) }}" readonly />
-                            <span class="text-xs text-white-dark mt-1">Based on total paid: BDT {{ number_format($totalPaid, 2) }}</span>
+                            <span class="text-xs text-white-dark mt-1">Based on total paid by student</span>
                         </div>
 
                         <div class="form-group md:col-span-3">
@@ -435,7 +435,7 @@
                             <div class="text-sm">
                                 <span class="font-semibold">Commission Amount:</span>
                                 BDT {{ number_format($existingCommission->amount, 2) }}
-                                <span class="ml-2">({{ $existingCommission->percentage }}% of BDT {{ number_format($totalPaid, 2) }})</span>
+                                <span class="ml-2">(Fixed amount)</span>
                             </div>
                             <div class="flex gap-2">
                                 <button type="button" onclick="updateCommissionStatus({{ $existingCommission->id }})"
@@ -453,7 +453,7 @@
                         </button>
                     </div>
                 </form>
-            </div>
+            </div> -->
         </div>
 @endsection
 
@@ -536,85 +536,15 @@
                     // No longer needed
                 }
 
-                // countrySelect.addEventListener('change', function () {
-                //     const countryId = this.value;
-                //     universitySelect.innerHTML = '<option value="">Select University</option>';
-                //     courseSelect.innerHTML = '<option value="">Select Course</option>';
-                //     intakeSelect.innerHTML = '<option value="">Select Intake</option>';
+                // Commission amount input handler
+                const amountInput = document.getElementById('amount');
 
-                //     if (countryId) {
-                //         fetch(`{{ route('admin.applications.get-universities') }}?country_id=${countryId}`)
-                //             .then(response => response.json())
-                //             .then(data => {
-                //                 data.forEach(university => {
-                //                     const option = document.createElement('option');
-                //                     option.value = university.id;
-                //                     option.textContent = university.name;
-                //                     universitySelect.appendChild(option);
-                //                 });
-                //             });
-                //     }
-                // });
-
-                // universitySelect.addEventListener('change', function () {
-                //     const universityId = this.value;
-                //     courseSelect.innerHTML = '<option value="">Select Course</option>';
-                //     intakeSelect.innerHTML = '<option value="">Select Intake</option>';
-
-                //     if (universityId) {
-                //         fetch(`{{ route('admin.applications.get-courses') }}?university_id=${universityId}`)
-                //             .then(response => response.json())
-                //             .then(data => {
-                //                 data.forEach(course => {
-                //                     const option = document.createElement('option');
-                //                     option.value = course.id;
-                //                     option.textContent = course.name;
-                //                     option.dataset.tuitionFee = course.tuition_fee;
-                //                     courseSelect.appendChild(option);
-                //                 });
-                //             });
-                //     }
-                // });
-
-                // courseSelect.addEventListener('change', function () {
-                //     const courseId = this.value;
-                //     intakeSelect.innerHTML = '<option value="">Select Intake</option>';
-                //     tuitionFeeInput.value = '';
-                //     currencyInput.value = '';
-
-                //     const selectedOption = this.options[this.selectedIndex];
-                //     if (selectedOption && selectedOption.dataset.tuitionFee) {
-                //         tuitionFeeInput.value = selectedOption.dataset.tuitionFee;
-                //         totalFeeInput.value = selectedOption.dataset.tuitionFee;
-                //     }
-
-                //     if (courseId) {
-                //         fetch(`{{ route('admin.applications.get-intakes') }}?course_id=${courseId}`)
-                //             .then(response => response.json())
-                //             .then(data => {
-                //                 data.forEach(intake => {
-                //                     const option = document.createElement('option');
-                //                     option.value = intake.id;
-                //                     option.textContent = intake.intake_name;
-                //                     intakeSelect.appendChild(option);
-                //                 });
-                //             });
-                //     }
-                // });
-
-                // Initial calculation
-                // calculateBDT();  // Removed
-
-                // Commission percentage to amount calculator
-                const percentageInput = document.getElementById('percentage');
-                const calculatedAmountInput = document.getElementById('calculated_amount');
-                const totalPaidValue = {{ $totalPaid }};
-
-                if (percentageInput) {
-                    percentageInput.addEventListener('input', function() {
-                        const pct = parseFloat(this.value) || 0;
-                        const amount = (totalPaidValue * pct) / 100;
-                        calculatedAmountInput.value = `BDT ${amount.toFixed(2)}`;
+                if (amountInput) {
+                    amountInput.addEventListener('input', function() {
+                        const amount = parseFloat(this.value) || 0;
+                        if (amount < 0) {
+                            this.value = 0;
+                        }
                     });
                 }
             });

@@ -89,7 +89,9 @@ Route::prefix('dashboard/payments')->name('admin.payments.')->group(function () 
 // Commission Management
 Route::prefix('dashboard/commissions')->name('admin.commissions.')->middleware('can:*accountant')->group(function () {
     Route::get('/', [CommissionController::class, 'index'])->name('index');
-    Route::post('application/{application}', [CommissionController::class, 'store'])->name('store');
+    Route::get('/create', [CommissionController::class, 'create'])->name('create');
+    Route::post('/', [CommissionController::class, 'storeStandalone'])->name('store');
+    Route::post('application/{application}', [CommissionController::class, 'store'])->name('store.application');
     Route::post('{commission}/update-status', [CommissionController::class, 'updateStatus'])->name('update-status');
     Route::delete('{commission}', [CommissionController::class, 'destroy'])->name('destroy');
 });
@@ -279,9 +281,9 @@ Route::prefix('dashboard/applications')->name('admin.applications.')->group(func
     Route::get('/', [ApplicationController::class, 'index'])->name('index')->middleware('can:*consultant|*application');
     Route::get('/create', [ApplicationController::class, 'create'])->name('create')->middleware('can:*application|*consultant');
     Route::post('/', [ApplicationController::class, 'store'])->name('store')->middleware('can:*application|*consultant');
-    Route::get('{application}/edit', [ApplicationController::class, 'edit'])->name('edit')->middleware('can:*consultant|*application');
-    Route::put('{application}', [ApplicationController::class, 'update'])->name('update')->middleware('can:*consultant|*application');
-    Route::delete('{application}', [ApplicationController::class, 'destroy'])->name('destroy')->middleware('can:*consultant');
+    Route::get('{application}/edit', [ApplicationController::class, 'edit'])->name('edit')->middleware('can:*application');
+    Route::put('{application}', [ApplicationController::class, 'update'])->name('update')->middleware('can:*application');
+    Route::delete('{application}', [ApplicationController::class, 'destroy'])->name('destroy')->middleware('can:*application');
 
 });
 

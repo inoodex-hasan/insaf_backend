@@ -68,7 +68,7 @@
                         <th>VFS</th>
                         <th>File Submit</th>
                         <th>Visa Status</th>  -->
-                        <th>Priority</th>
+                        <!-- <th>Priority</th> -->
                         <th>Created By</th>
                         <th class="text-center">Action</th>
                     </tr>
@@ -119,16 +119,16 @@
                         </td> -->
                         <td>
                             <span
-                                class="badge badge-outline-{{ $app->visa_status === 'approved' ? 'success' : ($app->visa_status === 'rejected' ? 'danger' : 'warning') }}">
-                                {{ ucfirst(str_replace('_', ' ', $app->visa_status)) }}
+                                class="badge badge-outline-{{ $app->status === 'pending' ? 'warning' : ($app->status === 'approved' ? 'success' : 'danger') }}">
+                                {{ ucfirst(str_replace('_', ' ', $app->status)) }}
                             </span>
                         </td>
-                        <td>
+                        <!-- <td>
                             <span
                                 class="badge badge-outline-{{ $app->application_priority === 'vip' ? 'danger' : ($app->application_priority === 'priority' ? 'warning' : 'info') }}">
                                 {{ ucfirst($app->application_priority) }}
                             </span>
-                        </td>
+                        </td> -->
                         <td>
                             <div class="text-xs">
                                 {{ $app->creator->name ?? 'System' }}
@@ -139,19 +139,18 @@
                             <div class="flex items-center justify-center gap-2">
                                 <a href="{{ route('admin.students.show', $app->student->id) }}"
                                     class="btn btn-sm btn-outline-info">View</a>
+                                @canany(['*application'])
                                 <a href="{{ route('admin.applications.download-pdf', $app->id) }}"
                                     class="btn btn-sm btn-outline-success">PDF</a>
                                 <a href="{{ route('admin.applications.edit', $app->id) }}"
                                     class="btn btn-sm btn-outline-primary">Edit</a>
-
-                                @canany(['*consultant'])
                                 <form action="{{ route('admin.applications.destroy', $app->id) }}" method="POST"
                                     onsubmit="return confirm('Delete this application?');">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
                                 </form>
-                                @endcan
+                                @endcanany
 
                             </div>
                         </td>
