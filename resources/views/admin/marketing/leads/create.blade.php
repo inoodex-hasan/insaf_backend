@@ -133,6 +133,7 @@
 
             <div class="form-group mt-5">
                 <label for="notes">Notes/Remarks</label>
+                <p class="mb-2 text-xs text-white-dark">If you set a follow-up date, this note will be saved in the follow-up history.</p>
                 <textarea name="notes" id="notes" class="form-textarea" rows="4">{{ old('notes') }}</textarea>
             </div>
 

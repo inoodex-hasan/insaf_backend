@@ -255,39 +255,82 @@
                 <div class="flex items-center justify-between mb-5">
                     <h5 class="font-semibold text-lg dark:text-white-light text-primary uppercase">Documents</h5>
                 </div>
+
                 @if ($student->documents && count($student->documents) > 0)
                     <div class="space-y-3">
                         <p class="text-xs font-bold text-white-dark uppercase">General Documents</p>
-                        @foreach ($student->documents as $doc)
-                            <div
-                                class="flex items-center justify-between p-3 border rounded-lg bg-gray-50 dark:bg-black/20 hover:bg-gray-100 dark:hover:bg-black/30 transition">
-                                <div class="flex-1 min-w-0">
-                                    <p class="text-sm font-medium break-words" title="{{ $doc['name'] }}">
-                                        {{ $doc['name'] }}
-                                    </p>
+                        <div class="grid grid-cols-1 gap-4">
+                            @foreach ($student->documents as $doc)
+                                @php
+                                    $path = $doc['path'] ?? null;
+                                    $name = $doc['name'] ?? 'Document';
+                                    $extension = strtolower(pathinfo($name, PATHINFO_EXTENSION));
+                                    $previewUrl = $path ? route('preview-file', ['path' => $path]) : null;
+                                    $downloadUrl = $path ? route('download-file', ['path' => $path]) : null;
+                                @endphp
+                                <div class="rounded-lg border border-white-light bg-gray-50 p-3 dark:border-[#1b2e4b] dark:bg-black/20">
+                                    <div class="flex items-start justify-between gap-3">
+                                        <div class="min-w-0">
+                                            <p class="text-sm font-semibold break-words" title="{{ $name }}">{{ $name }}</p>
+                                            <p class="text-xs text-white-dark uppercase">{{ $extension ?: 'file' }}</p>
+                                        </div>
+                                        <div class="flex items-center gap-3">
+                                            @if ($previewUrl)
+                                                <a href="{{ $previewUrl }}" target="_blank"
+                                                    class="text-xs text-primary hover:underline font-semibold whitespace-nowrap">
+                                                    Show
+                                                </a>
+                                            @endif
+                                            @if ($downloadUrl)
+                                                <a href="{{ $downloadUrl }}"
+                                                    class="text-xs text-success hover:underline font-semibold whitespace-nowrap">
+                                                    Download
+                                                </a>
+                                            @endif
+                                        </div>
+                                    </div>
                                 </div>
-                                <a href="{{ \Illuminate\Support\Facades\Storage::url($doc['path']) }}" target="_blank"
-                                    class="text-xs text-primary hover:underline font-semibold ml-3 whitespace-nowrap">Download</a>
-                            </div>
-                        @endforeach
+                            @endforeach
+                        </div>
                     </div>
                 @endif
 
                 @if ($student->translation_documents && count($student->translation_documents) > 0)
                     <div class="space-y-3 mt-4">
                         <p class="text-xs font-bold text-white-dark uppercase">Translation Documents</p>
-                        @foreach ($student->translation_documents as $doc)
-                            <div
-                                class="flex items-center justify-between p-3 border rounded-lg bg-gray-50 dark:bg-black/20 hover:bg-gray-100 dark:hover:bg-black/30 transition">
-                                <div class="flex-1 min-w-0">
-                                    <p class="text-sm font-medium break-words" title="{{ $doc['name'] }}">
-                                        {{ $doc['name'] }}
-                                    </p>
+                        <div class="grid grid-cols-1 gap-4">
+                            @foreach ($student->translation_documents as $doc)
+                                @php
+                                    $path = $doc['path'] ?? null;
+                                    $name = $doc['name'] ?? 'Document';
+                                    $extension = strtolower(pathinfo($name, PATHINFO_EXTENSION));
+                                    $previewUrl = $path ? route('preview-file', ['path' => $path]) : null;
+                                    $downloadUrl = $path ? route('download-file', ['path' => $path]) : null;
+                                @endphp
+                                <div class="rounded-lg border border-white-light bg-gray-50 p-3 dark:border-[#1b2e4b] dark:bg-black/20">
+                                    <div class="flex items-start justify-between gap-3">
+                                        <div class="min-w-0">
+                                            <p class="text-sm font-semibold break-words" title="{{ $name }}">{{ $name }}</p>
+                                            <p class="text-xs text-white-dark uppercase">{{ $extension ?: 'file' }}</p>
+                                        </div>
+                                        <div class="flex items-center gap-3">
+                                            @if ($previewUrl)
+                                                <a href="{{ $previewUrl }}" target="_blank"
+                                                    class="text-xs text-secondary hover:underline font-semibold whitespace-nowrap">
+                                                    Show
+                                                </a>
+                                            @endif
+                                            @if ($downloadUrl)
+                                                <a href="{{ $downloadUrl }}"
+                                                    class="text-xs text-success hover:underline font-semibold whitespace-nowrap">
+                                                    Download
+                                                </a>
+                                            @endif
+                                        </div>
+                                    </div>
                                 </div>
-                                <a href="{{ \Illuminate\Support\Facades\Storage::url($doc['path']) }}" target="_blank"
-                                    class="text-xs text-secondary hover:underline font-semibold ml-3 whitespace-nowrap">Download</a>
-                            </div>
-                        @endforeach
+                            @endforeach
+                        </div>
                     </div>
                 @endif
 

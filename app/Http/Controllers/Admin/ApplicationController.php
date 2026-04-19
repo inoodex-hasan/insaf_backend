@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Models\{Application, Country, Course, CourseIntake, Student, University, User};
 use App\Notifications\NewApplicationNotification;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Mpdf\Mpdf;
 
 class ApplicationController extends Controller
 {
@@ -164,14 +165,34 @@ class ApplicationController extends Controller
             ->with('success', 'Application deleted successfully.');
     }
 
-    public function downloadPdf(Application $application)
-    {
-        $application->load(['student', 'university', 'university.country', 'course', 'intake']);
+    // public function downloadPdf(Application $application)
+    // {
+    //     $application->load(['student', 'university', 'university.country', 'course', 'intake']);
 
-        $pdf = Pdf::loadView('admin.applications.pdf', compact('application'));
+    //     $pdf = Pdf::loadView('admin.applications.pdf', compact('application'));
 
-        return $pdf->download('Application_' . $application->application_id . '.pdf');
-    }
+    //     return $pdf->download('Application_' . $application->application_id . '.pdf');
+    // }
+
+public function downloadPdf(Application $application)
+{
+    $application->load(['student', 'university', 'university.country', 'course', 'intake']);
+
+    $mpdf = new Mpdf([
+    'mode' => 'utf-8',
+    'format' => 'A4',
+    'margin_top' => 10,
+    'margin_bottom' => 10,
+    ]);
+
+    $html = view('admin.applications.pdf', compact('application'))->render();
+
+    $mpdf->WriteHTML($html);
+
+    return response($mpdf->Output('', 'S'))
+        ->header('Content-Type', 'application/pdf')
+        ->header('Content-Disposition', 'attachment; filename="Application_' . $application->application_id . '.pdf"');
+}
 
     public function getUniversities(Request $request)
     {

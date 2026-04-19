@@ -151,6 +151,7 @@
 
             <div class="form-group mt-5">
                 <label for="notes">Notes/Remarks</label>
+                <p class="mb-2 text-xs text-white-dark">The current note will be saved with the selected follow-up date in history.</p>
                 <textarea name="notes" id="notes" class="form-textarea" rows="4"
                     placeholder="Brief details about the client interest...">{{ old('notes', $lead->notes) }}</textarea>
             </div>

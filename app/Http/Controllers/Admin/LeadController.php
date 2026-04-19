@@ -175,25 +175,35 @@ class LeadController extends Controller
         return response()->json($courses);
     }
 
-    private function buildFollowUpHistory(?Lead $lead, ?string $nextFollowUpAt): ?array
+    private function buildFollowUpHistory(?Lead $lead, ?string $nextFollowUpAt, ?string $notes): ?array
     {
-        $history = collect($lead?->follow_up_history ?? []);
-        $existingFollowUpDate = $lead?->next_follow_up_at?->toDateString();
+        $history = collect($lead?->follow_up_history ?? [])
+            ->map(fn ($entry) => $this->normalizeFollowUpHistoryEntry($entry))
+            ->filter(fn ($entry) => $entry !== null)
+            ->values();
 
-        if ($existingFollowUpDate !== null && $history->last() !== $existingFollowUpDate) {
-            $history->push($existingFollowUpDate);
+        $existingEntry = $this->normalizeFollowUpHistoryEntry([
+            'date' => $lead?->next_follow_up_at,
+            'notes' => $lead?->notes,
+        ]);
+
+        if ($existingEntry !== null && ! $this->followUpEntriesMatch($history->last(), $existingEntry)) {
+            $history->push($existingEntry);
         }
 
         if (filled($nextFollowUpAt)) {
-            $normalizedNextFollowUpAt = Carbon::parse($nextFollowUpAt)->toDateString();
+            $nextEntry = $this->normalizeFollowUpHistoryEntry([
+                'date' => $nextFollowUpAt,
+                'notes' => $notes,
+            ]);
 
-            if ($history->last() !== $normalizedNextFollowUpAt) {
-                $history->push($normalizedNextFollowUpAt);
+            if ($nextEntry !== null && ! $this->followUpEntriesMatch($history->last(), $nextEntry)) {
+                $history->push($nextEntry);
             }
         }
 
         $history = $history
-            ->filter(fn ($date) => filled($date))
+            ->filter(fn ($entry) => $entry !== null)
             ->values()
             ->all();
 
@@ -210,9 +220,48 @@ class LeadController extends Controller
         }
 
         if (Schema::hasColumn('leads', 'follow_up_history')) {
-            $validated['follow_up_history'] = $this->buildFollowUpHistory($lead, $validated['next_follow_up_at'] ?? null);
+            $validated['follow_up_history'] = $this->buildFollowUpHistory(
+                $lead,
+                $validated['next_follow_up_at'] ?? null,
+                $validated['notes'] ?? null,
+            );
         }
 
         return $validated;
+    }
+
+    private function normalizeFollowUpHistoryEntry(mixed $entry): ?array
+    {
+        if (blank($entry)) {
+            return null;
+        }
+
+        if (! is_array($entry)) {
+            return [
+                'date' => Carbon::parse($entry)->toDateString(),
+                'notes' => null,
+            ];
+        }
+
+        $date = $entry['date'] ?? $entry['follow_up_date'] ?? $entry['next_follow_up_at'] ?? null;
+
+        if (blank($date)) {
+            return null;
+        }
+
+        return [
+            'date' => Carbon::parse($date)->toDateString(),
+            'notes' => $entry['notes'] ?? null,
+        ];
+    }
+
+    private function followUpEntriesMatch(?array $left, ?array $right): bool
+    {
+        if ($left === null || $right === null) {
+            return false;
+        }
+
+        return $left['date'] === $right['date']
+            && (string) ($left['notes'] ?? '') === (string) ($right['notes'] ?? '');
     }
 }

@@ -285,6 +285,17 @@ Route::prefix('dashboard/applications')->name('admin.applications.')->group(func
 });
 
 // Storage file serving route - handled through Laravel route to ensure proper access control
-Route::get('/storage/{path}', [App\Http\Controllers\FileServingController::class, 'serveFile'])
+Route::get('/files/preview/{path}', [App\Http\Controllers\FileServingController::class, 'preview'])
     ->where('path', '.*')
+    ->middleware('auth')
+    ->name('preview-file');
+
+Route::get('/files/download/{path}', [App\Http\Controllers\FileServingController::class, 'download'])
+    ->where('path', '.*')
+    ->middleware('auth')
+    ->name('download-file');
+
+Route::get('/files/{path}', [App\Http\Controllers\FileServingController::class, 'serveFile'])
+    ->where('path', '.*')
+    ->middleware('auth')
     ->name('serve-file');

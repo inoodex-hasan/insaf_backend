@@ -61,7 +61,7 @@
                             <th>Phone</th>
                             <th>Contact Source</th>
                             <th>Follow-up Date</th>
-                            <th>Status</th>
+                            {{-- <th>Status</th> --}}
                             <th>Collected By</th>
                             @canany(['*marketing', '*consultant'])
                                 <th class="text-center">Action</th>
@@ -86,25 +86,15 @@
                                         <div class="{{ $currentFollowUpDate->isPast() ? 'text-danger font-bold' : 'font-semibold' }}">
                                             {{ $currentFollowUpDate->format('M d, Y') }}
                                         </div>
-
-                                        @if($followUpHistory->count() > 1)
-                                            <div class="mt-2 flex flex-wrap gap-1">
-                                                @foreach($followUpHistory->slice(0, -1)->reverse() as $historyDate)
-                                                    <span class="rounded-full bg-black/5 px-2 py-0.5 text-[10px] font-medium text-white-dark dark:bg-white/[0.08]">
-                                                        {{ $historyDate->format('M d, Y') }}
-                                                    </span>
-                                                @endforeach
-                                            </div>
-                                        @endif
                                     @else
                                         -
                                     @endif
                                 </td>
-                                <td>
+                                {{-- <td>
                                     <span class="badge @if($lead->status == 'pending') badge-outline-warning @elseif($lead->status == 'interested') badge-outline-success @elseif($lead->status == 'forwarded') badge-outline-info @else badge-outline-danger @endif capitalize">
                                         {{ $lead->status }}
                                     </span>
-                                </td>
+                                </td> --}}
                                 <td>
                                     @if($lead->creator)
                                         <span class="badge badge-outline-primary">{{ $lead->creator->name }}</span>
