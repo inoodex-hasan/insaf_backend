@@ -67,6 +67,7 @@ Route::prefix('dashboard/students')->name('admin.students.')->group(function () 
     Route::get('/create', [StudentController::class, 'create'])->name('create')->middleware('can:*consultant|*marketing');
     Route::post('/', [StudentController::class, 'store'])->name('store')->middleware('can:*consultant|*marketing');
     Route::get('{student}', [StudentController::class, 'show'])->name('show')->middleware('can:*consultant|*application|*marketing');
+    // Route::get('{student}/pdf', [StudentController::class, 'downloadPdf'])->name('pdf')->middleware('can:*consultant|*application|*marketing');
     Route::get('{student}/edit', [StudentController::class, 'edit'])->name('edit')->middleware('can:*consultant|*marketing');
     Route::put('{student}', [StudentController::class, 'update'])->name('update')->middleware('can:*consultant');
     Route::delete('{student}', [StudentController::class, 'destroy'])->name('destroy')->middleware('can:*consultant');

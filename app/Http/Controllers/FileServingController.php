@@ -30,14 +30,16 @@ class FileServingController extends Controller
             abort(404, 'File not found');
         }
 
-        $fullPath = Storage::disk('public')->path($path);
         $mimeType = $this->resolveMimeType($path);
+        $fileName = basename($path);
+        $content = Storage::disk('public')->get($path);
 
-        return response()->file($fullPath, [
-            'Content-Type' => $mimeType,
-            'Content-Disposition' => 'inline; filename="' . basename($fullPath) . '"',
-            'X-Content-Type-Options' => 'nosniff',
-        ]);
+        return response($content, 200)
+            ->header('Content-Type', $mimeType)
+            ->header('Content-Length', strlen($content))
+            ->header('Content-Disposition', 'inline; filename="' . $fileName . '"')
+            ->header('Cache-Control', 'public, max-age=3600')
+            ->header('X-Content-Type-Options', 'nosniff');
     }
 
     public function download($path)

@@ -6,6 +6,16 @@
     <div class="flex flex-wrap items-center justify-between gap-4">
         <h2 class="text-xl font-semibold uppercase">Student Details</h2>
         <div class="flex gap-2">
+            {{-- <a href="{{ route('admin.students.pdf', $student->id) }}" class="btn btn-danger gap-2" target="_blank">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                    <polyline points="14 2 14 8 20 8"></polyline>
+                    <line x1="12" y1="18" x2="12" y2="12"></line>
+                    <line x1="9" y1="15" x2="15" y2="15"></line>
+                </svg>
+                Download PDF
+            </a> --}}
             <a href="{{ route('admin.students.index') }}" class="btn btn-secondary gap-2">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                     stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5">
@@ -119,8 +129,12 @@
                             <p class="text-sm font-medium truncate" title="{{ $doc['name'] }}">
                                 {{ $doc['name'] }}
                             </p>
-                            <a href="{{ \Illuminate\Support\Facades\Storage::url($doc['path']) }}" target="_blank"
-                                class="text-xs text-primary hover:underline font-semibold">Download</a>
+                            <div class="flex gap-2 mt-1">
+                                <a href="{{ \Illuminate\Support\Facades\Storage::url($doc['path']) }}" target="_blank"
+                                    class="text-xs text-primary hover:underline font-semibold">View PDF</a>
+                                <a href="{{ \Illuminate\Support\Facades\Storage::url($doc['path']) }}" download
+                                    class="text-xs text-green-600 hover:underline font-semibold">Download</a>
+                            </div>
                         </div>
                     </div>
                     @endforeach

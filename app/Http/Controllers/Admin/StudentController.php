@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Controllers\Controller;
 use App\Models\{Country, Course, CourseIntake, Lead, Student, University, User};
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class StudentController extends Controller
 {
@@ -104,6 +105,24 @@ class StudentController extends Controller
         $student->load(['marketingAssignee', 'consultantAssignee', 'applicationAssignee', 'creator', 'country', 'university', 'course', 'intake', 'applications.university', 'applications.course', 'applications.intake']);
 
         return view('admin.students.show', compact('student'));
+    }
+
+    public function downloadPdf(Student $student)
+    {
+        $this->authorize('*consultant');
+
+        $student->load(['country', 'university', 'course', 'intake', 'marketingAssignee', 'consultantAssignee']);
+
+        try {
+            $pdf = Pdf::loadView('admin.students.pdf.student-detail', compact('student'));
+            $pdf->setPaper('a4', 'portrait');
+            
+            return $pdf->stream('student-' . $student->id . '-' . $student->first_name . '.pdf');
+        } catch (\Exception $e) {
+            \Log::error('PDF generation failed for student ' . $student->id . ': ' . $e->getMessage());
+            return redirect()->route('admin.students.show', $student->id)
+                ->with('error', 'Failed to generate PDF: ' . $e->getMessage());
+        }
     }
 
     public function edit(Student $student)
