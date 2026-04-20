@@ -137,7 +137,7 @@
                         </td>
                         <td class="text-center">
                             <div class="flex items-center justify-center gap-2">
-                                <a href="{{ route('admin.students.show', $app->student->id) }}"
+                                <a href="{{ route('admin.applications.show', $app) }}"
                                     class="btn btn-sm btn-outline-info">View</a>
                                 @canany(['*application'])
                                 <!-- <a href="{{ route('admin.applications.download-pdf', $app->id) }}"

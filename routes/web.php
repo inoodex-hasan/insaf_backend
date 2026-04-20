@@ -283,6 +283,7 @@ Route::prefix('dashboard/applications')->name('admin.applications.')->group(func
     Route::get('/', [ApplicationController::class, 'index'])->name('index')->middleware('can:*consultant|*application');
     Route::get('/create', [ApplicationController::class, 'create'])->name('create')->middleware('can:*application|*consultant');
     Route::post('/', [ApplicationController::class, 'store'])->name('store')->middleware('can:*application|*consultant');
+    Route::get('{application}', [ApplicationController::class, 'show'])->name('show')->middleware('can:*consultant|*application');
     Route::get('{application}/edit', [ApplicationController::class, 'edit'])->name('edit')->middleware('can:*application');
     Route::put('{application}', [ApplicationController::class, 'update'])->name('update')->middleware('can:*application');
     Route::delete('{application}', [ApplicationController::class, 'destroy'])->name('destroy')->middleware('can:*application');

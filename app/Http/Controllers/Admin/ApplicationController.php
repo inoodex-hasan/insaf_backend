@@ -95,6 +95,13 @@ class ApplicationController extends Controller
             ->with('success', 'Application created successfully.');
     }
 
+    public function show(Application $application)
+    {
+        $application->load(['student', 'university', 'university.country', 'course', 'intake', 'creator', 'payments.collector', 'commissions.user']);
+
+        return view('admin.applications.show', compact('application'));
+    }
+
     public function edit(Application $application)
     {
         $application->load('payments.collector');
