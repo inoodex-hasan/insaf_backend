@@ -325,6 +325,7 @@
                             <label for="emgs_score">EMGS Score</label>
                             <select name="emgs_score" id="emgs_score"
                                 class="form-select {{ !$canEdit ? 'bg-gray-100 dark:bg-black/20' : '' }}"
+                                style="width: 50%;"
                                 {{ !$canEdit ? 'disabled' : '' }}>
                                 <option value="">Select Score</option>
                                 @foreach([10, 20, 30, 40, 50, 60, 70, 80, 90, 100] as $score)

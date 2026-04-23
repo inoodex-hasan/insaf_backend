@@ -5,85 +5,56 @@
 @section('content')
     <div class="flex flex-wrap items-center justify-between gap-4">
         <h2 class="text-xl font-semibold uppercase">Journal Ledger</h2>
-        <a href="{{ route('admin.journal-entries.create') }}" class="btn btn-primary gap-2">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5">
-                <line x1="12" y1="5" x2="12" y2="19"></line>
-                <line x1="5" y1="12" x2="19" y2="12"></line>
-            </svg>
-            Post New Voucher
-        </a>
+        <div class="flex items-center gap-2">
+            <a href="{{ route('admin.journal-entries.report', request()->all()) }}" target="_blank" class="btn btn-outline-primary gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                    <polyline points="14 2 14 8 20 8"></polyline>
+                    <line x1="16" y1="13" x2="8" y2="13"></line>
+                    <line x1="16" y1="17" x2="8" y2="17"></line>
+                    <polyline points="10 9 9 9 8 9"></polyline>
+                </svg>
+                Generate Report
+            </a>
+            <a href="{{ route('admin.journal-entries.create') }}" class="btn btn-primary gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5">
+                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+                Create Voucher
+            </a>
+        </div>
     </div>
 
     {{-- Filter Section --}}
-    <div class="panel mt-4">
-        <form method="GET" action="{{ route('admin.journal-entries.index') }}">
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4">
-                {{-- Start Date --}}
-                <div>
-                    <label class="text-xs font-semibold text-gray-500 dark:text-gray-400 mb-1 block">Start Date</label>
-                    <input type="date" name="start_date" value="{{ request('start_date') }}"
-                        class="form-input w-full text-sm">
-                </div>
-
-                {{-- End Date --}}
-                <div>
-                    <label class="text-xs font-semibold text-gray-500 dark:text-gray-400 mb-1 block">End Date</label>
-                    <input type="date" name="end_date" value="{{ request('end_date') }}"
-                        class="form-input w-full text-sm">
-                </div>
-
-                {{-- Reference Number --}}
-                <div>
-                    <label class="text-xs font-semibold text-gray-500 dark:text-gray-400 mb-1 block">Reference No</label>
-                    <input type="text" name="reference_number" value="{{ request('reference_number') }}"
-                        placeholder="Search reference..." class="form-input w-full text-sm">
-                </div>
-
-                {{-- Period --}}
-                <div>
-                    <label class="text-xs font-semibold text-gray-500 dark:text-gray-400 mb-1 block">Period</label>
-                    <select name="period_id" class="form-select w-full text-sm">
-                        <option value="">All Periods</option>
-                        @foreach($periods as $period)
-                            <option value="{{ $period->id }}" {{ request('period_id') == $period->id ? 'selected' : '' }}>
-                                {{ $period->name }}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
-
-                {{-- Student Name --}}
-                <div>
-                    <label class="text-xs font-semibold text-gray-500 dark:text-gray-400 mb-1 block">Student Name</label>
-                    <input type="text" name="student_name" value="{{ request('student_name') }}"
-                        placeholder="Search student..." class="form-input w-full text-sm">
-                </div>
-
-                {{-- Status --}}
-                <div>
-                    <label class="text-xs font-semibold text-gray-500 dark:text-gray-400 mb-1 block">Status</label>
-                    <select name="status" class="form-select w-full text-sm">
-                        <option value="">All Status</option>
-                        <option value="posted" {{ request('status') == 'posted' ? 'selected' : '' }}>Posted</option>
-                        <option value="draft" {{ request('status') == 'draft' ? 'selected' : '' }}>Draft</option>
-                        <option value="reversed" {{ request('status') == 'reversed' ? 'selected' : '' }}>Reversed</option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="flex justify-end gap-2 mt-4">
-                <a href="{{ route('admin.journal-entries.index') }}" class="btn btn-outline-secondary btn-sm">
-                    Reset
-                </a>
-                <button type="submit" class="btn btn-primary btn-sm">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
-                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-1">
-                        <circle cx="11" cy="11" r="8"></circle>
-                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                    </svg>
-                    Filter
-                </button>
+    <div class="mt-4 mb-5">
+        <form method="GET" action="{{ route('admin.journal-entries.index') }}" class="flex flex-col md:flex-row flex-wrap gap-4 mb-4">
+            <input type="date" name="start_date" value="{{ request('start_date') }}" class="form-input flex-1 min-w-[150px]" title="Start Date">
+            <input type="date" name="end_date" value="{{ request('end_date') }}" class="form-input flex-1 min-w-[150px]" title="End Date">
+            
+            <input type="text" name="reference_number" value="{{ request('reference_number') }}" placeholder="Reference No..." class="form-input flex-1 min-w-[150px]">
+            
+            <input type="text" name="student_name" value="{{ request('student_name') }}" placeholder="Student Name..." class="form-input flex-1 min-w-[150px]">
+            
+            <select name="period_id" class="form-select flex-1 min-w-[150px]">
+                <option value="">All Periods</option>
+                @foreach($periods as $period)
+                    <option value="{{ $period->id }}" {{ request('period_id') == $period->id ? 'selected' : '' }}>{{ $period->name }}</option>
+                @endforeach
+            </select>
+            
+            <select name="status" class="form-select flex-1 min-w-[150px]">
+                <option value="">All Status</option>
+                <option value="posted" {{ request('status') == 'posted' ? 'selected' : '' }}>Posted</option>
+                <option value="draft" {{ request('status') == 'draft' ? 'selected' : '' }}>Draft</option>
+                <option value="reversed" {{ request('status') == 'reversed' ? 'selected' : '' }}>Reversed</option>
+            </select>
+     
+            <div class="flex gap-2 whitespace-nowrap md:ml-auto">
+                <button type="submit" class="btn btn-primary">Filter</button>
+                <a href="{{ route('admin.journal-entries.index') }}" class="btn btn-outline-secondary">Reset</a>
             </div>
         </form>
     </div>

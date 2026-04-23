@@ -197,6 +197,7 @@ Route::prefix('dashboard/chart-of-accounts')->name('admin.chart-of-accounts.')->
 
 // Journal Entries
 Route::prefix('dashboard/journal-entries')->name('admin.journal-entries.')->group(function () {
+    Route::get('/report', [App\Http\Controllers\Admin\JournalEntryController::class, 'report'])->name('report')->middleware('can:*accountant');
     Route::get('/', [App\Http\Controllers\Admin\JournalEntryController::class, 'index'])->name('index')->middleware('can:*accountant');
     Route::get('/create', [App\Http\Controllers\Admin\JournalEntryController::class, 'create'])->name('create')->middleware('can:*accountant');
     Route::post('/', [App\Http\Controllers\Admin\JournalEntryController::class, 'store'])->name('store')->middleware('can:*accountant');

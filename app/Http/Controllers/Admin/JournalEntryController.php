@@ -11,6 +11,7 @@ use App\Models\Application;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Mpdf\Mpdf;
 
 class JournalEntryController extends Controller
 {
@@ -64,6 +65,68 @@ class JournalEntryController extends Controller
         $periods = AccountingPeriod::orderBy('start_date', 'desc')->get();
 
         return view('admin.accounts.journal-entries.index', compact('entries', 'periods'));
+    }
+
+    /**
+     * Generate PDF report for journal entries.
+     */
+    public function report(Request $request)
+    {
+        $query = JournalEntry::with(['period', 'creator', 'application.student', 'items.chartOfAccount'])
+            ->withSum('items as total_amount', 'debit');
+
+        // Date range filter
+        if ($request->filled('start_date')) {
+            $query->whereDate('date', '>=', $request->start_date);
+        }
+        if ($request->filled('end_date')) {
+            $query->whereDate('date', '<=', $request->end_date);
+        }
+
+        // Reference number filter
+        if ($request->filled('reference_number')) {
+            $query->where('reference_number', 'like', '%' . $request->reference_number . '%');
+        }
+
+        // Period filter
+        if ($request->filled('period_id')) {
+            $query->where('period_id', $request->period_id);
+        }
+
+        // Student name filter
+        if ($request->filled('student_name')) {
+            $query->whereHas('application.student', function ($q) use ($request) {
+                $q->where(function ($sq) use ($request) {
+                    $sq->where('first_name', 'like', '%' . $request->student_name . '%')
+                        ->orWhere('last_name', 'like', '%' . $request->student_name . '%');
+                });
+            });
+        }
+
+        // Status filter
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        $entries = $query->orderBy('date', 'desc')
+            ->orderBy('id', 'desc')
+            ->get();
+
+        $mpdf = new Mpdf([
+            'mode' => 'utf-8',
+            'format' => 'A4-L',
+            'orientation' => 'L',
+            'margin_left' => 10,
+            'margin_right' => 10,
+            'margin_top' => 15,
+            'margin_bottom' => 15,
+        ]);
+
+        $html = view('admin.accounts.journal-entries.pdf', compact('entries', 'request'))->render();
+        $mpdf->WriteHTML($html);
+        
+        return response($mpdf->Output('journal-entries-report.pdf', 'I'), 200)
+            ->header('Content-Type', 'application/pdf');
     }
 
     /**
