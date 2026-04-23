@@ -52,7 +52,7 @@
 <body>
     <div class="header">
         <h2>Journal Entries Report</h2>
-        <p>Generated on {{ now()->format('M d, Y h:i A') }}</p>
+        <p>Generated on {{ now()->format('M d, Y') }}</p>
         @if(request()->filled('start_date') || request()->filled('end_date'))
             <p>Period: {{ request('start_date', 'Start') }} to {{ request('end_date', 'End') }}</p>
         @endif
