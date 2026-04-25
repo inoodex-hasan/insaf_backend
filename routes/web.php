@@ -268,6 +268,7 @@ Route::prefix('dashboard/vfs-checklist')->name('admin.vfs-checklist.')->group(fu
 Route::prefix('dashboard/reports')->name('admin.reports.')->group(function () {
     Route::get('/summary', [App\Http\Controllers\Admin\ReportController::class, 'summary'])->name('summary')->middleware('can:*accountant');
     Route::get('/balance-sheet', [App\Http\Controllers\Admin\ReportController::class, 'balanceSheet'])->name('balance-sheet')->middleware('can:*accountant');
+    Route::get('/balance-sheet/pdf', [App\Http\Controllers\Admin\ReportController::class, 'balanceSheetPdf'])->name('balance-sheet.pdf')->middleware('can:*accountant');
     Route::get('/download-pdf', [App\Http\Controllers\Admin\ReportController::class, 'downloadPdf'])->name('download-pdf')->middleware('can:*accountant');
 });
 

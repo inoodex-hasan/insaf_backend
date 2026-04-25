@@ -6,15 +6,24 @@
     <div class="flex flex-wrap items-center justify-between gap-4">
         <h2 class="text-xl font-semibold uppercase">Balance Sheet</h2>
         <div class="flex gap-2">
-            <button onclick="window.print()" class="btn btn-primary gap-2">
+            <a href="{{ route('admin.reports.balance-sheet.pdf', ['as_of_date' => $asOfDate]) }}" class="btn btn-danger gap-2">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                     stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5">
-                    <polyline points="6 9 6 2 18 2 18 9"></polyline>
-                    <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
-                    <rect x="6" y="14" width="12" height="8"></rect>
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                    <polyline points="14 2 14 8 20 8"></polyline>
+                    <path d="M12 18v-6"></path>
+                    <path d="M9 15l3 3 3-3"></path>
                 </svg>
-                Print Report
-            </button>
+                Download PDF
+            </a>
+            <a href="{{ route('admin.reports.balance-sheet.pdf', ['as_of_date' => $asOfDate, 'preview' => 1]) }}" target="_blank" class="btn btn-primary gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                    <circle cx="12" cy="12" r="3"></circle>
+                </svg>
+                Preview
+            </a>
         </div>
     </div>
 
@@ -187,17 +196,160 @@
 
     <style>
         @media print {
-            .no-print {
+            /* Hide only the specific UI elements */
+            .no-print,
+            .horizontal-menu,
+            .vertical-menu,
+            .sidebar,
+            aside,
+            button,
+            .btn,
+            form,
+            .theme-customizer,
+            .template-customizer,
+            .customizer,
+            .settings-panel,
+            .preview-panel,
+            .demo-panel,
+            .theme-panel,
+            .config-panel,
+            .style-switcher,
+            .theme-switcher,
+            .preview,
+            .toast,
+            .notification,
+            .alert-dismissible,
+            .modal-backdrop,
+            .loading-overlay,
+            .spinner-overlay,
+            .page-loader,
+            .preloader,
+            #template-customizer,
+            #theme-customizer,
+            #customizer,
+            [id*="customizer"],
+            [class*="customizer"],
+            .fixed.right-0,
+            .fixed.left-0,
+            .fixed.top-0,
+            .fixed.bottom-0:not(.panel),
+            .preview-wrap,
+            .preview-container,
+            .template-preview,
+            .theme-preview,
+            .design-preview,
+            .layout-preview,
+            .style-preview,
+            .color-picker,
+            .font-picker,
+            .layout-picker,
+            .theme-options,
+            .template-options,
+            .settings-btn,
+            .customizer-btn,
+            .theme-btn,
+            .preview-btn,
+            .config-btn,
+            .toggle-btn,
+            .floating-btn,
+            .fab,
+            .fab-btn,
+            .help-btn,
+            .support-btn,
+            .chat-btn,
+            .feedback-btn,
+            .guide,
+            .tour,
+            .walkthrough,
+            .onboarding,
+            .intro,
+            .tooltip,
+            .popover,
+            .dropdown-menu,
+            .context-menu,
+            .color-scheme,
+            .theme-toggle,
+            .dark-mode-toggle,
+            .mode-switcher,
+            .view-switcher,
+            .layout-switcher,
+            /* Website logo, header, footer */
+            .logo,
+            .brand,
+            .brand-logo,
+            .site-logo,
+            .app-logo,
+            .company-logo,
+            .navbar-brand,
+            .navbar-header,
+            .page-header,
+            .main-header,
+            .app-header,
+            .site-header,
+            header,
+            .header,
+            .footer,
+            .main-footer,
+            .app-footer,
+            .site-footer,
+            .page-footer,
+            footer,
+            .copyright,
+            .powered-by,
+            .made-with,
+            .breadcrumb,
+            .breadcrumbs,
+            .page-title,
+            .section-title,
+            .nav-tabs,
+            .tab-nav,
+            .pagination,
+            .page-navigation,
+            .back-to-top,
+            .scroll-top,
+            .scroll-to-top {
                 display: none !important;
             }
 
+            /* Show all content */
+            body {
+                background: white !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            /* Panel styling */
             .panel {
                 border: none !important;
                 box-shadow: none !important;
+                background: white !important;
             }
 
-            body {
-                background: white !important;
+            /* Grid layout for print */
+            .grid {
+                display: grid !important;
+            }
+
+            /* Ensure 2 columns on larger paper */
+            .md\:grid-cols-2 {
+                grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+            }
+
+            /* Ensure backgrounds print */
+            .bg-primary\/10,
+            .bg-danger\/10,
+            .bg-success\/10,
+            .bg-gray-50,
+            .bg-gray-800,
+            .bg-success\/5 {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            /* Text colors */
+            .text-primary, .text-danger, .text-success, .text-gray-900, .text-gray-700 {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
             }
         }
     </style>

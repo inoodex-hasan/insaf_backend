@@ -11,6 +11,7 @@ use App\Models\Payment;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
+use Mpdf\Mpdf;
 
 class ReportController extends Controller
 {
@@ -162,6 +163,118 @@ class ReportController extends Controller
             'totalLiabilities',
             'totalEquity'
         ));
+    }
+
+    public function balanceSheetPdf(Request $request)
+    {
+        $asOfDate = $request->get('as_of_date', date('Y-m-d'));
+        $date = Carbon::parse($asOfDate)->endOfDay();
+
+        // Fetch all accounts with their debit/credit sums up to the date
+        $accounts = \App\Models\ChartOfAccount::withSum([
+            'journalEntryItems as total_debit' => function ($query) use ($date) {
+                $query->whereHas('journalEntry', function ($q) use ($date) {
+                    $q->where('date', '<=', $date);
+                });
+            }
+        ], 'debit')
+            ->withSum([
+                'journalEntryItems as total_credit' => function ($query) use ($date) {
+                    $query->whereHas('journalEntry', function ($q) use ($date) {
+                        $q->where('date', '<=', $date);
+                    });
+                }
+            ], 'credit')
+            ->get();
+
+        // Group by type and calculate balances
+        $grouped = $accounts->groupBy('type');
+
+        $data = [
+            'asset' => collect(),
+            'liability' => collect(),
+            'equity' => collect(),
+            'revenue' => collect(),
+            'expense' => collect(),
+        ];
+
+        foreach ($grouped as $type => $typeAccounts) {
+            foreach ($typeAccounts as $account) {
+                $balance = 0;
+                $debit = $account->total_debit ?? 0;
+                $credit = $account->total_credit ?? 0;
+
+                if ($type === 'asset') {
+                    $balance = $debit - $credit;
+                } else {
+                    $balance = $credit - $debit;
+                }
+
+                if ($type === 'expense') {
+                    $balance = $debit - $credit;
+                }
+
+                if ($balance != 0 || $account->is_default) {
+                    $account->balance = $balance;
+                    $data[$type]->push($account);
+                }
+            }
+        }
+
+        $totalRevenue = $data['revenue']->sum('balance');
+        $totalExpenses = $data['expense']->sum('balance');
+        $netProfit = $totalRevenue - $totalExpenses;
+
+        $totalAssets = $data['asset']->sum('balance');
+        $totalLiabilities = $data['liability']->sum('balance');
+        $totalEquity = $data['equity']->sum('balance');
+
+        // Calculate difference for balance check
+        $diff = abs($totalAssets - ($totalLiabilities + $totalEquity + $netProfit));
+        $isBalanced = $diff < 0.01;
+
+        // Get company info from settings
+        $settings = Setting::pluck('value', 'key')->all();
+        $companyInfo = (object)[
+            'name' => $settings['company_name'] ?? config('app.name', 'Your Company'),
+            'address' => $settings['company_address'] ?? '',
+            'phone' => $settings['company_phone'] ?? '',
+            'email' => $settings['company_email'] ?? '',
+        ];
+
+        // Generate PDF using mPDF
+        $mpdf = new Mpdf([
+            'mode' => 'utf-8',
+            'format' => 'A4',
+            'margin_top' => 10,
+            'margin_right' => 10,
+            'margin_bottom' => 10,
+            'margin_left' => 10,
+        ]);
+
+        $html = view('admin.reports.balance_sheet_pdf', compact(
+            'data',
+            'asOfDate',
+            'netProfit',
+            'totalAssets',
+            'totalLiabilities',
+            'totalEquity',
+            'isBalanced',
+            'diff',
+            'companyInfo'
+        ))->render();
+
+        $mpdf->WriteHTML($html);
+
+        $filename = 'Balance_Sheet_' . str_replace('-', '_', $asOfDate) . '.pdf';
+
+        // Check if preview mode (view in browser) or download
+        $isPreview = $request->has('preview');
+        $disposition = $isPreview ? 'inline' : 'attachment';
+
+        return response($mpdf->Output('', 'S'))
+            ->header('Content-Type', 'application/pdf')
+            ->header('Content-Disposition', $disposition . '; filename="' . $filename . '"');
     }
 
     public function downloadPdf(Request $request)
