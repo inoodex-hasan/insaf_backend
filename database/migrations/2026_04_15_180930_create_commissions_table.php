@@ -12,7 +12,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('application_id')->constrained()->onDelete('cascade');
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->decimal('percentage', 5, 2);
+            $table->decimal('percentage', 5, 2)->nullable();
             $table->decimal('amount', 15, 2)->default(0);
             $table->string('status')->default('pending'); // pending, paid
             $table->text('notes')->nullable();

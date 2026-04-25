@@ -86,14 +86,30 @@ Route::prefix('dashboard/payments')->name('admin.payments.')->group(function () 
     Route::delete('{payment}', [PaymentController::class, 'destroy'])->name('destroy')->middleware('can:*accountant');
 });
 
-// Commission Management
+// Commission Management - Accountant Routes
 Route::prefix('dashboard/commissions')->name('admin.commissions.')->middleware('can:*accountant')->group(function () {
     Route::get('/', [CommissionController::class, 'index'])->name('index');
+    Route::get('/pending', [CommissionController::class, 'pendingClaims'])->name('pending');
     Route::get('/create', [CommissionController::class, 'create'])->name('create');
     Route::post('/', [CommissionController::class, 'storeStandalone'])->name('store');
     Route::post('application/{application}', [CommissionController::class, 'store'])->name('store.application');
+    Route::get('{commission}/review', [CommissionController::class, 'showForReview'])->name('review');
+    Route::post('{commission}/approve', [CommissionController::class, 'approve'])->name('approve');
+    Route::post('{commission}/reject', [CommissionController::class, 'reject'])->name('reject');
+    Route::post('{commission}/mark-paid', [CommissionController::class, 'markAsPaid'])->name('mark-paid');
+    Route::post('bulk-approve', [CommissionController::class, 'bulkApprove'])->name('bulk-approve');
     Route::post('{commission}/update-status', [CommissionController::class, 'updateStatus'])->name('update-status');
     Route::delete('{commission}', [CommissionController::class, 'destroy'])->name('destroy');
+});
+
+// My Commissions - Employee Routes
+Route::prefix('dashboard/my-commissions')->name('my-commissions.')->middleware('auth')->group(function () {
+    Route::get('/', [App\Http\Controllers\Admin\MyCommissionController::class, 'index'])->name('index');
+    Route::get('/claimable', [App\Http\Controllers\Admin\MyCommissionController::class, 'claimableApplications'])->name('claimable');
+    Route::get('applications/{application}/claim', [App\Http\Controllers\Admin\MyCommissionController::class, 'createClaim'])->name('create-claim');
+    Route::post('applications/{application}/claim', [App\Http\Controllers\Admin\MyCommissionController::class, 'storeClaim'])->name('store-claim');
+    Route::get('{commission}', [App\Http\Controllers\Admin\MyCommissionController::class, 'show'])->name('show');
+    Route::post('{commission}/cancel', [App\Http\Controllers\Admin\MyCommissionController::class, 'cancelClaim'])->name('cancel');
 });
 
 

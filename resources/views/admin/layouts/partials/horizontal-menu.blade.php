@@ -459,6 +459,39 @@
         @endcan
     @endif
 
+    <!-- My Commissions - For Marketing, Consultant, Application Staff -->
+    @if (auth()->check() &&
+            (auth()->user()->hasRole('marketing') ||
+                auth()->user()->hasRole('consultant') ||
+                auth()->user()->hasRole('application')))
+        @canany(['*marketing', '*consultant', '*application'])
+            <li class="menu nav-item relative group">
+                <a href="javascript:;" class="nav-link">
+                    <div class="flex items-center">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+                            xmlns="http://www.w3.org/2000/svg" class="shrink-0">
+                            <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M2 17L12 22L22 17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M2 12L12 17L22 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <span class="px-1">My Commissions</span>
+                    </div>
+                    <div class="right_arrow">
+                        <svg class="h-4 w-4 rotate-90" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path d="M9 5L15 12L9 19" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                                stroke-linejoin="round" />
+                        </svg>
+                    </div>
+                </a>
+                <ul class="sub-menu">
+                    <li><a href="{{ route('my-commissions.index') }}">Dashboard</a></li>
+                    <li><a href="{{ route('my-commissions.claimable') }}">Claim Commission</a></li>
+                </ul>
+            </li>
+        @endcanany
+    @endif
+
     @if (auth()->check() && auth()->user()->hasRole('accountant'))
         <!-- Core Accounting -->
         @can('*accountant')
@@ -647,13 +680,58 @@
 
                             </ul>
                         </li>
-
-                        {{-- Commissions --}}
-                        <li><a href="{{ route('admin.commissions.index') }}">Commissions</a></li>
                     @endcan
                 </ul>
             </li>
         @endcanany
+
+        <!-- Commissions - Separate Main Menu -->
+        @can('*accountant')
+            <li class="menu nav-item relative group">
+                <a href="javascript:;" class="nav-link">
+                    <div class="flex items-center">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+                            xmlns="http://www.w3.org/2000/svg" class="shrink-0">
+                            <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M2 17L12 22L22 17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M2 12L12 17L22 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <span class="px-1">Commissions</span>
+                        @php
+                            $pendingCount = \App\Models\Commission::claimed()->count() + \App\Models\Commission::underReview()->count();
+                        @endphp
+                        @if($pendingCount > 0)
+                            <span class="ml-1 bg-danger text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                                {{ $pendingCount }}
+                            </span>
+                        @endif
+                    </div>
+                    <div class="right_arrow">
+                        <svg class="h-4 w-4 rotate-90" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path d="M9 5L15 12L9 19" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                                stroke-linejoin="round" />
+                        </svg>
+                    </div>
+                </a>
+                <ul class="sub-menu">
+                    <li>
+                        <a href="{{ route('admin.commissions.pending') }}">
+                            Pending Review
+                            @php
+                                $pendingReviewCount = \App\Models\Commission::claimed()->count() + \App\Models\Commission::underReview()->count();
+                            @endphp
+                            @if($pendingReviewCount > 0)
+                                <span class="ml-2 bg-warning text-white text-xs rounded-full px-2 py-0.5">
+                                    {{ $pendingReviewCount }}
+                                </span>
+                            @endif
+                        </a>
+                    </li>
+                    <li><a href="{{ route('admin.commissions.index') }}">All Commissions</a></li>
+                </ul>
+            </li>
+        @endcan
     @endif
 
 </ul>

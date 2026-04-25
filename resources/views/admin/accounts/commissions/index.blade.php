@@ -6,7 +6,45 @@
     <div class="panel">
         <div class="mb-5 flex items-center justify-between">
             <h5 class="text-lg font-semibold dark:text-white-light">Commission Management</h5>
-            <a href="{{ route('admin.commissions.create') }}" class="btn btn-primary">Add Commission</a>
+            <div class="flex gap-2">
+                <a href="{{ route('admin.commissions.pending') }}" class="btn btn-warning">
+                    Pending Review
+                    @if($stats['pending_review'] > 0)
+                        <span class="ml-2 bg-danger text-white text-xs rounded-full px-2 py-0.5">
+                            {{ $stats['pending_review'] }}
+                        </span>
+                    @endif
+                </a>
+                <a href="{{ route('admin.commissions.create') }}" class="btn btn-primary">Add Commission</a>
+            </div>
+        </div>
+
+        {{-- Stats Cards --}}
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-6">
+            <div class="bg-info/10 rounded-md p-3 text-center">
+                <div class="text-info text-sm">Pending Review</div>
+                <div class="text-xl font-bold">{{ $stats['pending_review'] }}</div>
+            </div>
+            <div class="bg-warning/10 rounded-md p-3 text-center">
+                <div class="text-warning text-sm">Claimed</div>
+                <div class="text-xl font-bold">{{ $stats['claimed'] }}</div>
+            </div>
+            <div class="bg-secondary/10 rounded-md p-3 text-center">
+                <div class="text-secondary text-sm">Under Review</div>
+                <div class="text-xl font-bold">{{ $stats['under_review'] }}</div>
+            </div>
+            <div class="bg-success/10 rounded-md p-3 text-center">
+                <div class="text-success text-sm">Approved</div>
+                <div class="text-xl font-bold">{{ $stats['approved'] }}</div>
+            </div>
+            <div class="bg-danger/10 rounded-md p-3 text-center">
+                <div class="text-danger text-sm">Rejected</div>
+                <div class="text-xl font-bold">{{ $stats['rejected'] }}</div>
+            </div>
+            <div class="bg-primary/10 rounded-md p-3 text-center">
+                <div class="text-primary text-sm">Paid</div>
+                <div class="text-xl font-bold">{{ $stats['paid'] }}</div>
+            </div>
         </div>
 
         <div class="mb-5">
@@ -15,11 +53,15 @@
                     <input type="text" name="search" value="{{ request('search') }}" placeholder="Search by employee, student, application..."
                         class="form-input w-full" />
                 </div>
-                <div class="w-32 shrink-0">
-                    <select name="status" class="form-select w-full text-sm">
-                        <option value="">All</option>
-                        <option value="pending" {{ request('status') === 'pending' ? 'selected' : '' }}>Pending</option>
-                        <option value="paid" {{ request('status') === 'paid' ? 'selected' : '' }}>Paid</option>
+                <div class="w-40 shrink-0">
+                    <select name="workflow_status" class="form-select w-full text-sm">
+                        <option value="">All Status</option>
+                        <option value="draft" {{ request('workflow_status') === 'draft' ? 'selected' : '' }}>Draft</option>
+                        <option value="claimed" {{ request('workflow_status') === 'claimed' ? 'selected' : '' }}>Claimed</option>
+                        <option value="under_review" {{ request('workflow_status') === 'under_review' ? 'selected' : '' }}>Under Review</option>
+                        <option value="approved" {{ request('workflow_status') === 'approved' ? 'selected' : '' }}>Approved</option>
+                        <option value="rejected" {{ request('workflow_status') === 'rejected' ? 'selected' : '' }}>Rejected</option>
+                        <option value="paid" {{ request('workflow_status') === 'paid' ? 'selected' : '' }}>Paid</option>
                     </select>
                 </div>
                 <button type="submit" class="btn btn-primary whitespace-nowrap">Search</button>
@@ -32,9 +74,10 @@
                             <th>Application</th>
                             <th>Student</th>
                             <th>Employee</th>
-                            <th>Amount</th>
+                            <th>Proposed</th>
+                            <th>Final</th>
                             <th>Status</th>
-                            <th>Date</th>
+                            <th>Claimed Date</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -44,19 +87,35 @@
                                 <td>{{ $commission->application->application_id ?? '-' }}</td>
                                 <td>{{ $commission->application->student->full_name ?? '-' }}</td>
                                 <td>{{ $commission->user->name ?? '-' }}</td>
-                                <td>BDT {{ number_format($commission->amount, 2) }}</td>
+                                <td>BDT {{ number_format($commission->proposed_amount, 2) }}</td>
                                 <td>
-                                    <span class="badge {{ $commission->status === 'paid' ? 'badge-outline-success' : 'badge-outline-warning' }}">
-                                        {{ ucfirst($commission->status) }}
+                                    @if($commission->amount > 0)
+                                        BDT {{ number_format($commission->amount, 2) }}
+                                    @else
+                                        <span class="text-gray-400">-</span>
+                                    @endif
+                                </td>
+                                <td>
+                                    <span class="badge badge-outline-{{ $commission->getStatusBadgeClass() }}">
+                                        {{ $commission->getWorkflowStatusLabel() }}
                                     </span>
                                 </td>
-                                <td>{{ $commission->created_at->format('M d, Y') }}</td>
+                                <td>{{ $commission->claimed_at?->format('M d, Y') ?? '-' }}</td>
                                 <td>
                                     <div class="flex gap-2">
-                                        <button onclick="toggleStatus({{ $commission->id }}, '{{ $commission->status }}')"
-                                            class="btn btn-sm {{ $commission->status === 'pending' ? 'btn-success' : 'btn-warning' }}">
-                                            {{ $commission->status === 'pending' ? 'Mark Paid' : 'Mark Pending' }}
-                                        </button>
+                                        @if($commission->canBeReviewed())
+                                            <a href="{{ route('admin.commissions.review', $commission) }}" class="btn btn-sm btn-primary">
+                                                Review
+                                            </a>
+                                        @elseif($commission->canBePaid())
+                                            <form action="{{ route('admin.commissions.mark-paid', $commission) }}" method="POST" class="inline">
+                                                @csrf
+                                                <button type="submit" class="btn btn-sm btn-success"
+                                                    onclick="return confirm('Mark this commission as paid?')">Mark Paid</button>
+                                            </form>
+                                        @elseif($commission->isPaid())
+                                            <span class="badge badge-outline-primary">Paid</span>
+                                        @endif
                                         <form action="{{ route('admin.commissions.destroy', $commission) }}" method="POST" class="inline">
                                             @csrf
                                             @method('DELETE')
@@ -68,7 +127,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="7" class="text-center py-4 text-gray-500">No commissions found.</td>
+                                <td colspan="8" class="text-center py-4 text-gray-500">No commissions found.</td>
                             </tr>
                         @endforelse
                     </tbody>
