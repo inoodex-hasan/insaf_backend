@@ -4,12 +4,17 @@
 
 @section('content')
     <div class="flex flex-wrap items-center justify-between gap-4">
-        <h2 class="text-xl font-semibold uppercase">Documents</h2>
-        @if($selectedApplication)
-            <a href="{{ route('admin.applications.show', $selectedApplication->id) }}" class="btn btn-outline-info">
-                Back to Application
+        <h2 class="text-xl font-semibold uppercase">Update Documents</h2>
+        <div class="flex gap-2">
+            <a href="{{ route('admin.marketing.documents.index') }}" class="btn btn-outline-secondary">
+                Back
             </a>
-        @endif
+            <!-- @if($selectedApplication)
+                <a href="{{ route('admin.applications.show', $selectedApplication->id) }}" class="btn btn-outline-info">
+                    Back to Application
+                </a>
+            @endif -->
+        </div>
     </div>
 
     <!-- Application Selector -->
@@ -17,7 +22,7 @@
         <form action="{{ route('admin.marketing.documents.index') }}" method="GET">
             <div class="flex flex-wrap gap-4 items-end">
                 <div class="flex-1 min-w-[300px]">
-                    <label class="text-sm font-bold mb-1 block">Select Application</label>
+                    <label class="text-sm font-bold mb-1 block">Change Application</label>
                     <select name="application_id" class="form-select" onchange="this.form.submit()">
                         <option value="">-- Choose an application --</option>
                         @foreach($applications as $app)
@@ -54,7 +59,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach(['sop' => 'SOP', 'cv' => 'CV', 'cl' => 'Cover Letter'] as $type => $label)
+                            @foreach(['sop' => 'SOP', 'cv' => 'CV', 'cl' => 'CL'] as $type => $label)
                                 <tr class="border-b border-gray-100 dark:border-gray-800">
                                     <td class="py-4 px-2">
                                         <div class="flex items-center gap-3">
@@ -76,9 +81,9 @@
                                             @php
                                                 $currentStatus = $documents[$type]->status ?? 'pending';
                                             @endphp
-                                            <option value="pending" {{ $currentStatus == 'pending' ? 'selected' : '' }}>Pending</option>
-                                            <option value="received" {{ $currentStatus == 'received' ? 'selected' : '' }}>Received</option>
+                                            <!-- <option value="pending" {{ $currentStatus == 'pending' ? 'selected' : '' }}>Pending</option> -->
                                             <option value="not_received" {{ $currentStatus == 'not_received' ? 'selected' : '' }}>Not Received</option>
+                                            <option value="received" {{ $currentStatus == 'received' ? 'selected' : '' }}>Received</option>
                                             <option value="ready" {{ $currentStatus == 'ready' ? 'selected' : '' }}>Ready</option>
                                             <option value="submitted" {{ $currentStatus == 'submitted' ? 'selected' : '' }}>Submitted</option>
                                         </select>

@@ -163,10 +163,15 @@ CREATE TABLE `cache` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 INSERT INTO `cache` (`key`, `value`, `expiration`) VALUES
+('admin-dashboard-cache-tyro:user-1:roles',	'a:1:{i:0;s:5:\"admin\";}',	1777178208),
+('admin-dashboard-cache-tyro:user-2:privileges',	'a:1:{i:0;s:10:\"*marketing\";}',	1777178737),
+('admin-dashboard-cache-tyro:user-2:roles',	'a:1:{i:0;s:9:\"marketing\";}',	1777178737),
 ('admin-dashboard-cache-tyro:user-3:privileges',	'a:2:{i:0;s:11:\"*consultant\";i:1;s:8:\"*invoice\";}',	1777119947),
 ('admin-dashboard-cache-tyro:user-3:roles',	'a:1:{i:0;s:10:\"consultant\";}',	1777119947),
-('admin-dashboard-cache-tyro:user-4:privileges',	'a:4:{i:0;s:11:\"*accountant\";i:1;s:8:\"*payment\";i:2;s:10:\"*comission\";i:3;s:8:\"*invoice\";}',	1777119891),
-('admin-dashboard-cache-tyro:user-4:roles',	'a:1:{i:0;s:10:\"accountant\";}',	1777119891);
+('admin-dashboard-cache-tyro:user-4:privileges',	'a:4:{i:0;s:11:\"*accountant\";i:1;s:8:\"*payment\";i:2;s:10:\"*comission\";i:3;s:8:\"*invoice\";}',	1777191582),
+('admin-dashboard-cache-tyro:user-4:roles',	'a:1:{i:0;s:10:\"accountant\";}',	1777191582),
+('admin-dashboard-cache-tyro:user-7:privileges',	'a:1:{i:0;s:18:\"*digital_marketing\";}',	1777195911),
+('admin-dashboard-cache-tyro:user-7:roles',	'a:1:{i:0;s:17:\"digital-marketing\";}',	1777195911);
 
 DROP TABLE IF EXISTS `cache_locks`;
 CREATE TABLE `cache_locks` (
@@ -535,6 +540,8 @@ DROP TABLE IF EXISTS `marketing_campaigns`;
 CREATE TABLE `marketing_campaigns` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `start_date` date DEFAULT NULL,
+  `end_date` date DEFAULT NULL,
   `boosting_status` enum('on','off') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'off',
   `created_by` bigint unsigned DEFAULT NULL,
   `notes` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
@@ -545,32 +552,51 @@ CREATE TABLE `marketing_campaigns` (
   CONSTRAINT `marketing_campaigns_created_by_foreign` FOREIGN KEY (`created_by`) REFERENCES `users` (`id`) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+INSERT INTO `marketing_campaigns` (`id`, `name`, `start_date`, `end_date`, `boosting_status`, `created_by`, `notes`, `created_at`, `updated_at`) VALUES
+(1,	'Summer 2026',	'2026-05-01',	'2026-05-10',	'off',	7,	NULL,	'2026-04-25 23:01:19',	'2026-04-26 02:20:13');
+
+DROP TABLE IF EXISTS `marketing_documents`;
+CREATE TABLE `marketing_documents` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `application_id` bigint unsigned NOT NULL,
+  `document_name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `document_type` enum('sop','cv','cl') COLLATE utf8mb4_unicode_ci NOT NULL,
+  `status` enum('pending','received','not_received','ready','submitted') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'pending',
+  `notes` text COLLATE utf8mb4_unicode_ci,
+  `created_by` bigint unsigned DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `marketing_documents_application_id_foreign` (`application_id`),
+  KEY `marketing_documents_created_by_foreign` (`created_by`),
+  CONSTRAINT `marketing_documents_application_id_foreign` FOREIGN KEY (`application_id`) REFERENCES `applications` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `marketing_documents_created_by_foreign` FOREIGN KEY (`created_by`) REFERENCES `users` (`id`) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+INSERT INTO `marketing_documents` (`id`, `application_id`, `document_name`, `document_type`, `status`, `notes`, `created_by`, `created_at`, `updated_at`) VALUES
+(1,	11,	'SOP',	'sop',	'pending',	NULL,	7,	'2026-04-26 03:26:58',	'2026-04-26 03:26:58'),
+(2,	11,	'CV',	'cv',	'pending',	NULL,	7,	'2026-04-26 03:26:58',	'2026-04-26 03:26:58'),
+(3,	11,	'CL',	'cl',	'pending',	NULL,	7,	'2026-04-26 03:26:58',	'2026-04-26 03:26:58');
 
 DROP TABLE IF EXISTS `marketing_posters`;
 CREATE TABLE `marketing_posters` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
-  `campaign_id` bigint unsigned NOT NULL,
   `poster_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `status` enum('ready','not_ready','uploaded') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'not_ready',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `marketing_posters_campaign_id_foreign` (`campaign_id`),
-  CONSTRAINT `marketing_posters_campaign_id_foreign` FOREIGN KEY (`campaign_id`) REFERENCES `marketing_campaigns` (`id`) ON DELETE CASCADE
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 
 DROP TABLE IF EXISTS `marketing_videos`;
 CREATE TABLE `marketing_videos` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
-  `campaign_id` bigint unsigned NOT NULL,
   `video_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `status` enum('edited','upload','not_edited','ready') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'not_edited',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `marketing_videos_campaign_id_foreign` (`campaign_id`),
-  CONSTRAINT `marketing_videos_campaign_id_foreign` FOREIGN KEY (`campaign_id`) REFERENCES `marketing_campaigns` (`id`) ON DELETE CASCADE
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 
@@ -671,7 +697,12 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (91,	'2026_04_20_035455_add_emgs_score_to_applications_table',	48),
 (92,	'2026_04_21_000000_create_vfs_checklist_templates_table',	49),
 (93,	'2026_04_21_000001_add_country_to_vfs_checklist_templates',	50),
-(94,	'2026_04_25_100000_add_workflow_fields_to_commissions_table',	51);
+(94,	'2026_04_25_100000_add_workflow_fields_to_commissions_table',	51),
+(95,	'2026_04_26_100000_add_dates_to_marketing_campaigns_table',	52),
+(96,	'2026_04_26_110000_remove_campaign_id_from_marketing_videos',	53),
+(97,	'2026_04_26_110001_remove_campaign_id_from_marketing_posters',	53),
+(98,	'2026_04_26_120000_create_marketing_documents_table',	54),
+(99,	'2026_04_26_130000_create_marketing_documents_table',	55);
 
 DROP TABLE IF EXISTS `notifications`;
 CREATE TABLE `notifications` (
@@ -824,7 +855,8 @@ INSERT INTO `privilege_role` (`id`, `role_id`, `privilege_id`, `created_at`, `up
 (14,	4,	11,	'2026-04-07 21:53:18',	'2026-04-07 21:53:18'),
 (15,	4,	12,	'2026-04-07 21:55:21',	'2026-04-07 21:55:21'),
 (16,	3,	13,	'2026-04-11 04:25:47',	'2026-04-11 04:25:47'),
-(17,	4,	13,	'2026-04-11 04:25:47',	'2026-04-11 04:25:47');
+(17,	4,	13,	'2026-04-11 04:25:47',	'2026-04-11 04:25:47'),
+(18,	11,	14,	'2026-04-25 22:34:35',	'2026-04-25 22:34:35');
 
 DROP TABLE IF EXISTS `privileges`;
 CREATE TABLE `privileges` (
@@ -851,7 +883,8 @@ INSERT INTO `privileges` (`id`, `name`, `slug`, `description`, `created_at`, `up
 (10,	'Wildcard',	'*',	'Grants every privilege.',	'2026-02-21 01:19:44',	'2026-02-21 01:19:44'),
 (11,	'Payment',	'*payment',	NULL,	'2026-04-07 21:53:18',	'2026-04-07 21:55:35'),
 (12,	'Comission',	'*comission',	NULL,	'2026-04-07 21:55:21',	'2026-04-07 21:55:21'),
-(13,	'Invoice',	'*invoice',	NULL,	'2026-04-11 04:25:47',	'2026-04-11 04:25:47');
+(13,	'Invoice',	'*invoice',	NULL,	'2026-04-11 04:25:47',	'2026-04-11 04:25:47'),
+(14,	'Digital Marketing',	'*digital_marketing',	NULL,	'2026-04-25 22:34:35',	'2026-04-25 22:34:35');
 
 DROP TABLE IF EXISTS `roles`;
 CREATE TABLE `roles` (
@@ -873,7 +906,8 @@ INSERT INTO `roles` (`id`, `name`, `slug`, `is_active`, `created_at`, `updated_a
 (5,	'Editor',	'editor',	1,	'2026-02-18 02:45:05',	'2026-02-18 02:45:05'),
 (6,	'Application',	'application',	1,	'2026-02-18 22:39:28',	'2026-02-18 22:52:44'),
 (7,	'User',	'user',	1,	'2026-02-21 01:19:44',	'2026-02-21 01:19:44'),
-(10,	'Super Admin',	'super-admin',	1,	'2026-02-21 01:19:44',	'2026-02-21 01:19:44');
+(10,	'Super Admin',	'super-admin',	1,	'2026-02-21 01:19:44',	'2026-02-21 01:19:44'),
+(11,	'Digital Marketing',	'digital-marketing',	1,	'2026-04-25 22:33:54',	'2026-04-25 22:33:54');
 
 DROP TABLE IF EXISTS `salaries`;
 CREATE TABLE `salaries` (
@@ -926,7 +960,7 @@ CREATE TABLE `sessions` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, `last_activity`) VALUES
-('Dx7VSxvK8dmdNt8IpzTkSy60w7XAcs3nXCHposml',	3,	'127.0.0.1',	'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36',	'YTo1OntzOjY6Il90b2tlbiI7czo0MDoiMEZVcFgwV2NsbE9iQ3dDbUYyYUMzMGh3R3ZFcVFBSkNqdFBzTlBYTiI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czoxMDoidHlyby1sb2dpbiI7YToxOntzOjc6ImNhcHRjaGEiO2E6MDp7fX1zOjk6Il9wcmV2aW91cyI7YToyOntzOjM6InVybCI7czo0NjoiaHR0cDovLzEyNy4wLjAuMTo4MDAwL2Rhc2hib2FyZC9teS1jb21taXNzaW9ucyI7czo1OiJyb3V0ZSI7czoyMDoibXktY29tbWlzc2lvbnMuaW5kZXgiO31zOjUwOiJsb2dpbl93ZWJfNTliYTM2YWRkYzJiMmY5NDAxNTgwZjAxNGM3ZjU4ZWE0ZTMwOTg5ZCI7aTozO30=',	1777119665);
+('Kj4rvkg0SG7zVkmu22sUiwNbKYv3L9bVzTe3Dqb8',	7,	'127.0.0.1',	'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36',	'YTo1OntzOjY6Il90b2tlbiI7czo0MDoiTlB1N20xN1JnRkd2cUFQQ2pmaFByOWtha1R1WUkxUFcwdGFoY2xUbCI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czoxMDoidHlyby1sb2dpbiI7YToxOntzOjc6ImNhcHRjaGEiO2E6MDp7fX1zOjk6Il9wcmV2aW91cyI7YToyOntzOjM6InVybCI7czo2OToiaHR0cDovLzEyNy4wLjAuMTo4MDAwL2Rhc2hib2FyZC9tYXJrZXRpbmcvZG9jdW1lbnRzP2FwcGxpY2F0aW9uX2lkPTExIjtzOjU6InJvdXRlIjtzOjMxOiJhZG1pbi5tYXJrZXRpbmcuZG9jdW1lbnRzLmluZGV4Ijt9czo1MDoibG9naW5fd2ViXzU5YmEzNmFkZGMyYjJmOTQwMTU4MGYwMTRjN2Y1OGVhNGUzMDk4OWQiO2k6Nzt9',	1777195619);
 
 DROP TABLE IF EXISTS `settings`;
 CREATE TABLE `settings` (
@@ -1257,7 +1291,25 @@ INSERT INTO `tyro_audit_logs` (`id`, `user_id`, `event`, `auditable_type`, `audi
 (188,	3,	'user.logout',	'App\\Models\\User',	3,	NULL,	'{\"email\": \"consultant@example.com\"}',	'{\"ip\": \"127.0.0.1\", \"is_console\": false, \"user_agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36\"}',	'2026-04-25 11:47:31'),
 (189,	4,	'user.login',	'App\\Models\\User',	4,	NULL,	'{\"email\": \"accountant@example.com\"}',	'{\"ip\": \"127.0.0.1\", \"is_console\": false, \"user_agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36\"}',	'2026-04-25 11:47:39'),
 (190,	4,	'user.logout',	'App\\Models\\User',	4,	NULL,	'{\"email\": \"accountant@example.com\"}',	'{\"ip\": \"127.0.0.1\", \"is_console\": false, \"user_agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36\"}',	'2026-04-25 12:20:36'),
-(191,	3,	'user.login',	'App\\Models\\User',	3,	NULL,	'{\"email\": \"consultant@example.com\"}',	'{\"ip\": \"127.0.0.1\", \"is_console\": false, \"user_agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36\"}',	'2026-04-25 12:20:45');
+(191,	3,	'user.login',	'App\\Models\\User',	3,	NULL,	'{\"email\": \"consultant@example.com\"}',	'{\"ip\": \"127.0.0.1\", \"is_console\": false, \"user_agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36\"}',	'2026-04-25 12:20:45'),
+(192,	2,	'user.login',	'App\\Models\\User',	2,	NULL,	'{\"email\": \"marketing@example.com\"}',	'{\"ip\": \"127.0.0.1\", \"is_console\": false, \"user_agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36\"}',	'2026-04-26 03:42:07'),
+(193,	2,	'user.logout',	'App\\Models\\User',	2,	NULL,	'{\"email\": \"marketing@example.com\"}',	'{\"ip\": \"127.0.0.1\", \"is_console\": false, \"user_agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36\"}',	'2026-04-26 03:59:46'),
+(194,	1,	'user.login',	'App\\Models\\User',	1,	NULL,	'{\"email\": \"hello@inoodex.com\"}',	'{\"ip\": \"127.0.0.1\", \"is_console\": false, \"user_agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36\"}',	'2026-04-26 04:31:43'),
+(195,	1,	'user.unsuspended',	'App\\Models\\User',	5,	'{\"suspended_at\": \"2026-02-23 07:15:26\", \"suspension_reason\": \"test\"}',	'{\"suspended_at\": null, \"suspension_reason\": null}',	'{\"ip\": \"127.0.0.1\", \"is_console\": false, \"user_agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36\"}',	'2026-04-26 04:32:28'),
+(196,	1,	'role.created',	'HasinHayder\\Tyro\\Models\\Role',	11,	NULL,	'{\"id\": 11, \"name\": \"Digital Marketing\", \"slug\": \"digital-marketing\", \"is_active\": true}',	'{\"ip\": \"127.0.0.1\", \"is_console\": false, \"user_agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36\"}',	'2026-04-26 04:33:54'),
+(197,	1,	'privilege.created',	'HasinHayder\\Tyro\\Models\\Privilege',	14,	NULL,	'{\"id\": 14, \"name\": \"Digital Marketing\", \"slug\": \"*digital_marketing\", \"description\": null}',	'{\"ip\": \"127.0.0.1\", \"is_console\": false, \"user_agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36\"}',	'2026-04-26 04:34:35'),
+(198,	1,	'privilege.attached',	'HasinHayder\\Tyro\\Models\\Role',	11,	NULL,	'{\"privilege_id\": 14, \"privilege_slug\": \"*digital_marketing\"}',	'{\"ip\": \"127.0.0.1\", \"is_console\": false, \"user_agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36\"}',	'2026-04-26 04:34:35'),
+(199,	1,	'privilege.created',	'HasinHayder\\Tyro\\Models\\Privilege',	14,	NULL,	'{\"id\": 14, \"name\": \"Digital Marketing\", \"slug\": \"*digital_marketing\", \"roles\": [11], \"description\": null}',	'{\"ip\": \"127.0.0.1\", \"is_console\": false, \"user_agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36\"}',	'2026-04-26 04:34:35'),
+(200,	1,	'role.assigned',	'App\\Models\\User',	7,	NULL,	'{\"role_id\": 11, \"role_slug\": \"digital-marketing\"}',	'{\"ip\": \"127.0.0.1\", \"is_console\": false, \"user_agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36\"}',	'2026-04-26 04:34:57'),
+(201,	1,	'user.logout',	'App\\Models\\User',	1,	NULL,	'{\"email\": \"hello@inoodex.com\"}',	'{\"ip\": \"127.0.0.1\", \"is_console\": false, \"user_agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36\"}',	'2026-04-26 04:35:07'),
+(202,	2,	'user.login',	'App\\Models\\User',	2,	NULL,	'{\"email\": \"marketing@example.com\"}',	'{\"ip\": \"127.0.0.1\", \"is_console\": false, \"user_agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36\"}',	'2026-04-26 04:35:23'),
+(203,	2,	'user.logout',	'App\\Models\\User',	2,	NULL,	'{\"email\": \"marketing@example.com\"}',	'{\"ip\": \"127.0.0.1\", \"is_console\": false, \"user_agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36\"}',	'2026-04-26 04:43:58'),
+(204,	7,	'user.login',	'App\\Models\\User',	7,	NULL,	'{\"email\": \"digital_marketing@example.com\"}',	'{\"ip\": \"127.0.0.1\", \"is_console\": false, \"user_agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36\"}',	'2026-04-26 04:44:09'),
+(205,	4,	'user.login',	'App\\Models\\User',	4,	NULL,	'{\"email\": \"accountant@example.com\"}',	'{\"ip\": \"127.0.0.1\", \"is_console\": false, \"user_agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36\"}',	'2026-04-26 08:14:40'),
+(206,	4,	'user.logout',	'App\\Models\\User',	4,	NULL,	'{\"email\": \"accountant@example.com\"}',	'{\"ip\": \"127.0.0.1\", \"is_console\": false, \"user_agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36\"}',	'2026-04-26 08:14:53'),
+(207,	7,	'user.login',	'App\\Models\\User',	7,	NULL,	'{\"email\": \"digital_marketing@example.com\"}',	'{\"ip\": \"127.0.0.1\", \"is_console\": false, \"user_agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36\"}',	'2026-04-26 08:15:04'),
+(208,	7,	'user.logout',	'App\\Models\\User',	7,	NULL,	'{\"email\": \"digital_marketing@example.com\"}',	'{\"ip\": \"127.0.0.1\", \"is_console\": false, \"user_agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36\"}',	'2026-04-26 08:17:14'),
+(209,	7,	'user.login',	'App\\Models\\User',	7,	NULL,	'{\"email\": \"digital_marketing@example.com\"}',	'{\"ip\": \"127.0.0.1\", \"is_console\": false, \"user_agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36\"}',	'2026-04-26 08:17:31');
 
 DROP TABLE IF EXISTS `universities`;
 CREATE TABLE `universities` (
@@ -1301,7 +1353,8 @@ INSERT INTO `user_roles` (`id`, `user_id`, `role_id`, `created_at`, `updated_at`
 (3,	3,	3,	'2026-02-17 13:02:10',	'2026-02-17 13:02:10'),
 (4,	4,	4,	'2026-02-17 23:03:02',	'2026-02-17 23:03:02'),
 (5,	5,	5,	'2026-02-18 02:45:29',	'2026-02-18 02:45:29'),
-(6,	6,	6,	'2026-02-18 22:47:11',	'2026-02-18 22:47:11');
+(6,	6,	6,	'2026-02-18 22:47:11',	'2026-02-18 22:47:11'),
+(8,	7,	11,	'2026-04-25 22:34:57',	'2026-04-25 22:34:57');
 
 DROP TABLE IF EXISTS `users`;
 CREATE TABLE `users` (
@@ -1334,8 +1387,9 @@ INSERT INTO `users` (`id`, `name`, `email`, `basic_salary`, `email_verified_at`,
 (2,	'Marketing',	'marketing@example.com',	18000.00,	NULL,	'$2y$12$ei9LSrLrIhng1FNUsEZztOnKxDIZ3stVVswIXvKK8Dvphk3pTs5BO',	NULL,	NULL,	NULL,	NULL,	'2026-02-17 12:46:55',	'2026-02-23 02:49:28',	NULL,	NULL,	NULL,	0,	'521654651',	'Islami Bank Bangladesh',	'Banani',	'57868'),
 (3,	'Consultant',	'consultant@example.com',	12000.00,	NULL,	'$2y$12$m3ZggFrGDw7maLPG1tU8DuKDOTSWUUeSzEFcW1fSfK7xCHJmwJTVW',	NULL,	NULL,	NULL,	NULL,	'2026-02-17 12:49:33',	'2026-02-22 04:14:08',	NULL,	NULL,	NULL,	0,	NULL,	NULL,	NULL,	NULL),
 (4,	'Accountant',	'accountant@example.com',	20000.00,	NULL,	'$2y$12$eF1/DUs.OmbYrUHoLL0Z.uO5HCJSsdaYSknKdu6Sl1tnYF.dhRC.G',	NULL,	NULL,	NULL,	NULL,	'2026-02-17 23:01:58',	'2026-02-22 04:14:08',	NULL,	NULL,	NULL,	0,	NULL,	NULL,	NULL,	NULL),
-(5,	'Editor',	'editor@example.com',	12000.00,	NULL,	'$2y$12$cmDPJgBl7B/V8acxTv3Ej.15/p9DkpiY/G/cSFL9j2iwTkKmbbjXW',	NULL,	NULL,	NULL,	NULL,	'2026-02-18 02:45:29',	'2026-02-23 01:15:26',	'2026-02-23 01:15:26',	'test',	NULL,	0,	NULL,	NULL,	NULL,	NULL),
-(6,	'Application',	'application@example.com',	15000.00,	NULL,	'$2y$12$vZrAn3nHsyH1FOtRvuBW4elSdagHiBA4YnoI2.QdnHkYqeI6MmL1e',	NULL,	NULL,	NULL,	NULL,	'2026-02-18 22:39:12',	'2026-02-22 04:14:08',	NULL,	NULL,	NULL,	0,	NULL,	NULL,	NULL,	NULL);
+(5,	'Editor',	'editor@example.com',	12000.00,	NULL,	'$2y$12$cmDPJgBl7B/V8acxTv3Ej.15/p9DkpiY/G/cSFL9j2iwTkKmbbjXW',	NULL,	NULL,	NULL,	NULL,	'2026-02-18 02:45:29',	'2026-04-25 22:32:28',	NULL,	NULL,	NULL,	0,	NULL,	NULL,	NULL,	NULL),
+(6,	'Application',	'application@example.com',	15000.00,	NULL,	'$2y$12$vZrAn3nHsyH1FOtRvuBW4elSdagHiBA4YnoI2.QdnHkYqeI6MmL1e',	NULL,	NULL,	NULL,	NULL,	'2026-02-18 22:39:12',	'2026-02-22 04:14:08',	NULL,	NULL,	NULL,	0,	NULL,	NULL,	NULL,	NULL),
+(7,	'Digital Marketing',	'digital_marketing@example.com',	0.00,	NULL,	'$2y$12$fo/Cfa7sIDcLK6ytXcZD.uCVPwMxTVYzEGuUecSP.RctWeKBlIkqi',	NULL,	NULL,	NULL,	NULL,	'2026-04-25 22:33:19',	'2026-04-25 22:33:19',	NULL,	NULL,	NULL,	0,	NULL,	NULL,	NULL,	NULL);
 
 DROP TABLE IF EXISTS `vfs_checklist_templates`;
 CREATE TABLE `vfs_checklist_templates` (
@@ -1427,4 +1481,4 @@ INSERT INTO `vfs_checklists` (`id`, `application_id`, `checklist_item`, `is_chec
 (131,	11,	'Financial Declaration Affidavit',	0,	NULL,	NULL,	NULL,	'2026-04-21 06:42:16',	'2026-04-21 06:42:16'),
 (132,	11,	'test',	0,	NULL,	NULL,	NULL,	'2026-04-21 06:42:16',	'2026-04-21 06:42:16');
 
--- 2026-04-25 12:21:28 UTC
+-- 2026-04-26 10:42:37 UTC
