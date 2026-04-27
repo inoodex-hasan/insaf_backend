@@ -170,8 +170,8 @@ INSERT INTO `cache` (`key`, `value`, `expiration`) VALUES
 ('admin-dashboard-cache-tyro:user-3:roles',	'a:1:{i:0;s:10:\"consultant\";}',	1777119947),
 ('admin-dashboard-cache-tyro:user-4:privileges',	'a:4:{i:0;s:11:\"*accountant\";i:1;s:8:\"*payment\";i:2;s:10:\"*comission\";i:3;s:8:\"*invoice\";}',	1777191582),
 ('admin-dashboard-cache-tyro:user-4:roles',	'a:1:{i:0;s:10:\"accountant\";}',	1777191582),
-('admin-dashboard-cache-tyro:user-7:privileges',	'a:1:{i:0;s:18:\"*digital_marketing\";}',	1777195911),
-('admin-dashboard-cache-tyro:user-7:roles',	'a:1:{i:0;s:17:\"digital-marketing\";}',	1777195911);
+('admin-dashboard-cache-tyro:user-7:privileges',	'a:1:{i:0;s:18:\"*digital_marketing\";}',	1777202511),
+('admin-dashboard-cache-tyro:user-7:roles',	'a:1:{i:0;s:17:\"digital-marketing\";}',	1777202511);
 
 DROP TABLE IF EXISTS `cache_locks`;
 CREATE TABLE `cache_locks` (
@@ -574,9 +574,9 @@ CREATE TABLE `marketing_documents` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 INSERT INTO `marketing_documents` (`id`, `application_id`, `document_name`, `document_type`, `status`, `notes`, `created_by`, `created_at`, `updated_at`) VALUES
-(1,	11,	'SOP',	'sop',	'pending',	NULL,	7,	'2026-04-26 03:26:58',	'2026-04-26 03:26:58'),
-(2,	11,	'CV',	'cv',	'pending',	NULL,	7,	'2026-04-26 03:26:58',	'2026-04-26 03:26:58'),
-(3,	11,	'CL',	'cl',	'pending',	NULL,	7,	'2026-04-26 03:26:58',	'2026-04-26 03:26:58');
+(1,	11,	'SOP',	'sop',	'ready',	NULL,	7,	'2026-04-26 03:26:58',	'2026-04-26 05:09:37'),
+(2,	11,	'CV',	'cv',	'received',	NULL,	7,	'2026-04-26 03:26:58',	'2026-04-26 05:09:37'),
+(3,	11,	'CL',	'cl',	'not_received',	NULL,	7,	'2026-04-26 03:26:58',	'2026-04-26 05:01:38');
 
 DROP TABLE IF EXISTS `marketing_posters`;
 CREATE TABLE `marketing_posters` (
@@ -960,7 +960,7 @@ CREATE TABLE `sessions` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, `last_activity`) VALUES
-('Kj4rvkg0SG7zVkmu22sUiwNbKYv3L9bVzTe3Dqb8',	7,	'127.0.0.1',	'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36',	'YTo1OntzOjY6Il90b2tlbiI7czo0MDoiTlB1N20xN1JnRkd2cUFQQ2pmaFByOWtha1R1WUkxUFcwdGFoY2xUbCI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czoxMDoidHlyby1sb2dpbiI7YToxOntzOjc6ImNhcHRjaGEiO2E6MDp7fX1zOjk6Il9wcmV2aW91cyI7YToyOntzOjM6InVybCI7czo2OToiaHR0cDovLzEyNy4wLjAuMTo4MDAwL2Rhc2hib2FyZC9tYXJrZXRpbmcvZG9jdW1lbnRzP2FwcGxpY2F0aW9uX2lkPTExIjtzOjU6InJvdXRlIjtzOjMxOiJhZG1pbi5tYXJrZXRpbmcuZG9jdW1lbnRzLmluZGV4Ijt9czo1MDoibG9naW5fd2ViXzU5YmEzNmFkZGMyYjJmOTQwMTU4MGYwMTRjN2Y1OGVhNGUzMDk4OWQiO2k6Nzt9',	1777195619);
+('Kj4rvkg0SG7zVkmu22sUiwNbKYv3L9bVzTe3Dqb8',	7,	'127.0.0.1',	'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36',	'YTo1OntzOjY6Il90b2tlbiI7czo0MDoiTlB1N20xN1JnRkd2cUFQQ2pmaFByOWtha1R1WUkxUFcwdGFoY2xUbCI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czoxMDoidHlyby1sb2dpbiI7YToxOntzOjc6ImNhcHRjaGEiO2E6MDp7fX1zOjk6Il9wcmV2aW91cyI7YToyOntzOjM6InVybCI7czo1MToiaHR0cDovLzEyNy4wLjAuMTo4MDAwL2Rhc2hib2FyZC9tYXJrZXRpbmcvZG9jdW1lbnRzIjtzOjU6InJvdXRlIjtzOjMxOiJhZG1pbi5tYXJrZXRpbmcuZG9jdW1lbnRzLmluZGV4Ijt9czo1MDoibG9naW5fd2ViXzU5YmEzNmFkZGMyYjJmOTQwMTU4MGYwMTRjN2Y1OGVhNGUzMDk4OWQiO2k6Nzt9',	1777202211);
 
 DROP TABLE IF EXISTS `settings`;
 CREATE TABLE `settings` (
@@ -1481,4 +1481,4 @@ INSERT INTO `vfs_checklists` (`id`, `application_id`, `checklist_item`, `is_chec
 (131,	11,	'Financial Declaration Affidavit',	0,	NULL,	NULL,	NULL,	'2026-04-21 06:42:16',	'2026-04-21 06:42:16'),
 (132,	11,	'test',	0,	NULL,	NULL,	NULL,	'2026-04-21 06:42:16',	'2026-04-21 06:42:16');
 
--- 2026-04-26 10:42:37 UTC
+-- 2026-04-26 11:17:28 UTC

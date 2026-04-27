@@ -202,8 +202,6 @@ class CommissionController extends Controller
             'review_notes' => $validated['review_notes'] ?? null,
         ]);
 
-        // TODO: Notify employee about approval
-
         return redirect()->route('admin.commissions.pending')
             ->with('success', 'Commission claim approved successfully. Ready for payment.');
     }
@@ -231,8 +229,6 @@ class CommissionController extends Controller
             'review_notes' => $validated['review_notes'],
         ]);
 
-        // TODO: Notify employee about rejection
-
         return redirect()->route('admin.commissions.pending')
             ->with('success', 'Commission claim rejected. Employee can resubmit with corrections.');
     }
@@ -252,8 +248,6 @@ class CommissionController extends Controller
         $commission->update([
             'workflow_status' => Commission::STATUS_PAID,
         ]);
-
-        // TODO: Create journal entry for commission payment
 
         return redirect()->route('admin.commissions.index')
             ->with('success', 'Commission marked as paid successfully.');

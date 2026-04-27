@@ -213,8 +213,6 @@ class MyCommissionController extends Controller
             $message = 'Commission claim submitted successfully. Awaiting accountant review.';
         }
 
-        // TODO: Notify accountants about new claim
-
         return redirect()->route('my-commissions.index')
             ->with('success', $message);
     }

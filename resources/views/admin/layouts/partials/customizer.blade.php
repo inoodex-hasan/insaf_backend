@@ -71,7 +71,7 @@
                         </svg>
                         Dark
                     </button>
-                    <button type="button" class="btn"
+                    <!-- <button type="button" class="btn"
                         :class="[$store.app.theme === 'system' ? 'btn-primary' :'btn-outline-primary']"
                         @click="$store.app.toggleTheme('system')">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
@@ -85,7 +85,7 @@
                                 stroke-linecap="round"></path>
                         </svg>
                         System
-                    </button>
+                    </button> -->
                 </div>
             </div>
 
@@ -94,42 +94,42 @@
                 <h5 class="mb-1 text-base leading-none dark:text-white">Navigation Position</h5>
                 <p class="text-xs text-white-dark">Select the primary navigation paradigm for your app.</p>
                 <div class="mt-3 grid grid-cols-3 gap-2">
-                    <button type="button" class="btn"
+                    <!-- <button type="button" class="btn"
                         :class="[$store.app.menu === 'horizontal' ? 'btn-primary' :'btn-outline-primary']"
                         @click="$store.app.toggleMenu('horizontal')">
                         Horizontal
-                    </button>
+                    </button> -->
                     <button type="button" class="btn"
                         :class="[$store.app.menu === 'vertical' ? 'btn-primary' :'btn-outline-primary']"
                         @click="$store.app.toggleMenu('vertical')">
                         Vertical
                     </button>
-                    <button type="button" class="btn"
+                    {{-- <button type="button" class="btn"
                         :class="[$store.app.menu === 'collapsible-vertical' ? 'btn-primary' :'btn-outline-primary']"
                         @click="$store.app.toggleMenu('collapsible-vertical')">
                         Collapsible
-                    </button>
+                    </button> --}}
                 </div>
-                <div class="mt-5 text-primary">
+                {{-- <div class="mt-5 text-primary">
                     <label class="mb-0 inline-flex">
                         <input x-model="$store.app.semidark" type="checkbox" :value="true" class="form-checkbox"
                             @change="$store.app.toggleSemidark()" />
                         <span>Semi Dark (Sidebar & Header)</span>
                     </label>
-                </div>
+                </div> --}}
             </div>
 
             <!-- Layout Style -->
             <div class="mb-3 rounded-md border border-dashed border-[#e0e6ed] p-3 dark:border-[#1b2e4b]">
                 <h5 class="mb-1 text-base leading-none dark:text-white">Layout Style</h5>
                 <p class="text-xs text-white-dark">Select the primary layout style for your app.</p>
-                <div class="mt-3 flex gap-2">
-                    <button type="button" class="btn flex-auto"
+                <div class="mt-3 grid grid-cols-3 gap-2">
+                    <button type="button" class="btn"
                         :class="[$store.app.layout === 'boxed-layout' ? 'btn-primary' :'btn-outline-primary']"
                         @click="$store.app.toggleLayout('boxed-layout')">
                         Box
                     </button>
-                    <button type="button" class="btn flex-auto"
+                    <button type="button" class="btn"
                         :class="[$store.app.layout === 'full' ? 'btn-primary' :'btn-outline-primary']"
                         @click="$store.app.toggleLayout('full')">
                         Full
@@ -141,13 +141,13 @@
             <div class="mb-3 rounded-md border border-dashed border-[#e0e6ed] p-3 dark:border-[#1b2e4b]">
                 <h5 class="mb-1 text-base leading-none dark:text-white">Direction</h5>
                 <p class="text-xs text-white-dark">Select the direction for your app.</p>
-                <div class="mt-3 flex gap-2">
-                    <button type="button" class="btn flex-auto"
+                <div class="mt-3 grid grid-cols-3 gap-2">
+                    <button type="button" class="btn"
                         :class="[$store.app.rtlClass === 'ltr' ? 'btn-primary' :'btn-outline-primary']"
                         @click="$store.app.toggleRTL('ltr')">
                         LTR
                     </button>
-                    <button type="button" class="btn flex-auto"
+                    <button type="button" class="btn"
                         :class="[$store.app.rtlClass === 'rtl' ? 'btn-primary' :'btn-outline-primary']"
                         @click="$store.app.toggleRTL('rtl')">
                         RTL
@@ -155,7 +155,7 @@
                 </div>
             </div>
 
-            <!-- Navbar Type -->
+            {{-- <!-- Navbar Type -->
             <div class="mb-3 rounded-md border border-dashed border-[#e0e6ed] p-3 dark:border-[#1b2e4b]">
                 <h5 class="mb-1 text-base leading-none dark:text-white">Navbar Type</h5>
                 <p class="text-xs text-white-dark">Sticky or Floating.</p>
@@ -176,14 +176,14 @@
                         <span>Static</span>
                     </label>
                 </div>
-            </div>
+            </div> --}}
 
             <!-- Router Transition -->
             <div class="mb-3 rounded-md border border-dashed border-[#e0e6ed] p-3 dark:border-[#1b2e4b]">
                 <h5 class="mb-1 text-base leading-none dark:text-white">Router Transition</h5>
                 <p class="text-xs text-white-dark">Animation of main content.</p>
                 <div class="mt-3">
-                    <select x-model="$store.app.animation" class="form-select border-primary text-primary"
+                    <select x-model="$store.app.animation" class="form-select border-primary text-primary !w-fit"
                         @change="$store.app.toggleAnimation()">
                         <option value="">None</option>
                         <option value="animate__fadeIn">Fade</option>
