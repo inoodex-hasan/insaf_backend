@@ -125,49 +125,7 @@
                     </ul>
                 </li>
 
-                <!-- Administration -->
-                <li class="nav-item" x-data="{ open: false }">
-                    <a href="javascript:;" @click="open = !open" class="group">
-                        <div class="flex items-center justify-between">
-                            <div class="flex items-center">
-                                <svg class="shrink-0" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path opacity="0.5" d="M12 15a3 3 0 100-6 3 3 0 000 6z" fill="currentColor" />
-                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M18.121 17.659c.032.085.097.158.18.194l.003.002c.198.088.435-.004.529-.204.03-.065.062-.132.094-.197.105-.209.346-.312.569-.245.068.02.137.04.205.063.228.077.375.31.344.548-.009.071-.02.144-.032.215-.04.241.104.475.34.55a4.342 4.342 0 01.705.315c.218.122.316.395.231.624l-.025.07c-.085.23-.339.351-.568.27-.07-.024-.138-.05-.208-.072-.225-.073-.473.023-.585.228-.035.064-.07.13-.108.194-.123.212-.046.48.167.603.064.037.129.071.193.109.215.126.31.398.225.626-.145.394-.33.766-.554 1.111-.137.211-.407.284-.63.17l-.066-.034c-.218-.11-.49-.057-.643.125-.047.056-.093.113-.143.167-.163.178-.186.446-.057.653l.044.07c.143.232.083.535-.135.698a4.33 4.33 0 01-.84.484c-.233.1-.515-.004-.634-.233l-.037-.073c-.116-.226-.395-.316-.624-.213l-.208.094c-.22.1-.336.353-.274.587l.02.075c.063.242-.083.491-.324.557a4.343 4.343 0 01-.767.121c-.25.016-.474-.165-.52-.413l-.014-.076c-.042-.243-.278-.403-.523-.357l-.226.042c-.239.045-.476-.102-.55-.34-.021-.067-.04-.134-.06-.202-.071-.238.082-.48.323-.555a4.342 4.342 0 01.703-.316c.218-.121.317-.393.232-.622l-.025-.07c-.085-.23-.339-.351-.568-.27-.069.023-.137.049-.206.072-.225.074-.473-.019-.585-.224-.035-.065-.07-.131-.107-.196-.122-.211-.045-.478.168-.601.063-.037.128-.072.192-.11.215-.126.31-.397.225-.625-.146-.395-.331-.768-.556-1.113-.137-.211-.408-.284-.632-.169l-.065.034c-.218.11-.489.058-.642-.124-.047-.056-.094-.113-.144-.168-.163-.177-.186-.444-.058-.651l.044-.07c.143-.232.084-.535-.134-.698a4.33 4.33 0 01-.84-.484c-.233-.101-.516.004-.635.232l-.037.073c-.116.225-.395.315-.624.212l-.207-.094c-.22-.099-.336-.352-.275-.585l.02-.076c.063-.242-.082-.49-.323-.557a4.343 4.343 0 01-.767-.12c-.25-.017-.474.164-.52.412l-.015.076c-.041.244-.277.405-.522.36l-.225-.042c-.238-.045-.476.101-.551.338-.021.068-.041.136-.061.204-.071.238.081.48.322.556.234.08.472.196.704.317.218.121.317.393.232.622l-.026.071c-.084.229-.337.35-.565.269-.067-.022-.133-.046-.199-.068-.226-.075-.476.019-.59.223-.035.064-.071.129-.109.193-.123.213-.046.482.168.605.064.037.129.072.193.11.215.126.311.398.226.627-.146.394-.331.766-.556 1.111z" fill="currentColor" />
-                                </svg>
-                                <span class="px-3">Administration</span>
-                            </div>
-                            <svg class="h-4 w-4 transition-transform" :class="open ? 'rotate-180' : ''" viewBox="0 0 24 24" fill="none">
-                                <path d="M19 9l-7 7-7-7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                            </svg>
-                        </div>
-                    </a>
-                    <ul x-show="open" x-collapse class="mt-1 space-y-1 rounded-md bg-gray-100 p-2 dark:bg-[#1b2e4b]">
-                        <li><a href="{{ route('tyro-dashboard.users.index') }}" class="block rounded-md px-3 py-2 text-sm hover:bg-white hover:shadow-sm dark:hover:bg-[#0e1726]">Users</a></li>
-                        <li><a href="{{ route('tyro-dashboard.roles.index') }}" class="block rounded-md px-3 py-2 text-sm hover:bg-white hover:shadow-sm dark:hover:bg-[#0e1726]">Roles</a></li>
-                        <li><a href="{{ route('tyro-dashboard.privileges.index') }}" class="block rounded-md px-3 py-2 text-sm hover:bg-white hover:shadow-sm dark:hover:bg-[#0e1726]">Privileges</a></li>
-                    </ul>
-                </li>
 
-                <!-- Settings -->
-                <li class="nav-item" x-data="{ open: false }">
-                    <a href="javascript:;" @click="open = !open" class="group">
-                        <div class="flex items-center justify-between">
-                            <div class="flex items-center">
-                                <svg class="shrink-0" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" stroke="currentColor" stroke-width="1.5" />
-                                    <path d="M12 15a3 3 0 100-6 3 3 0 000 6z" stroke="currentColor" stroke-width="1.5" />
-                                </svg>
-                                <span class="px-3">Settings</span>
-                            </div>
-                            <svg class="h-4 w-4 transition-transform" :class="open ? 'rotate-180' : ''" viewBox="0 0 24 24" fill="none">
-                                <path d="M19 9l-7 7-7-7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                            </svg>
-                        </div>
-                    </a>
-                    <ul x-show="open" x-collapse class="mt-1 space-y-1 rounded-md bg-gray-100 p-2 dark:bg-[#1b2e4b]">
-                        <li><a href="{{ route('admin.settings.index') }}" class="block rounded-md px-3 py-2 text-sm hover:bg-white hover:shadow-sm dark:hover:bg-[#0e1726]">Settings</a></li>
-                    </ul>
-                </li>
 
                 <!-- Data Collection -->
                 <li class="nav-item" x-data="{ open: false }">
@@ -175,8 +133,9 @@
                         <div class="flex items-center justify-between">
                             <div class="flex items-center">
                                 <svg class="shrink-0" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M3 11V13M5 10L18 6V18L5 14V10Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                                    <path d="M5 14L6 19C6.2 20 7 20.5 8 20L9 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                    <ellipse cx="12" cy="5" rx="9" ry="3" stroke="currentColor" stroke-width="2"/>
+                                    <path d="M21 12C21 13.6569 16.9706 15 12 15C7.02944 15 3 13.6569 3 12" stroke="currentColor" stroke-width="2"/>
+                                    <path d="M21 5V19C21 20.6569 16.9706 22 12 22C7.02944 22 3 20.6569 3 19V5" stroke="currentColor" stroke-width="2"/>
                                 </svg>
                                 <span class="px-3">Data Collection</span>
                             </div>
@@ -258,9 +217,10 @@
                         <div class="flex items-center justify-between">
                             <div class="flex items-center">
                                 <svg class="shrink-0" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M12 22C17.5 22 22 17.5 22 12C22 6.5 17.5 2 12 2C6.5 2 2 6.5 2 12C2 17.5 6.5 22 12 22Z" stroke="currentColor" stroke-width="2" />
-                                    <path d="M12 12V16" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-                                    <path d="M12 8H12.01" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                                    <path d="M19 21H5C3.89543 21 3 20.1046 3 19V5C3 3.89543 3.89543 3 5 3H19C20.1046 3 21 3.89543 21 5V19C21 20.1046 20.1046 21 19 21Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path d="M7 8H17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path d="M7 12H17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path d="M7 16H13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                                 </svg>
                                 <span class="px-3">Application</span>
                             </div>
@@ -329,9 +289,8 @@
                         <div class="flex items-center justify-between">
                             <div class="flex items-center">
                                 <svg class="shrink-0" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                                    <path d="M2 17L12 22L22 17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                                    <path d="M2 12L12 17L22 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                    <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+                                    <path d="M12 6V18M9 9H13.5C14.3284 9 15 9.67157 15 10.5C15 11.3284 14.3284 12 13.5 12H10.5C9.67157 12 9 12.6716 9 13.5C9 14.3284 9.67157 15 10.5 15H15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                                 </svg>
                                 <span class="px-3">My Commissions</span>
                             </div>
@@ -352,7 +311,8 @@
                         <div class="flex items-center justify-between">
                             <div class="flex items-center">
                                 <svg class="shrink-0" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path opacity="0.5" d="M17 18.5H19C20.1046 18.5 21 17.6046 21 16.5V7.5C21 6.39543 20.1046 5.5 19 5.5H5C3.89543 5.5 3 6.39543 3 7.5V16.5C3 17.6046 3.89543 18.5 5 18.5H7M12 15.5V2.5M12 15.5L9 12.5M12 15.5L15 12.5M9 21.5H15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                                    <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path d="M6.5 2H20V22H6.5A2.5 2.5 0 0 1 4 19.5V4.5A2.5 2.5 0 0 1 6.5 2z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                                 </svg>
                                 <span class="px-3 font-bold">Accounting</span>
                             </div>
@@ -375,7 +335,8 @@
                         <div class="flex items-center justify-between">
                             <div class="flex items-center">
                                 <svg class="shrink-0" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M8 6H21M8 12H21M8 18H21M3 6H3.01M3 12H3.01M3 18H3.01" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                    <rect x="2" y="5" width="20" height="14" rx="2" stroke="currentColor" stroke-width="2"/>
+                                    <path d="M2 10H22" stroke="currentColor" stroke-width="2"/>
                                 </svg>
                                 <span class="px-3">Payments</span>
                             </div>
@@ -416,9 +377,8 @@
                         <div class="flex items-center justify-between">
                             <div class="flex items-center">
                                 <svg class="shrink-0" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="currentColor" stroke-width="2" />
-                                    <path d="M12 8V12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                                    <path d="M12 16H12.01" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                    <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2"/>
+                                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" stroke="currentColor" stroke-width="2"/>
                                 </svg>
                                 <span class="px-3">Operations</span>
                             </div>
@@ -484,9 +444,8 @@
                         <div class="flex items-center justify-between">
                             <div class="flex items-center">
                                 <svg class="shrink-0" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                                    <path d="M2 17L12 22L22 17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                                    <path d="M2 12L12 17L22 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                    <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+                                    <path d="M12 6V18M9 9H13.5C14.3284 9 15 9.67157 15 10.5C15 11.3284 14.3284 12 13.5 12H10.5C9.67157 12 9 12.6716 9 13.5C9 14.3284 9.67157 15 10.5 15H15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                                 </svg>
                                 <span class="px-3">Commissions</span>
                                 @php
@@ -520,6 +479,49 @@
                             </a>
                         </li>
                         <li><a href="{{ route('admin.commissions.index') }}" class="block rounded-md px-3 py-2 text-sm hover:bg-white hover:shadow-sm dark:hover:bg-[#0e1726]">All Commissions</a></li>
+                    </ul>
+                </li>
+                <!-- Administration -->
+                <li class="nav-item" x-data="{ open: false }">
+                    <a href="javascript:;" @click="open = !open" class="group">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center">
+                                <svg class="shrink-0" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path opacity="0.5" d="M12 15a3 3 0 100-6 3 3 0 000 6z" fill="currentColor" />
+                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M18.121 17.659c.032.085.097.158.18.194l.003.002c.198.088.435-.004.529-.204.03-.065.062-.132.094-.197.105-.209.346-.312.569-.245.068.02.137.04.205.063.228.077.375.31.344.548-.009.071-.02.144-.032.215-.04.241.104.475.34.55a4.342 4.342 0 01.705.315c.218.122.316.395.231.624l-.025.07c-.085.23-.339.351-.568.27-.07-.024-.138-.05-.208-.072-.225-.073-.473.023-.585.228-.035.064-.07.13-.108.194-.123.212-.046.48.167.603.064.037.129.071.193.109.215.126.31.398.225.626-.145.394-.33.766-.554 1.111-.137.211-.407.284-.63.17l-.066-.034c-.218-.11-.49-.057-.643.125-.047.056-.093.113-.143.167-.163.178-.186.446-.057.653l.044.07c.143.232.083.535-.135.698a4.33 4.33 0 01-.84.484c-.233.1-.515-.004-.634-.233l-.037-.073c-.116-.226-.395-.316-.624-.213l-.208.094c-.22.1-.336.353-.274.587l.02.075c.063.242-.083.491-.324.557a4.343 4.343 0 01-.767.121c-.25.016-.474-.165-.52-.413l-.014-.076c-.042-.243-.278-.403-.523-.357l-.226.042c-.239.045-.476-.102-.55-.34-.021-.067-.04-.134-.06-.202-.071-.238.082-.48.323-.555a4.342 4.342 0 01.703-.316c.218-.121.317-.393.232-.622l-.025-.07c-.085-.23-.339-.351-.568-.27-.069.023-.137.049-.206.072-.225.074-.473-.019-.585-.224-.035-.065-.07-.131-.107-.196-.122-.211-.045-.478.168-.601.063-.037.128-.072.192-.11.215-.126.31-.397.225-.625-.146-.395-.331-.768-.556-1.113-.137-.211-.408-.284-.632-.169l-.065.034c-.218.11-.489.058-.642-.124-.047-.056-.094-.113-.144-.168-.163-.177-.186-.444-.058-.651l.044-.07c.143-.232.084-.535-.134-.698a4.33 4.33 0 01-.84-.484c-.233-.101-.516.004-.635.232l-.037.073c-.116.225-.395.315-.624.212l-.207-.094c-.22-.099-.336-.352-.275-.585l.02-.076c.063-.242-.082-.49-.323-.557a4.343 4.343 0 01-.767-.12c-.25-.017-.474.164-.52.412l-.015.076c-.041.244-.277.405-.522.36l-.225-.042c-.238-.045-.476.101-.551.338-.021.068-.041.136-.061.204-.071.238.081.48.322.556.234.08.472.196.704.317.218.121.317.393.232.622l-.026.071c-.084.229-.337.35-.565.269-.067-.022-.133-.046-.199-.068-.226-.075-.476.019-.59.223-.035.064-.071.129-.109.193-.123.213-.046.482.168.605.064.037.129.072.193.11.215.126.311.398.226.627-.146.394-.331.766-.556 1.111z" fill="currentColor" />
+                                </svg>
+                                <span class="px-3">Administration</span>
+                            </div>
+                            <svg class="h-4 w-4 transition-transform" :class="open ? 'rotate-180' : ''" viewBox="0 0 24 24" fill="none">
+                                <path d="M19 9l-7 7-7-7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                            </svg>
+                        </div>
+                    </a>
+                    <ul x-show="open" x-collapse class="mt-1 space-y-1 rounded-md bg-gray-100 p-2 dark:bg-[#1b2e4b]">
+                        <li><a href="{{ route('tyro-dashboard.users.index') }}" class="block rounded-md px-3 py-2 text-sm hover:bg-white hover:shadow-sm dark:hover:bg-[#0e1726]">Users</a></li>
+                        <li><a href="{{ route('tyro-dashboard.roles.index') }}" class="block rounded-md px-3 py-2 text-sm hover:bg-white hover:shadow-sm dark:hover:bg-[#0e1726]">Roles</a></li>
+                        <li><a href="{{ route('tyro-dashboard.privileges.index') }}" class="block rounded-md px-3 py-2 text-sm hover:bg-white hover:shadow-sm dark:hover:bg-[#0e1726]">Privileges</a></li>
+                    </ul>
+                </li>
+
+                <!-- Settings -->
+                <li class="nav-item" x-data="{ open: false }">
+                    <a href="javascript:;" @click="open = !open" class="group">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center">
+                                <svg class="shrink-0" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" stroke="currentColor" stroke-width="1.5" />
+                                    <path d="M12 15a3 3 0 100-6 3 3 0 000 6z" stroke="currentColor" stroke-width="1.5" />
+                                </svg>
+                                <span class="px-3">Settings</span>
+                            </div>
+                            <svg class="h-4 w-4 transition-transform" :class="open ? 'rotate-180' : ''" viewBox="0 0 24 24" fill="none">
+                                <path d="M19 9l-7 7-7-7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                            </svg>
+                        </div>
+                    </a>
+                    <ul x-show="open" x-collapse class="mt-1 space-y-1 rounded-md bg-gray-100 p-2 dark:bg-[#1b2e4b]">
+                        <li><a href="{{ route('admin.settings.index') }}" class="block rounded-md px-3 py-2 text-sm hover:bg-white hover:shadow-sm dark:hover:bg-[#0e1726]">Settings</a></li>
                     </ul>
                 </li>
             </ul>
