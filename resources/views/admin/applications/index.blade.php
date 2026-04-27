@@ -22,22 +22,24 @@
 </div>
 
 <div class="panel mt-6">
-    <div class="mb-5 flex flex-col gap-5 md:flex-row md:items-center">
-        <form action="{{ route('admin.applications.index') }}" method="GET"
-            class="flex flex-1 flex-col gap-5 md:flex-row md:items-center w-full">
-            <div class="relative w-full md:w-auto" style="width: 450px;">
-                <input type="text" name="search" value="{{ request('search') }}"
-                    placeholder="Search..." class="form-input ltr:pr-11 rtl:pl-11" />
-                <button type="submit"
-                    class="absolute inset-y-0 flex items-center hover:text-primary ltr:right-4 rtl:left-4">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <circle cx="11.5" cy="11.5" r="9.5" stroke="currentColor" stroke-width="1.5" opacity="0.5" />
-                        <path d="M18.5 18.5L22 22" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
-                    </svg>
-                </button>
-            </div>
-            <div class="flex gap-2">
-                <select name="status" class="form-select w-auto pr-10">
+    <div class="mb-5">
+        <form action="{{ route('admin.applications.index') }}" method="GET" class="flex flex-col gap-3 w-full">
+
+            {{-- Row 1: Search + Status + Offer Letter + Visa --}}
+            <div style="display: flex; align-items: center; gap: 8px; width: 100%;">
+                <div class="relative" style="flex: 2; min-width: 150px;">
+                    <input type="text" name="search" value="{{ request('search') }}"
+                        placeholder="Search..." class="form-input ltr:pr-11 rtl:pl-11" style="width: 100%;" />
+                    <button type="submit"
+                        class="absolute inset-y-0 flex items-center hover:text-primary ltr:right-4 rtl:left-4">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="11.5" cy="11.5" r="9.5" stroke="currentColor" stroke-width="1.5" opacity="0.5" />
+                            <path d="M18.5 18.5L22 22" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                        </svg>
+                    </button>
+                </div>
+
+                <select name="status" class="form-select" style="flex: 1; min-width: 120px;">
                     <option value="">Status</option>
                     <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>Pending</option>
                     <option value="applied" {{ request('status') == 'applied' ? 'selected' : '' }}>Applied</option>
@@ -47,48 +49,55 @@
                     <option value="enrolled" {{ request('status') == 'enrolled' ? 'selected' : '' }}>Enrolled</option>
                 </select>
 
-                <select name="offer_letter" class="form-select min-w-[150px]">
+                <select name="offer_letter" class="form-select" style="flex: 1; min-width: 120px;">
                     <option value="">Offer Letter</option>
                     <option value="1" {{ request('offer_letter') == '1' ? 'selected' : '' }}>Received</option>
                     <option value="0" {{ request('offer_letter') == '0' ? 'selected' : '' }}>Not Received</option>
                 </select>
 
-                <select name="visa_status" class="form-select w-auto pr-10">
+                <select name="visa_status" class="form-select" style="flex: 1; min-width: 120px;">
                     <option value="">Visa</option>
                     <option value="not_applied" {{ request('visa_status') == 'not_applied' ? 'selected' : '' }}>Not Applied</option>
                     <option value="pending" {{ request('visa_status') == 'pending' ? 'selected' : '' }}>Pending</option>
                     <option value="approved" {{ request('visa_status') == 'approved' ? 'selected' : '' }}>Approved</option>
                     <option value="rejected" {{ request('visa_status') == 'rejected' ? 'selected' : '' }}>Rejected</option>
                 </select>
+            </div>
 
-                <select name="emgs_score" class="form-select min-w-[150px]">
+            {{-- Row 2: EMGS Score + Security Deposit + CVU Fee + Filter/Reset buttons --}}
+            <div style="display: flex; align-items: center; gap: 8px; width: 100%;">
+                <select name="emgs_score" class="form-select" style="flex: 1; min-width: 120px;">
                     <option value="">EMGS Score</option>
                     @foreach([5, 15, 32, 35, 70] as $score)
                         <option value="{{ $score }}" {{ request('emgs_score') == $score ? 'selected' : '' }}>{{ $score }}%</option>
                     @endforeach
                 </select>
 
-                <select name="security_deposit" class="form-select min-w-[200px]">
+                <select name="security_deposit" class="form-select" style="flex: 1; min-width: 150px;">
                     <option value="">Security Deposit Fee</option>
                     <option value="1" {{ request('security_deposit') == '1' ? 'selected' : '' }}>Paid</option>
                     <option value="0" {{ request('security_deposit') == '0' ? 'selected' : '' }}>Pending</option>
                 </select>
 
-                <select name="cvu_fee" class="form-select w-auto pr-10">
+                <select name="cvu_fee" class="form-select" style="flex: 1; min-width: 120px;">
                     <option value="">CVU Fee</option>
                     <option value="1" {{ request('cvu_fee') == '1' ? 'selected' : '' }}>Paid</option>
                     <option value="0" {{ request('cvu_fee') == '0' ? 'selected' : '' }}>Pending</option>
                 </select>
 
-                <!-- <select name="final_payment" class="form-select w-auto pr-10">
+                {{-- <select name="final_payment" class="form-select" style="flex: 1; min-width: 120px;">
                     <option value="">Final Pay</option>
                     <option value="1" {{ request('final_payment') == '1' ? 'selected' : '' }}>Paid</option>
                     <option value="0" {{ request('final_payment') == '0' ? 'selected' : '' }}>Pending</option>
-                </select> -->
+                </select> --}}
 
-                <button type="submit" class="btn btn-primary">Filter</button>
-                <a href="{{ route('admin.applications.index') }}" class="btn btn-outline-danger">Reset</a>
+                {{-- Spacer to push buttons to the right --}}
+                <div style="flex: 2;"></div>
+
+                <button type="submit" class="btn btn-primary" style="white-space: nowrap;">Filter</button>
+                <a href="{{ route('admin.applications.index') }}" class="btn btn-outline-danger" style="white-space: nowrap;">Reset</a>
             </div>
+
         </form>
     </div>
 
@@ -130,43 +139,12 @@
                             <div class="text-xs text-white-dark">{{ $app->course->name ?? 'N/A' }}</div>
                         </td>
                         <!-- <td>{{ $app->intake->intake_name ?? 'N/A' }}</td> -->
-                        <!-- <td>
-                            <span
-                                class="badge badge-outline-primary capitalize">{{ str_replace('_', ' ', $app->status) }}</span>
-                        </td> -->
-                        <!-- <td class="text-center">
-                            @if ($app->offer_letter_received)
-                                <span class="badge badge-outline-success">Yes</span>
-                            @else
-                                <span class="badge badge-outline-danger">No</span>
-                            @endif
-                        </td>
-                        <td class="text-center">
-                            @if ($app->vfs_appointment)
-                                <span class="badge badge-outline-success">Yes</span>
-                            @else
-                                <span class="badge badge-outline-danger">No</span>
-                            @endif
-                        </td>
-                        <td class="text-center">
-                            @if ($app->file_submission)
-                                <span class="badge badge-outline-success">Yes</span>
-                            @else
-                                <span class="badge badge-outline-danger">No</span>
-                            @endif
-                        </td> -->
                         <td>
                             <span
                                 class="badge badge-outline-{{ $app->status === 'pending' ? 'warning' : ($app->status === 'approved' ? 'success' : 'danger') }}">
                                 {{ ucfirst(str_replace('_', ' ', $app->status)) }}
                             </span>
                         </td>
-                        <!-- <td>
-                            <span
-                                class="badge badge-outline-{{ $app->application_priority === 'vip' ? 'danger' : ($app->application_priority === 'priority' ? 'warning' : 'info') }}">
-                                {{ ucfirst($app->application_priority) }}
-                            </span>
-                        </td> -->
                         <td>
                             <div class="text-xs">
                                 {{ $app->creator->name ?? 'System' }}
