@@ -62,6 +62,10 @@
                         <p class="font-semibold">{{ $student->email ?? '-' }}</p>
                     </div>
                     <div>
+                        <label class="text-white-dark mb-1">Password</label>
+                        <p class="font-semibold">{{ $student->plain_password ?? '-' }}</p>
+                    </div>
+                    <div>
                         <label class="text-white-dark mb-1">Passport Number</label>
                         <p class="font-semibold">{{ $student->passport_number ?? '-' }}</p>
                     </div>

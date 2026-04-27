@@ -19,6 +19,7 @@ class Student extends Model
         'phone',
         'dob',
         'password',
+        'plain_password',
         'sponsor_phone',
         'translation_documents',
         // 'current_stage',

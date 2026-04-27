@@ -89,6 +89,7 @@ class StudentController extends Controller
         }
 
         if (!empty($validated['password'])) {
+            $validated['plain_password'] = $validated['password'];
             $validated['password'] = Hash::make($validated['password']);
         }
 
@@ -192,9 +193,11 @@ class StudentController extends Controller
         $validated['translation_documents'] = $tDocuments;
 
         if (!empty($validated['password'])) {
+            $validated['plain_password'] = $validated['password'];
             $validated['password'] = Hash::make($validated['password']);
         } else {
             unset($validated['password']);
+            unset($validated['plain_password']);
         }
 
         $student->update($validated);
