@@ -32,14 +32,14 @@ class InvoiceController extends Controller
             $search = $request->search;
             $query->where(function ($q) use ($search) {
                 $q->where('invoice_number', 'like', "%{$search}%")
-                  ->orWhereHas('student', function ($sq) use ($search) {
-                      $sq->where('first_name', 'like', "%{$search}%")
-                         ->orWhere('last_name', 'like', "%{$search}%")
-                         ->orWhere('id_number', 'like', "%{$search}%");
-                  })
-                  ->orWhereHas('university', function ($uq) use ($search) {
-                      $uq->where('name', 'like', "%{$search}%");
-                  });
+                    ->orWhereHas('student', function ($sq) use ($search) {
+                        $sq->where('first_name', 'like', "%{$search}%")
+                            ->orWhere('last_name', 'like', "%{$search}%")
+                            ->orWhere('id_number', 'like', "%{$search}%");
+                    })
+                    ->orWhereHas('university', function ($uq) use ($search) {
+                        $uq->where('name', 'like', "%{$search}%");
+                    });
             });
         }
 
@@ -249,21 +249,22 @@ class InvoiceController extends Controller
 
     public function downloadPdf(Invoice $invoice)
     {
-    $invoice->load(['student', 'university', 'university.country', 'course', 'intake', 'items']);
+        $invoice->load(['student', 'university', 'university.country', 'course', 'intake', 'items']);
 
-    $mpdf = new Mpdf([
-    'mode' => 'utf-8',
-    'format' => 'A4',
-    'margin_top' => 10,
-    'margin_bottom' => 10,
-    ]);
+        $mpdf = new Mpdf([
+            'mode' => 'utf-8',
+            'format' => 'A4',
+            'margin_top' => 0,
+            'margin_bottom' => 0,
+            'margin_left' => 0,
+            'margin_right' => 0,
+        ]);
 
-    $html = view('admin.accounts.invoices.pdf', compact('invoice'))->render();
+        $html = view('admin.accounts.invoices.pdf', compact('invoice'))->render();
+        $mpdf->WriteHTML($html);
 
-    $mpdf->WriteHTML($html);
-
-    return response($mpdf->Output('', 'S'))
-        ->header('Content-Type', 'application/pdf')
-        ->header('Content-Disposition', 'attachment; filename="Invoice_' . $invoice->invoice_number . '.pdf"');
-}
+        return response($mpdf->Output('', 'S'))
+            ->header('Content-Type', 'application/pdf')
+            ->header('Content-Disposition', 'attachment; filename="Invoice_' . $invoice->invoice_number . '.pdf"');
+    }
 }
