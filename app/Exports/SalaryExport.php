@@ -28,15 +28,15 @@ class SalaryExport implements FromCollection, WithHeadings, WithMapping
         return [
             'Employee Name',
             'Designation',
-            'Basic Salary',
-            'Bonus',
-            'Deductions',
+            // 'Basic Salary',
+            // 'Bonus',
+            // 'Deductions',
             'Net Salary',
-            'Account Number',
-            'Bank Name',
-            'Bank Branch',
-            'IFSC Code',
-            'Payment Status',
+            // 'Account Number',
+            // 'Bank Name',
+            // 'Bank Branch',
+            // 'IFSC Code',
+            // 'Payment Status',
         ];
     }
 
@@ -45,15 +45,15 @@ class SalaryExport implements FromCollection, WithHeadings, WithMapping
         return [
             $salary->employee_name,
             $salary->user->roles->first()->name ?? 'Employee',
-            $salary->basic_salary,
-            $salary->bonus,
-            $salary->tax_deduction + $salary->insurance_deduction + $salary->other_deductions,
+            // $salary->basic_salary,
+            // $salary->bonus,
+            // $salary->tax_deduction + $salary->insurance_deduction + $salary->other_deductions,
             $salary->net_salary,
-            $salary->user->account_number ?? 'N/A',
-            $salary->user->bank_name ?? 'N/A',
-            $salary->user->bank_branch ?? 'N/A',
-            $salary->user->ifsc_code ?? 'N/A',
-            ucfirst($salary->payment_status),
+            // $salary->user->account_number ?? 'N/A',
+            // $salary->user->bank_name ?? 'N/A',
+            // $salary->user->bank_branch ?? 'N/A',
+            // $salary->user->ifsc_code ?? 'N/A',
+            // ucfirst($salary->payment_status),
         ];
     }
 }
