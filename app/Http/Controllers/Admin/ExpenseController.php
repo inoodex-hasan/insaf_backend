@@ -8,6 +8,7 @@ use Illuminate\Validation\Rule;
 use App\Http\Controllers\Controller;
 use App\Models\{Expense, ChartOfAccount, OfficeAccount, Salary};
 use Barryvdh\DomPDF\Facade\Pdf;
+use Mpdf\Mpdf;
 
 class ExpenseController extends Controller
 {
@@ -133,7 +134,55 @@ class ExpenseController extends Controller
         return $pdf->download('expense-' . $expense->id . '.pdf');
     }
 
-    public function report(Request $request)
+    // public function report(Request $request)
+    // {
+    //     $this->authorize('*accountant');
+
+    //     $query = Expense::with(['creator', 'chartOfAccount']);
+
+    //     // Apply same filters as index
+    //     if ($search = $request->get('search')) {
+    //         $query->where(function ($q) use ($search) {
+    //             $q->where('description', 'like', "%{$search}%")
+    //                 ->orWhere('payment_method', 'like', "%{$search}%");
+    //         });
+    //     }
+
+    //     if ($category = $request->get('category')) {
+    //         $query->whereHas('chartOfAccount', function ($q) use ($category) {
+    //             $q->where('name', 'like', "%{$category}%");
+    //         });
+    //     }
+
+    //     if ($startDate = $request->get('start_date')) {
+    //         $query->whereDate('expense_date', '>=', $startDate);
+    //     }
+    //     if ($endDate = $request->get('end_date')) {
+    //         $query->whereDate('expense_date', '<=', $endDate);
+    //     }
+
+    //     $expenses = $query->orderBy('expense_date', 'desc')->get();
+    //     $totalAmount = $expenses->sum('amount');
+
+    //     $pdf = Pdf::loadView('admin.expenses.report', compact('expenses', 'totalAmount', 'request'));
+    //     return $pdf->download('expenses-report-' . now()->format('Y-m-d') . '.pdf');
+    // }
+
+    private function validateExpense(Request $request): array
+    {
+        return $request->validate([
+            'description' => ['required', 'string', 'max:255'],
+            'amount' => ['required', 'numeric', 'min:0.01'],
+            'expense_date' => ['required', 'date'],
+            'chart_of_account_id' => ['required', 'exists:chart_of_accounts,id'],
+            'payment_method' => ['required', 'in:cash,bank_transfer,mobile_banking,cheque'],
+            'office_account_id' => ['nullable', 'exists:office_accounts,id'],
+            'salary_id' => ['nullable', 'exists:salaries,id'],
+            'notes' => ['nullable', 'string'],
+        ]);
+    }
+
+       public function preview(Request $request)
     {
         $this->authorize('*accountant');
 
@@ -163,21 +212,69 @@ class ExpenseController extends Controller
         $expenses = $query->orderBy('expense_date', 'desc')->get();
         $totalAmount = $expenses->sum('amount');
 
-        $pdf = Pdf::loadView('admin.expenses.report', compact('expenses', 'totalAmount', 'request'));
-        return $pdf->download('expenses-report-' . now()->format('Y-m-d') . '.pdf');
+        // Generate PDF using mPDF for preview
+        $mpdf = new Mpdf([
+            'mode' => 'utf-8',
+            'format' => 'A4',
+            'margin_top' => 10,
+            'margin_right' => 10,
+            'margin_bottom' => 10,
+            'margin_left' => 10,
+        ]);
+
+        $html = view('admin.expenses.report', compact('expenses', 'totalAmount', 'request'))->render();
+        $mpdf->WriteHTML($html);
+
+        return response($mpdf->Output('', 'S'))
+            ->header('Content-Type', 'application/pdf')
+            ->header('Content-Disposition', 'inline; filename="expenses-report-preview.pdf"');
     }
 
-    private function validateExpense(Request $request): array
+    public function download(Request $request)
     {
-        return $request->validate([
-            'description' => ['required', 'string', 'max:255'],
-            'amount' => ['required', 'numeric', 'min:0.01'],
-            'expense_date' => ['required', 'date'],
-            'chart_of_account_id' => ['required', 'exists:chart_of_accounts,id'],
-            'payment_method' => ['required', 'in:cash,bank_transfer,mobile_banking,cheque'],
-            'office_account_id' => ['nullable', 'exists:office_accounts,id'],
-            'salary_id' => ['nullable', 'exists:salaries,id'],
-            'notes' => ['nullable', 'string'],
+        $this->authorize('*accountant');
+
+        $query = Expense::with(['creator', 'chartOfAccount']);
+
+        // Apply same filters as index
+        if ($search = $request->get('search')) {
+            $query->where(function ($q) use ($search) {
+                $q->where('description', 'like', "%{$search}%")
+                    ->orWhere('payment_method', 'like', "%{$search}%");
+            });
+        }
+
+        if ($category = $request->get('category')) {
+            $query->whereHas('chartOfAccount', function ($q) use ($category) {
+                $q->where('name', 'like', "%{$category}%");
+            });
+        }
+
+        if ($startDate = $request->get('start_date')) {
+            $query->whereDate('expense_date', '>=', $startDate);
+        }
+        if ($endDate = $request->get('end_date')) {
+            $query->whereDate('expense_date', '<=', $endDate);
+        }
+
+        $expenses = $query->orderBy('expense_date', 'desc')->get();
+        $totalAmount = $expenses->sum('amount');
+
+        // Generate PDF using mPDF for download
+        $mpdf = new Mpdf([
+            'mode' => 'utf-8',
+            'format' => 'A4',
+            'margin_top' => 10,
+            'margin_right' => 10,
+            'margin_bottom' => 10,
+            'margin_left' => 10,
         ]);
+
+        $html = view('admin.expenses.report', compact('expenses', 'totalAmount', 'request'))->render();
+        $mpdf->WriteHTML($html);
+
+        return response($mpdf->Output('', 'S'))
+            ->header('Content-Type', 'application/pdf')
+            ->header('Content-Disposition', 'attachment; filename="expenses-report-' . now()->format('Y-m-d') . '.pdf"');
     }
 }

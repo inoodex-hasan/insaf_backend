@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Expense Report - #{{ $expense->id }}</title>
@@ -155,10 +156,10 @@
             <td class="value-cell">{{ $expense->payment_method ?: 'N/A' }}</td>
         </tr>
         @if ($expense->office_account)
-        <tr>
-            <td class="label-cell">Account Name</td>
-            <td class="value-cell">{{ $expense->office_account->account_name }}</td>
-        </tr>
+            <tr>
+                <td class="label-cell">Account Name</td>
+                <td class="value-cell">{{ $expense->office_account->account_name }}</td>
+            </tr>
         @endif
         <tr>
             <td class="label-cell">Recorded By</td>
@@ -179,8 +180,9 @@
 
     <htmlpagefooter name="DocFooter">
         <div class="footer-content">
-            Computer generated document • Generated on {{ now()->format('M d, Y H:i A') }}
+            Computer generated document • Generated on {{ now()->format('M d, Y') }}
         </div>
     </htmlpagefooter>
 </body>
+
 </html>

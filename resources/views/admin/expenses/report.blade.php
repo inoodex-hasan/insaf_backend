@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Expenses Report</title>
@@ -139,7 +140,7 @@
         <tr>
             <td class="report-title">Expenses Report</td>
             <td style="text-align: right; vertical-align: bottom; color: #718096; font-size: 10pt;">
-                Generated: {{ now()->format('M d, Y H:i A') }}
+                Generated: {{ now()->format('M d, Y') }}
             </td>
         </tr>
     </table>
@@ -147,11 +148,23 @@
     {{-- Filter Information --}}
     <div class="filter-info">
         <strong>Filters Applied:</strong>
-        @if($request->get('search')) | Search: {{ $request->get('search') }} @endif
-        @if($request->get('category')) | Category: {{ $request->get('category') }} @endif
-        @if($request->get('start_date')) | From: {{ $request->get('start_date') }} @endif
-        @if($request->get('end_date')) | To: {{ $request->get('end_date') }} @endif
-        @if(!$request->get('search') && !$request->get('category') && !$request->get('start_date') && !$request->get('end_date'))
+        @if ($request->get('search'))
+            | Search: {{ $request->get('search') }}
+        @endif
+        @if ($request->get('category'))
+            | Category: {{ $request->get('category') }}
+        @endif
+        @if ($request->get('start_date'))
+            | From: {{ $request->get('start_date') }}
+        @endif
+        @if ($request->get('end_date'))
+            | To: {{ $request->get('end_date') }}
+        @endif
+        @if (
+            !$request->get('search') &&
+                !$request->get('category') &&
+                !$request->get('start_date') &&
+                !$request->get('end_date'))
             All Records
         @endif
     </div>
@@ -165,7 +178,7 @@
     </table>
 
     {{-- Data Table --}}
-    @if($expenses->count() > 0)
+    @if ($expenses->count() > 0)
         <table class="data-table">
             <thead>
                 <tr>
@@ -178,7 +191,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach($expenses as $expense)
+                @foreach ($expenses as $expense)
                     <tr>
                         <td class="date-cell">{{ $expense->expense_date->format('M d, Y') }}</td>
                         <td>{{ $expense->description }}</td>
@@ -204,4 +217,5 @@
         </div>
     </htmlpagefooter>
 </body>
+
 </html>

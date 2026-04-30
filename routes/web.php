@@ -182,6 +182,8 @@ Route::prefix('dashboard/expenses')->name('admin.expenses.')->group(function () 
     Route::get('{expense}/edit', [App\Http\Controllers\Admin\ExpenseController::class, 'edit'])->name('edit')->middleware('can:*accountant');
     Route::put('{expense}', [App\Http\Controllers\Admin\ExpenseController::class, 'update'])->name('update')->middleware('can:*accountant');
     Route::delete('{expense}', [App\Http\Controllers\Admin\ExpenseController::class, 'destroy'])->name('destroy')->middleware('can:*accountant');
+    Route::get('/dashboard/expenses/preview', [App\Http\Controllers\Admin\ExpenseController::class, 'preview'])->name('preview')->middleware('can:*accountant');
+    Route::get('/dashboard/expenses/download', [App\Http\Controllers\Admin\ExpenseController::class, 'download'])->name('download')->middleware('can:*accountant');
 });
 
 // Office Accounts Management
