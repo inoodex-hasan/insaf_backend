@@ -31,6 +31,10 @@
         <form action="{{ route('admin.reports.balance-sheet') }}" method="GET"
             class="mb-5 flex flex-wrap items-center gap-4 no-print">
             <div class="flex items-center gap-2">
+                <label for="from_date" class="mb-0 font-bold">From Date:</label>
+                <input type="date" name="from_date" id="from_date" value="{{ $fromDate }}" class="form-input w-48">
+            </div>
+            <div class="flex items-center gap-2">
                 <label for="as_of_date" class="mb-0 font-bold">As of Date:</label>
                 <input type="date" name="as_of_date" id="as_of_date" value="{{ $asOfDate }}" class="form-input w-48">
             </div>

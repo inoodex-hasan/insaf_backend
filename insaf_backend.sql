@@ -163,7 +163,9 @@ CREATE TABLE `cache` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 INSERT INTO `cache` (`key`, `value`, `expiration`) VALUES
-('admin-dashboard-cache-tyro:user-1:roles',	'a:1:{i:0;s:5:\"admin\";}',	1777290732);
+('admin-dashboard-cache-tyro:user-1:roles',	'a:1:{i:0;s:5:\"admin\";}',	1777291096),
+('admin-dashboard-cache-tyro:user-2:privileges',	'a:1:{i:0;s:10:\"*marketing\";}',	1777291118),
+('admin-dashboard-cache-tyro:user-2:roles',	'a:1:{i:0;s:9:\"marketing\";}',	1777291118);
 
 DROP TABLE IF EXISTS `cache_locks`;
 CREATE TABLE `cache_locks` (
@@ -949,7 +951,7 @@ CREATE TABLE `sessions` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, `last_activity`) VALUES
-('oVLhB5fdpkKF1ARC6WawZeYd3dGetfW3lskV9usu',	1,	'127.0.0.1',	'Mozilla/5.0 (Macintosh; Intel Mac OS X 11_0) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0 Safari/605.1.15',	'YTo2OntzOjY6Il90b2tlbiI7czo0MDoiZlY2YkdpbmwwNnl1MlRFVDVWVDQ4Z1pMZllnWTE5NUtXYlM3Tzl6ZCI7czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6NDk6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC9kYXNoYm9hcmQvc2FsYXJpZXMvZ2VuZXJhdGUiO3M6NToicm91dGUiO3M6MjM6ImFkbWluLnNhbGFyaWVzLmdlbmVyYXRlIjt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czozOiJ1cmwiO2E6MDp7fXM6MTA6InR5cm8tbG9naW4iO2E6MTp7czo3OiJjYXB0Y2hhIjthOjA6e319czo1MDoibG9naW5fd2ViXzU5YmEzNmFkZGMyYjJmOTQwMTU4MGYwMTRjN2Y1OGVhNGUzMDk4OWQiO2k6MTt9',	1777290626);
+('e8Y10UPtDRDLWfdlnTzNejJcmTfl4GwcdFuIDBtY',	2,	'127.0.0.1',	'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36',	'YTo1OntzOjY6Il90b2tlbiI7czo0MDoiT1RwOEgxU2NmVm1xek9jek5FNW5MN0ZTTkxCb0h2RUNndWhwYno0bCI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czoxMDoidHlyby1sb2dpbiI7YToxOntzOjc6ImNhcHRjaGEiO2E6MDp7fX1zOjk6Il9wcmV2aW91cyI7YToyOntzOjM6InVybCI7czo0NzoiaHR0cDovLzEyNy4wLjAuMTo4MDAwL2Rhc2hib2FyZC9zdHVkZW50cy9jcmVhdGUiO3M6NToicm91dGUiO3M6MjE6ImFkbWluLnN0dWRlbnRzLmNyZWF0ZSI7fXM6NTA6ImxvZ2luX3dlYl81OWJhMzZhZGRjMmIyZjk0MDE1ODBmMDE0YzdmNThlYTRlMzA5ODlkIjtpOjI7fQ==',	1777291118);
 
 DROP TABLE IF EXISTS `settings`;
 CREATE TABLE `settings` (
@@ -1309,7 +1311,9 @@ INSERT INTO `tyro_audit_logs` (`id`, `user_id`, `event`, `auditable_type`, `audi
 (216,	5,	'user.login',	'App\\Models\\User',	5,	NULL,	'{\"email\": \"editor@example.com\"}',	'{\"ip\": \"127.0.0.1\", \"is_console\": false, \"user_agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36\"}',	'2026-04-27 06:44:13'),
 (217,	5,	'user.logout',	'App\\Models\\User',	5,	NULL,	'{\"email\": \"editor@example.com\"}',	'{\"ip\": \"127.0.0.1\", \"is_console\": false, \"user_agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36\"}',	'2026-04-27 07:19:29'),
 (218,	6,	'user.login',	'App\\Models\\User',	6,	NULL,	'{\"email\": \"application@example.com\"}',	'{\"ip\": \"127.0.0.1\", \"is_console\": false, \"user_agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36\"}',	'2026-04-27 07:19:40'),
-(219,	1,	'user.login',	'App\\Models\\User',	1,	NULL,	'{\"email\": \"hello@inoodex.com\"}',	'{\"ip\": \"127.0.0.1\", \"is_console\": false, \"user_agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36\"}',	'2026-04-27 09:57:49');
+(219,	1,	'user.login',	'App\\Models\\User',	1,	NULL,	'{\"email\": \"hello@inoodex.com\"}',	'{\"ip\": \"127.0.0.1\", \"is_console\": false, \"user_agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36\"}',	'2026-04-27 09:57:49'),
+(220,	1,	'user.logout',	'App\\Models\\User',	1,	NULL,	'{\"email\": \"hello@inoodex.com\"}',	'{\"ip\": \"127.0.0.1\", \"is_console\": false, \"user_agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36\"}',	'2026-04-27 11:53:24'),
+(221,	2,	'user.login',	'App\\Models\\User',	2,	NULL,	'{\"email\": \"marketing@example.com\"}',	'{\"ip\": \"127.0.0.1\", \"is_console\": false, \"user_agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36\"}',	'2026-04-27 11:53:37');
 
 DROP TABLE IF EXISTS `universities`;
 CREATE TABLE `universities` (
@@ -1480,4 +1484,4 @@ INSERT INTO `vfs_checklists` (`id`, `application_id`, `checklist_item`, `is_chec
 (157,	12,	'Deposit Slip (If possible)',	0,	NULL,	NULL,	NULL,	'2026-04-27 05:29:13',	'2026-04-27 05:29:13'),
 (158,	12,	'Financial Declaration Affidavit',	0,	NULL,	NULL,	NULL,	'2026-04-27 05:29:13',	'2026-04-27 05:29:13');
 
--- 2026-04-27 11:51:43 UTC
+-- 2026-04-27 11:59:13 UTC

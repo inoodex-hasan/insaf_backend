@@ -91,20 +91,27 @@ class ReportController extends Controller
     {
 
         $asOfDate = $request->get('as_of_date', date('Y-m-d'));
-        $date = Carbon::parse($asOfDate)->endOfDay();
+        $fromDate = $request->get('from_date');
+        $endDate = Carbon::parse($asOfDate)->endOfDay();
 
-        // Fetch all accounts with their debit/credit sums up to the date
+        // Fetch all accounts with their debit/credit sums within the date range
         $accounts = \App\Models\ChartOfAccount::withSum([
-            'journalEntryItems as total_debit' => function ($query) use ($date) {
-                $query->whereHas('journalEntry', function ($q) use ($date) {
-                    $q->where('date', '<=', $date);
+            'journalEntryItems as total_debit' => function ($query) use ($fromDate, $endDate) {
+                $query->whereHas('journalEntry', function ($q) use ($fromDate, $endDate) {
+                    $q->where('date', '<=', $endDate);
+                    if ($fromDate) {
+                        $q->where('date', '>=', $fromDate);
+                    }
                 });
             }
         ], 'debit')
             ->withSum([
-                'journalEntryItems as total_credit' => function ($query) use ($date) {
-                    $query->whereHas('journalEntry', function ($q) use ($date) {
-                        $q->where('date', '<=', $date);
+                'journalEntryItems as total_credit' => function ($query) use ($fromDate, $endDate) {
+                    $query->whereHas('journalEntry', function ($q) use ($fromDate, $endDate) {
+                        $q->where('date', '<=', $endDate);
+                        if ($fromDate) {
+                            $q->where('date', '>=', $fromDate);
+                        }
                     });
                 }
             ], 'credit')
@@ -158,6 +165,7 @@ class ReportController extends Controller
         return view('admin.reports.balance_sheet', compact(
             'data',
             'asOfDate',
+            'fromDate',
             'netProfit',
             'totalAssets',
             'totalLiabilities',
