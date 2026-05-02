@@ -150,7 +150,7 @@
     </style>
 </head>
 @php
-    $bgPath = public_path('assets/images/Invoice_Insaf.jpeg');
+    $bgPath = public_path('assets/images/Invoice_Insaf_02.jpg');
     $bgSrc = file_exists($bgPath) ? 'file:///' . str_replace('\\', '/', $bgPath) : null;
 @endphp
 
