@@ -170,36 +170,34 @@
     </style>
 </head>
 @php
-$bgPath = public_path('assets/images/Invoice_Insaf_01.jpeg');
-$bgSrc = file_exists($bgPath) ? 'file:///' . str_replace('\\', '/', $bgPath) : null;
-$liabilitiesAndEquity = $totalLiabilities + $totalEquity + $netProfit;
+    $bgPath = public_path('assets/images/Invoice_Insaf_02.jpg');
+    $bgSrc = file_exists($bgPath) ? 'file:///' . str_replace('\\', '/', $bgPath) : null;
+    $liabilitiesAndEquity = $totalLiabilities + $totalEquity + $netProfit;
 @endphp
 
 <body>
     @if ($bgSrc)
-    <div class="pdf-bg" style="background-image: url('{{ $bgSrc }}');"></div>
+        <div class="pdf-bg" style="background-image: url('{{ $bgSrc }}');"></div>
     @endif
 
     <div class="content">
         <table class="report-heading">
             <tr>
-                <td style="width: 50%; vertical-align: top;">
+                <td style="vertical-align: top; text-align: center;">
                     <table class="info-box">
                         <tr>
-                            <th>Balance Sheet</th>
+                            <th style="text-align: center;">Balance Sheet</th>
                         </tr>
-                        <tr>
-                            <td>{{ $companyInfo->name ?? config('app.name') }}</td>
-                        </tr>
+                        {{-- <p><strong>As of:</strong> {{ \Carbon\Carbon::parse($asOfDate)->format('Y-m-d') }}</p> --}}
                         <tr>
                             <td>Statement of Financial Position</td>
                         </tr>
                     </table>
                 </td>
-                <td style="width: 50%;" class="report-meta">
+                {{-- <td style="width: 50%;" class="report-meta">
                     <p><span class="report-badge">Balance Sheet</span></p>
                     <p><strong>As of:</strong> {{ \Carbon\Carbon::parse($asOfDate)->format('Y-m-d') }}</p>
-                </td>
+                </td> --}}
             </tr>
         </table>
 
@@ -234,22 +232,22 @@ $liabilitiesAndEquity = $totalLiabilities + $totalEquity + $netProfit;
                         </thead>
                         <tbody>
                             @forelse ($data['asset'] as $asset)
-                            <tr>
-                                <td class="text-left {{ $loop->odd ? 'table-shade' : '' }}">
-                                    {{ $asset->name }}
-                                    @if ($asset->code)
-                                    <br><span style="font-size: 8px; color: #666;">{{ $asset->code }}</span>
-                                    @endif
-                                </td>
-                                <td class="text-right {{ $loop->odd ? 'table-shade' : '' }}">
-                                    {{ number_format($asset->balance, 2) }}
-                                </td>
-                            </tr>
+                                <tr>
+                                    <td class="text-left {{ $loop->odd ? 'table-shade' : '' }}">
+                                        {{ $asset->name }}
+                                        @if ($asset->code)
+                                            <br><span style="font-size: 8px; color: #666;">{{ $asset->code }}</span>
+                                        @endif
+                                    </td>
+                                    <td class="text-right {{ $loop->odd ? 'table-shade' : '' }}">
+                                        {{ number_format($asset->balance, 2) }}
+                                    </td>
+                                </tr>
                             @empty
-                            <tr>
-                                <td class="text-left table-shade">No assets recorded.</td>
-                                <td class="text-right table-shade">-</td>
-                            </tr>
+                                <tr>
+                                    <td class="text-left table-shade">No assets recorded.</td>
+                                    <td class="text-right table-shade">-</td>
+                                </tr>
                             @endforelse
                             <tr class="summary-row">
                                 <td class="summary-label">TOTAL ASSETS:</td>
@@ -268,22 +266,23 @@ $liabilitiesAndEquity = $totalLiabilities + $totalEquity + $netProfit;
                         </thead>
                         <tbody>
                             @forelse ($data['liability'] as $liability)
-                            <tr>
-                                <td class="text-left {{ $loop->odd ? 'table-shade' : '' }}">
-                                    {{ $liability->name }}
-                                    @if ($liability->code)
-                                    <br><span style="font-size: 8px; color: #666;">{{ $liability->code }}</span>
-                                    @endif
-                                </td>
-                                <td class="text-right {{ $loop->odd ? 'table-shade' : '' }}">
-                                    {{ number_format($liability->balance, 2) }}
-                                </td>
-                            </tr>
+                                <tr>
+                                    <td class="text-left {{ $loop->odd ? 'table-shade' : '' }}">
+                                        {{ $liability->name }}
+                                        @if ($liability->code)
+                                            <br><span
+                                                style="font-size: 8px; color: #666;">{{ $liability->code }}</span>
+                                        @endif
+                                    </td>
+                                    <td class="text-right {{ $loop->odd ? 'table-shade' : '' }}">
+                                        {{ number_format($liability->balance, 2) }}
+                                    </td>
+                                </tr>
                             @empty
-                            <tr>
-                                <td class="text-left table-shade">No liabilities recorded.</td>
-                                <td class="text-right table-shade">-</td>
-                            </tr>
+                                <tr>
+                                    <td class="text-left table-shade">No liabilities recorded.</td>
+                                    <td class="text-right table-shade">-</td>
+                                </tr>
                             @endforelse
                             <tr class="summary-row">
                                 <td class="summary-label">TOTAL LIABILITIES:</td>
@@ -301,22 +300,22 @@ $liabilitiesAndEquity = $totalLiabilities + $totalEquity + $netProfit;
                         </thead>
                         <tbody>
                             @forelse ($data['equity'] as $equity)
-                            <tr>
-                                <td class="text-left {{ $loop->odd ? 'table-shade' : '' }}">
-                                    {{ $equity->name }}
-                                    @if ($equity->code)
-                                    <br><span style="font-size: 8px; color: #666;">{{ $equity->code }}</span>
-                                    @endif
-                                </td>
-                                <td class="text-right {{ $loop->odd ? 'table-shade' : '' }}">
-                                    {{ number_format($equity->balance, 2) }}
-                                </td>
-                            </tr>
+                                <tr>
+                                    <td class="text-left {{ $loop->odd ? 'table-shade' : '' }}">
+                                        {{ $equity->name }}
+                                        @if ($equity->code)
+                                            <br><span style="font-size: 8px; color: #666;">{{ $equity->code }}</span>
+                                        @endif
+                                    </td>
+                                    <td class="text-right {{ $loop->odd ? 'table-shade' : '' }}">
+                                        {{ number_format($equity->balance, 2) }}
+                                    </td>
+                                </tr>
                             @empty
-                            <tr>
-                                <td class="text-left table-shade">No equity accounts recorded.</td>
-                                <td class="text-right table-shade">-</td>
-                            </tr>
+                                <tr>
+                                    <td class="text-left table-shade">No equity accounts recorded.</td>
+                                    <td class="text-right table-shade">-</td>
+                                </tr>
                             @endforelse
                             <tr>
                                 <td class="text-left">Net Profit / (Loss)</td>
@@ -342,9 +341,9 @@ $liabilitiesAndEquity = $totalLiabilities + $totalEquity + $netProfit;
                 <th>STATUS</th>
                 <td>
                     @if ($isBalanced)
-                    Statement is balanced - Total Assets = Total Liabilities &amp; Equity
+                        Statement is balanced - Total Assets = Total Liabilities &amp; Equity
                     @else
-                    Warning: Balance sheet is out of balance by BDT {{ number_format($diff, 2) }}
+                        Warning: Balance sheet is out of balance by BDT {{ number_format($diff, 2) }}
                     @endif
                 </td>
             </tr>

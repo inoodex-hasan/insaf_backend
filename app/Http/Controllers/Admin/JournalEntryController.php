@@ -114,18 +114,19 @@ class JournalEntryController extends Controller
 
         $mpdf = new Mpdf([
             'mode' => 'utf-8',
-            'format' => 'A4-L',
-            'orientation' => 'L',
-            'margin_left' => 10,
-            'margin_right' => 10,
-            'margin_top' => 15,
-            'margin_bottom' => 15,
+            'format' => 'A4',
+            'margin_top' => 0,
+            'margin_right' => 0,
+            'margin_bottom' => 0,
+            'margin_left' => 0,
         ]);
 
         $html = view('admin.accounts.journal-entries.pdf', compact('entries', 'request'))->render();
         $mpdf->WriteHTML($html);
-        
-        return response($mpdf->Output('journal-entries-report.pdf', 'I'), 200)
+
+        $outputMode = $request->get('output') === 'download' ? 'D' : 'I';
+
+        return response($mpdf->Output('journal-entries-report.pdf', $outputMode), 200)
             ->header('Content-Type', 'application/pdf');
     }
 

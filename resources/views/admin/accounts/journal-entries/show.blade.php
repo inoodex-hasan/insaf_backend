@@ -22,13 +22,13 @@
     <div class="flex flex-wrap items-center justify-between gap-4 print:hidden">
         <h2 class="text-xl font-semibold uppercase">Journal Voucher Details</h2>
         <div class="flex gap-2 text-xs">
-            <button onclick="window.print()" class="btn btn-outline-primary gap-2 font-bold uppercase">
+            {{-- <button onclick="window.print()" class="btn btn-outline-primary gap-2 font-bold uppercase">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path
                         d="M17 17h2a2 2 0 0 0 2-2v-4a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v4a2 2 0 0 0 2 2h2m2 4h6a2 2 0 0 0 2-2v-4a2 2 0 0 0-2-2H9a2 2 0 0 0-2 2v4a2 2 0 0 0 2 2zM17 9V5a2 2 0 0 0-2-2H9a2 2 0 0 0-2 2v4" />
                 </svg>
                 Print
-            </button>
+            </button> --}}
             <a href="{{ route('admin.journal-entries.index') }}" class="btn btn-secondary font-bold uppercase">Back to
                 List</a>
         </div>
