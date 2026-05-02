@@ -275,9 +275,9 @@ class ReportController extends Controller
 
         $filename = 'Balance_Sheet_' . str_replace('-', '_', $asOfDate) . '.pdf';
 
-        // Check if preview mode (view in browser) or download
-        $isPreview = $request->has('preview');
-        $disposition = $isPreview ? 'inline' : 'attachment';
+        // Match journal-entry behavior: output=preview|download (preview by default).
+        $isDownload = $request->get('output') === 'download';
+        $disposition = $isDownload ? 'attachment' : 'inline';
 
         return response($mpdf->Output('', 'S'))
             ->header('Content-Type', 'application/pdf')
