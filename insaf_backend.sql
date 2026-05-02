@@ -1,4 +1,4 @@
--- Adminer 5.4.2 MySQL 8.4.3 dump
+-- Adminer 5.3.0 MySQL 8.4.3 dump
 
 SET NAMES utf8;
 SET time_zone = '+00:00';
@@ -165,7 +165,9 @@ CREATE TABLE `cache` (
 INSERT INTO `cache` (`key`, `value`, `expiration`) VALUES
 ('admin-dashboard-cache-tyro:user-1:roles',	'a:1:{i:0;s:5:\"admin\";}',	1777291096),
 ('admin-dashboard-cache-tyro:user-2:privileges',	'a:1:{i:0;s:10:\"*marketing\";}',	1777291118),
-('admin-dashboard-cache-tyro:user-2:roles',	'a:1:{i:0;s:9:\"marketing\";}',	1777291118);
+('admin-dashboard-cache-tyro:user-2:roles',	'a:1:{i:0;s:9:\"marketing\";}',	1777291118),
+('admin-dashboard-cache-tyro:user-4:privileges',	'a:4:{i:0;s:11:\"*accountant\";i:1;s:8:\"*payment\";i:2;s:10:\"*comission\";i:3;s:8:\"*invoice\";}',	1777644456),
+('admin-dashboard-cache-tyro:user-4:roles',	'a:1:{i:0;s:10:\"accountant\";}',	1777644456);
 
 DROP TABLE IF EXISTS `cache_locks`;
 CREATE TABLE `cache_locks` (
@@ -218,12 +220,12 @@ CREATE TABLE `commissions` (
   `amount` decimal(15,2) NOT NULL DEFAULT '0.00',
   `proposed_amount` decimal(15,2) DEFAULT NULL,
   `status` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'pending',
-  `workflow_status` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'draft',
+  `workflow_status` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'draft',
   `claimed_at` timestamp NULL DEFAULT NULL,
-  `claim_notes` text COLLATE utf8mb4_unicode_ci,
+  `claim_notes` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
   `reviewed_by` bigint unsigned DEFAULT NULL,
   `reviewed_at` timestamp NULL DEFAULT NULL,
-  `review_notes` text COLLATE utf8mb4_unicode_ci,
+  `review_notes` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
   `notes` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
@@ -553,10 +555,10 @@ DROP TABLE IF EXISTS `marketing_documents`;
 CREATE TABLE `marketing_documents` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
   `application_id` bigint unsigned NOT NULL,
-  `document_name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `document_type` enum('sop','cv','cl') COLLATE utf8mb4_unicode_ci NOT NULL,
-  `status` enum('pending','received','not_received','ready','submitted') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'pending',
-  `notes` text COLLATE utf8mb4_unicode_ci,
+  `document_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `document_type` enum('sop','cv','cl') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `status` enum('pending','received','not_received','ready','submitted') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'pending',
+  `notes` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
   `created_by` bigint unsigned DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
@@ -951,7 +953,8 @@ CREATE TABLE `sessions` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, `last_activity`) VALUES
-('e8Y10UPtDRDLWfdlnTzNejJcmTfl4GwcdFuIDBtY',	2,	'127.0.0.1',	'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36',	'YTo1OntzOjY6Il90b2tlbiI7czo0MDoiT1RwOEgxU2NmVm1xek9jek5FNW5MN0ZTTkxCb0h2RUNndWhwYno0bCI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czoxMDoidHlyby1sb2dpbiI7YToxOntzOjc6ImNhcHRjaGEiO2E6MDp7fX1zOjk6Il9wcmV2aW91cyI7YToyOntzOjM6InVybCI7czo0NzoiaHR0cDovLzEyNy4wLjAuMTo4MDAwL2Rhc2hib2FyZC9zdHVkZW50cy9jcmVhdGUiO3M6NToicm91dGUiO3M6MjE6ImFkbWluLnN0dWRlbnRzLmNyZWF0ZSI7fXM6NTA6ImxvZ2luX3dlYl81OWJhMzZhZGRjMmIyZjk0MDE1ODBmMDE0YzdmNThlYTRlMzA5ODlkIjtpOjI7fQ==',	1777291118);
+('e8Y10UPtDRDLWfdlnTzNejJcmTfl4GwcdFuIDBtY',	2,	'127.0.0.1',	'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36',	'YTo1OntzOjY6Il90b2tlbiI7czo0MDoiT1RwOEgxU2NmVm1xek9jek5FNW5MN0ZTTkxCb0h2RUNndWhwYno0bCI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czoxMDoidHlyby1sb2dpbiI7YToxOntzOjc6ImNhcHRjaGEiO2E6MDp7fX1zOjk6Il9wcmV2aW91cyI7YToyOntzOjM6InVybCI7czo0NzoiaHR0cDovLzEyNy4wLjAuMTo4MDAwL2Rhc2hib2FyZC9zdHVkZW50cy9jcmVhdGUiO3M6NToicm91dGUiO3M6MjE6ImFkbWluLnN0dWRlbnRzLmNyZWF0ZSI7fXM6NTA6ImxvZ2luX3dlYl81OWJhMzZhZGRjMmIyZjk0MDE1ODBmMDE0YzdmNThlYTRlMzA5ODlkIjtpOjI7fQ==',	1777291118),
+('Fm80Ol9H3ljDQ0wDQG7gem9uieQf3XgaxgWlDfdx',	4,	'127.0.0.1',	'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36',	'YTo1OntzOjY6Il90b2tlbiI7czo0MDoiNEZSTnEzV2oyYnliR2ZBSlpZRnpKNDFEeEZuT2JRQVRGeFB6UnlWOSI7czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6NDc6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC9kYXNoYm9hcmQvcmVwb3J0cy9zdW1tYXJ5IjtzOjU6InJvdXRlIjtzOjIxOiJhZG1pbi5yZXBvcnRzLnN1bW1hcnkiO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX1zOjEwOiJ0eXJvLWxvZ2luIjthOjE6e3M6NzoiY2FwdGNoYSI7YTowOnt9fXM6NTA6ImxvZ2luX3dlYl81OWJhMzZhZGRjMmIyZjk0MDE1ODBmMDE0YzdmNThlYTRlMzA5ODlkIjtpOjQ7fQ==',	1777644156);
 
 DROP TABLE IF EXISTS `settings`;
 CREATE TABLE `settings` (
@@ -1015,7 +1018,7 @@ CREATE TABLE `students` (
   `translation_documents` json DEFAULT NULL,
   `email` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `password` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `plain_password` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `plain_password` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `phone` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `sponsor_phone` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `address` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
@@ -1313,7 +1316,8 @@ INSERT INTO `tyro_audit_logs` (`id`, `user_id`, `event`, `auditable_type`, `audi
 (218,	6,	'user.login',	'App\\Models\\User',	6,	NULL,	'{\"email\": \"application@example.com\"}',	'{\"ip\": \"127.0.0.1\", \"is_console\": false, \"user_agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36\"}',	'2026-04-27 07:19:40'),
 (219,	1,	'user.login',	'App\\Models\\User',	1,	NULL,	'{\"email\": \"hello@inoodex.com\"}',	'{\"ip\": \"127.0.0.1\", \"is_console\": false, \"user_agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36\"}',	'2026-04-27 09:57:49'),
 (220,	1,	'user.logout',	'App\\Models\\User',	1,	NULL,	'{\"email\": \"hello@inoodex.com\"}',	'{\"ip\": \"127.0.0.1\", \"is_console\": false, \"user_agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36\"}',	'2026-04-27 11:53:24'),
-(221,	2,	'user.login',	'App\\Models\\User',	2,	NULL,	'{\"email\": \"marketing@example.com\"}',	'{\"ip\": \"127.0.0.1\", \"is_console\": false, \"user_agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36\"}',	'2026-04-27 11:53:37');
+(221,	2,	'user.login',	'App\\Models\\User',	2,	NULL,	'{\"email\": \"marketing@example.com\"}',	'{\"ip\": \"127.0.0.1\", \"is_console\": false, \"user_agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36\"}',	'2026-04-27 11:53:37'),
+(222,	4,	'user.login',	'App\\Models\\User',	4,	NULL,	'{\"email\": \"accountant@example.com\"}',	'{\"ip\": \"127.0.0.1\", \"is_console\": false, \"user_agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36\"}',	'2026-05-01 13:57:04');
 
 DROP TABLE IF EXISTS `universities`;
 CREATE TABLE `universities` (
@@ -1399,7 +1403,7 @@ INSERT INTO `users` (`id`, `name`, `email`, `basic_salary`, `email_verified_at`,
 DROP TABLE IF EXISTS `vfs_checklist_templates`;
 CREATE TABLE `vfs_checklist_templates` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
-  `item_name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `item_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `country_id` bigint unsigned DEFAULT NULL,
   `sort_order` int NOT NULL DEFAULT '0',
   `is_active` tinyint(1) NOT NULL DEFAULT '1',
@@ -1484,4 +1488,4 @@ INSERT INTO `vfs_checklists` (`id`, `application_id`, `checklist_item`, `is_chec
 (157,	12,	'Deposit Slip (If possible)',	0,	NULL,	NULL,	NULL,	'2026-04-27 05:29:13',	'2026-04-27 05:29:13'),
 (158,	12,	'Financial Declaration Affidavit',	0,	NULL,	NULL,	NULL,	'2026-04-27 05:29:13',	'2026-04-27 05:29:13');
 
--- 2026-04-27 11:59:13 UTC
+-- 2026-05-01 18:18:58 UTC

@@ -9,7 +9,6 @@ use App\Models\Budget;
 use App\Models\Setting;
 use App\Models\Payment;
 use Illuminate\Http\Request;
-use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Mpdf\Mpdf;
 
@@ -254,10 +253,10 @@ class ReportController extends Controller
         $mpdf = new Mpdf([
             'mode' => 'utf-8',
             'format' => 'A4',
-            'margin_top' => 10,
-            'margin_right' => 10,
-            'margin_bottom' => 10,
-            'margin_left' => 10,
+            'margin_top' => 0,
+            'margin_right' => 0,
+            'margin_bottom' => 0,
+            'margin_left' => 0,
         ]);
 
         $html = view('admin.reports.balance_sheet_pdf', compact(
@@ -306,10 +305,10 @@ class ReportController extends Controller
         $transactionType = $request->get('transaction_type');
 
         $expensesQuery = Expense::with(['creator', 'chartOfAccount'])->whereBetween('expense_date', [$startDate, $endDate]);
-        $paymentsQuery = Payment::whereBetween('payment_date', [$startDate, $endDate])
+        $paymentsQuery = Payment::with('student')->whereBetween('payment_date', [$startDate, $endDate])
             ->whereIn('payment_status', ['pending', 'completed']);
         // Transfers are now tracked via journal_entries
-        $transfersQuery = JournalEntry::with(['period', 'creator'])->whereBetween('date', [$startDate, $endDate])
+        $transfersQuery = JournalEntry::with(['period', 'creator', 'items.chartOfAccount'])->whereBetween('date', [$startDate, $endDate])
             ->where('note', 'like', '%transfer%');
 
         // Filter by Account
@@ -338,9 +337,20 @@ class ReportController extends Controller
 
         $settings = Setting::pluck('value', 'key')->all();
 
-        $pdf = Pdf::loadView('admin.reports.pdf', compact('expenses', 'payments', 'transfers', 'settings', 'reportDate'))
-            ->setPaper('a4', 'portrait');
+        $mpdf = new Mpdf([
+            'mode' => 'utf-8',
+            'format' => 'A4',
+            'margin_top' => 0,
+            'margin_right' => 0,
+            'margin_bottom' => 0,
+            'margin_left' => 0,
+        ]);
 
-        return $pdf->download("Financial_Report_{$reportDate}.pdf");
+        $html = view('admin.reports.pdf', compact('expenses', 'payments', 'transfers', 'settings', 'reportDate'))->render();
+        $mpdf->WriteHTML($html);
+
+        return response($mpdf->Output('', 'S'))
+            ->header('Content-Type', 'application/pdf')
+            ->header('Content-Disposition', 'attachment; filename="Financial_Report_' . str_replace(' ', '_', $reportDate) . '.pdf"');
     }
 }

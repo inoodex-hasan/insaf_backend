@@ -7,7 +7,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 use App\Http\Controllers\Controller;
 use App\Models\{Application, Invoice, OfficeAccount, Payment, Setting, Student, User, JournalEntry, JournalEntryItem, AccountingPeriod, ChartOfAccount};
-use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\DB;
 use Mpdf\Mpdf;
 
@@ -209,10 +208,12 @@ class PaymentController extends Controller
         $remainingBalance = $payment->invoice ? max(0, $payment->invoice->total_amount - $totalPaid) : 0;
 
         $mpdf = new Mpdf([
-        'mode' => 'utf-8',
-        'format' => 'A4',
-        'margin_top' => 10,
-        'margin_bottom' => 10,
+            'mode' => 'utf-8',
+            'format' => 'A4',
+            'margin_top' => 0,
+            'margin_right' => 0,
+            'margin_bottom' => 0,
+            'margin_left' => 0,
         ]);
         $mpdf->WriteHTML(view('admin.payments.invoice', compact('payment', 'settings', 'remainingBalance', 'totalPaid'))->render());
 

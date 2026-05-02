@@ -1,53 +1,116 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
-    <meta charset="utf-8">
+    <meta charset="UTF-8">
     <title>Financial Report - {{ $reportDate }}</title>
     <style>
-        body {
-            font-family: sans-serif;
-            font-size: 12px;
-            color: #333;
-        }
-
-        .header {
-            text-align: center;
-            margin-bottom: 30px;
-            border-bottom: 2px solid #eee;
-            padding-bottom: 10px;
-        }
-
-        .header h1 {
+        @page {
             margin: 0;
-            color: #2196F3;
         }
 
-        .section-title {
-            background: #f5f5f5;
-            padding: 10px;
-            font-weight: bold;
-            margin: 20px 0 10px;
-            text-transform: uppercase;
-            border-left: 4px solid #2196F3;
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: sans-serif;
+            color: #333;
+            font-size: 10px;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-bottom: 20px;
         }
 
-        th,
-        td {
-            border: 1px solid #eee;
-            padding: 8px;
+        .pdf-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 210mm;
+            height: 297mm;
+            z-index: 0;
+            background-position: top left;
+            background-repeat: no-repeat;
+            background-size: 210mm 297mm;
+        }
+
+        .content {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            padding: 70px 35px 0 35px;
+            box-sizing: border-box;
+        }
+
+        .report-heading {
+            margin-top: 100px;
+        }
+
+        .info-box {
+            padding: 15px;
+        }
+
+        .info-box th {
             text-align: left;
+            font-size: 18px;
+            color: #263a79;
         }
 
-        th {
-            background: #fafafa;
+        .info-box td {
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .report-meta {
+            text-align: right;
+            vertical-align: top;
+        }
+
+        .report-meta p {
+            font-size: 14px;
+            margin: 0 0 10px 0;
+        }
+
+        .report-badge {
+            display: inline-block;
+            background-color: #263a79;
+            color: white;
+            padding: 10px 12px;
+            line-height: 1.2;
+            margin-bottom: 10px;
             font-weight: bold;
+        }
+
+        .items-table {
+            margin-top: 22px;
+            border: 1px solid #263a79;
+        }
+
+        .items-table th {
+            color: #fff;
+            padding: 9px 8px;
+            font-weight: normal;
+            text-align: center;
+            font-size: 10px;
+        }
+
+        .items-table th:nth-child(odd) {
+            background-color: #263a79;
+        }
+
+        .items-table th:nth-child(even) {
+            background-color: #c09f5a;
+        }
+
+        .items-table td {
+            padding: 7px 8px;
+            border: 1px solid #263a79;
+            font-size: 9.5px;
+            vertical-align: top;
+        }
+
+        .text-left {
+            text-align: left;
         }
 
         .text-right {
@@ -58,163 +121,232 @@
             text-align: center;
         }
 
-        .font-bold {
+        .table-shade {
+            background-color: #eaecf2;
+        }
+
+        .summary-row td {
+            padding: 8px;
+            border: 1px solid #263a79;
             font-weight: bold;
         }
 
-        .footer {
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-            text-align: center;
-            font-size: 10px;
-            border-top: 1px solid #eee;
-            padding-top: 5px;
+        .summary-label {
+            text-align: right;
+            font-weight: bold;
         }
 
-        .badge {
-            padding: 3px 6px;
-            border-radius: 3px;
-            font-size: 10px;
+        .section-title {
+            margin-top: 22px;
+            color: #263a79;
+            font-size: 14px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .totals-table {
+            margin-top: 24px;
+            border: 1px solid #263a79;
+        }
+
+        .totals-table th {
+            width: 24%;
+            background-color: #263a79;
             color: #fff;
+            padding: 10px;
+            font-weight: normal;
+            text-align: left;
         }
 
-        .bg-primary {
-            background: #2196F3;
-        }
-
-        .bg-success {
-            background: #4caf50;
-        }
-
-        .bg-danger {
-            background: #f44336;
+        .totals-table td {
+            padding: 10px;
+            color: #322014;
         }
     </style>
 </head>
+@php
+$bgPath = public_path('assets/images/Invoice_Insaf_01.jpeg');
+$bgSrc = file_exists($bgPath) ? 'file:///' . str_replace('\\', '/', $bgPath) : null;
+$companyName = $settings['company_name'] ?? $settings['site_name'] ?? config('app.name');
+$totalInc = $payments->sum('amount');
+$totalExp = $expenses->sum('amount');
+$totalTrans = $transfers->sum(function ($transfer) {
+return $transfer->items->sum('debit') ?: $transfer->items->sum('credit');
+});
+@endphp
 
 <body>
-    <div class="header">
-        <h1>Monthly Financial Report</h1>
-        <p>{{ $reportDate }}</p>
-        @if (isset($settings['site_name']))
-            <p><strong>{{ $settings['site_name'] }}</strong></p>
-        @endif
-    </div>
+    @if ($bgSrc)
+    <div class="pdf-bg" style="background-image: url('{{ $bgSrc }}');"></div>
+    @endif
 
-    <div class="section-title">Income Breakdown (Student Payments)</div>
-    <table>
-        <thead>
+    <div class="content">
+        <table class="report-heading">
             <tr>
-                <th>Date</th>
-                <th>Student</th>
-                <th>Receipt #</th>
-                <th class="text-right">Amount</th>
+                <td style="width: 50%; vertical-align: top;">
+                    <table class="info-box">
+                        <tr>
+                            <th>Financial Summary</th>
+                        </tr>
+                        <tr>
+                            <td>{{ $companyName }}</td>
+                        </tr>
+                        <tr>
+                            <td>Income, expenses, transfers and net movement</td>
+                        </tr>
+                    </table>
+                </td>
+                <td style="width: 50%;" class="report-meta">
+                    <p><span class="report-badge">Financial Report</span></p>
+                    <p><strong>Period:</strong> {{ $reportDate }}</p>
+                    <p><strong>Generated:</strong> {{ now()->format('d M, Y h:i A') }}</p>
+                </td>
             </tr>
-        </thead>
-        <tbody>
-            @php $totalInc = 0; @endphp
-            @forelse($payments as $payment)
-                @php $totalInc += $payment->amount; @endphp
-                <tr>
-                    <td>{{ \Carbon\Carbon::parse($payment->payment_date)->format('d M, Y') }}</td>
-                    <td style="text-transform: uppercase">{{ $payment->student->first_name ?? 'N/A' }}
-                        {{ $payment->student->last_name ?? '' }}</td>
-                    <td>{{ $payment->receipt_number }}</td>
-                    <td class="text-right">{{ number_format($payment->amount, 2) }}</td>
-                </tr>
-            @empty
-                <tr>
-                    <td colspan="4" class="text-center">No income recorded.</td>
-                </tr>
-            @endforelse
-        </tbody>
-        <tfoot>
-            <tr class="font-bold">
-                <td colspan="3" class="text-right">Total Income:</td>
-                <td class="text-right">{{ number_format($totalInc, 2) }}</td>
-            </tr>
-        </tfoot>
-    </table>
+        </table>
 
-    <div class="section-title">Expenses Breakdown</div>
-    <table>
-        <thead>
+        <table class="items-table">
+            <thead>
+                <tr>
+                    <th style="width: 34%;" class="text-left">SUMMARY</th>
+                    <th style="width: 22%;">INCOME (BDT)</th>
+                    <th style="width: 22%;">EXPENSES (BDT)</th>
+                    <th style="width: 22%;">NET MOVEMENT (BDT)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="text-left table-shade">{{ $reportDate }}</td>
+                    <td class="text-right">{{ number_format($totalInc, 2) }}</td>
+                    <td class="text-right table-shade">{{ number_format($totalExp, 2) }}</td>
+                    <td class="text-right">{{ number_format($totalInc - $totalExp, 2) }}</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="section-title">Income Breakdown (Student Payments)</div>
+        <table class="items-table" style="margin-top: 8px;">
+            <thead>
+                <tr>
+                    <th style="width: 16%;">DATE</th>
+                    <th style="width: 40%;" class="text-left">STUDENT</th>
+                    <th style="width: 24%;">RECEIPT NO.</th>
+                    <th style="width: 20%;">AMOUNT (BDT)</th>
+                </tr>
+            </thead>
+            <tbody>
+                @forelse($payments as $payment)
+                <tr>
+                    <td class="{{ $loop->odd ? 'table-shade' : '' }}">
+                        {{ \Carbon\Carbon::parse($payment->payment_date)->format('d M, Y') }}
+                    </td>
+                    <td class="text-left {{ $loop->odd ? 'table-shade' : '' }}" style="text-transform: uppercase;">
+                        {{ $payment->student->first_name ?? 'N/A' }} {{ $payment->student->last_name ?? '' }}
+                    </td>
+                    <td class="{{ $loop->odd ? 'table-shade' : '' }}">{{ $payment->receipt_number ?? '-' }}</td>
+                    <td class="text-right {{ $loop->odd ? 'table-shade' : '' }}">{{ number_format($payment->amount, 2)
+                        }}</td>
+                </tr>
+                @empty
+                <tr>
+                    <td colspan="4" class="text-center table-shade">No income recorded.</td>
+                </tr>
+                @endforelse
+                <tr class="summary-row">
+                    <td colspan="3" class="summary-label">TOTAL INCOME:</td>
+                    <td class="text-right table-shade">{{ number_format($totalInc, 2) }}</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="section-title">Expenses Breakdown</div>
+        <table class="items-table" style="margin-top: 8px;">
+            <thead>
+                <tr>
+                    <th style="width: 14%;">DATE</th>
+                    <th style="width: 34%;" class="text-left">CATEGORY / PURPOSE</th>
+                    <th style="width: 20%;">PAYMENT METHOD</th>
+                    <th style="width: 18%;">RECORDED BY</th>
+                    <th style="width: 14%;">AMOUNT (BDT)</th>
+                </tr>
+            </thead>
+            <tbody>
+                @forelse($expenses as $expense)
+                <tr>
+                    <td class="{{ $loop->odd ? 'table-shade' : '' }}">
+                        {{ \Carbon\Carbon::parse($expense->expense_date)->format('d M, Y') }}
+                    </td>
+                    <td class="text-left {{ $loop->odd ? 'table-shade' : '' }}" style="text-transform: uppercase;">
+                        {{ $expense->chartOfAccount->name ?? $expense->category ?? '-' }}
+                    </td>
+                    <td class="{{ $loop->odd ? 'table-shade' : '' }}" style="text-transform: uppercase;">
+                        {{ $expense->payment_method ?? '-' }}
+                    </td>
+                    <td class="{{ $loop->odd ? 'table-shade' : '' }}">{{ $expense->creator->name ?? '-' }}</td>
+                    <td class="text-right {{ $loop->odd ? 'table-shade' : '' }}">{{ number_format($expense->amount, 2)
+                        }}</td>
+                </tr>
+                @empty
+                <tr>
+                    <td colspan="5" class="text-center table-shade">No expenses recorded.</td>
+                </tr>
+                @endforelse
+                <tr class="summary-row">
+                    <td colspan="4" class="summary-label">TOTAL EXPENSES:</td>
+                    <td class="text-right table-shade">{{ number_format($totalExp, 2) }}</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="section-title">Office Transfers History</div>
+        <table class="items-table" style="margin-top: 8px;">
+            <thead>
+                <tr>
+                    <th style="width: 16%;">DATE</th>
+                    <th style="width: 26%;" class="text-left">FROM ACCOUNT</th>
+                    <th style="width: 26%;" class="text-left">TO ACCOUNT</th>
+                    <th style="width: 16%;">REFERENCE</th>
+                    <th style="width: 16%;">AMOUNT (BDT)</th>
+                </tr>
+            </thead>
+            <tbody>
+                @forelse($transfers as $transfer)
+                @php
+                $debitItem = $transfer->items->firstWhere('debit', '>', 0);
+                $creditItem = $transfer->items->firstWhere('credit', '>', 0);
+                $transferAmount = $transfer->items->sum('debit') ?: $transfer->items->sum('credit');
+                @endphp
+                <tr>
+                    <td class="{{ $loop->odd ? 'table-shade' : '' }}">
+                        {{ \Carbon\Carbon::parse($transfer->date)->format('d M, Y') }}
+                    </td>
+                    <td class="text-left {{ $loop->odd ? 'table-shade' : '' }}">
+                        {{ $creditItem->chartOfAccount->name ?? 'N/A' }}
+                    </td>
+                    <td class="text-left {{ $loop->odd ? 'table-shade' : '' }}">
+                        {{ $debitItem->chartOfAccount->name ?? 'N/A' }}
+                    </td>
+                    <td class="{{ $loop->odd ? 'table-shade' : '' }}">{{ $transfer->reference_number ?? '-' }}</td>
+                    <td class="text-right {{ $loop->odd ? 'table-shade' : '' }}">{{ number_format($transferAmount, 2) }}
+                    </td>
+                </tr>
+                @empty
+                <tr>
+                    <td colspan="5" class="text-center table-shade">No transfers recorded.</td>
+                </tr>
+                @endforelse
+                <tr class="summary-row">
+                    <td colspan="4" class="summary-label">TOTAL TRANSFERS:</td>
+                    <td class="text-right table-shade">{{ number_format($totalTrans, 2) }}</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <table class="totals-table">
             <tr>
-                <th>Date</th>
-                <th>Category (Purpose)</th>
-                <th>Payment Method</th>
-                <th class="text-right">Amount</th>
-                <th>Recorded By</th>
+                <th>NET FINANCIAL MOVEMENT</th>
+                <td class="text-right">BDT {{ number_format($totalInc - $totalExp, 2) }}</td>
             </tr>
-        </thead>
-        <tbody>
-            @php $totalExp = 0; @endphp
-            @forelse($expenses as $expense)
-                @php $totalExp += $expense->amount; @endphp
-                <tr>
-                    <td>{{ \Carbon\Carbon::parse($expense->expense_date)->format('d M, Y') }}</td>
-                    <td style="text-transform: uppercase">{{ $expense->category }}</td>
-                    <td style="text-transform: uppercase">{{ $expense->payment_method }}</td>
-                    <td class="text-right">{{ number_format($expense->amount, 2) }}</td>
-                    <td>{{ $expense->creator->name ?? '-' }}</td>
-                </tr>
-            @empty
-                <tr>
-                    <td colspan="5" class="text-center">No expenses recorded.</td>
-                </tr>
-            @endforelse
-        </tbody>
-        <tfoot>
-            <tr class="font-bold">
-                <td colspan="3" class="text-right">Total Expenses:</td>
-                <td class="text-right">{{ number_format($totalExp, 2) }}</td>
-                <td></td>
-            </tr>
-        </tfoot>
-    </table>
-
-    <div class="section-title">Office Transfers History</div>
-    <table>
-        <thead>
-            <tr>
-                <th>Date</th>
-                <th>From Account</th>
-                <th>To Account</th>
-                <th class="text-right">Amount</th>
-            </tr>
-        </thead>
-        <tbody>
-            @php $totalTrans = 0; @endphp
-            @forelse($transfers as $transfer)
-                @php $totalTrans += $transfer->amount; @endphp
-                <tr>
-                    <td>{{ \Carbon\Carbon::parse($transfer->transaction_date)->format('d M, Y') }}</td>
-                    <td>{{ $transfer->fromAccount->account_name ?? 'N/A' }}</td>
-                    <td>{{ $transfer->toAccount->account_name ?? 'N/A' }}</td>
-                    <td class="text-right">{{ number_format($transfer->amount, 2) }}</td>
-                </tr>
-            @empty
-                <tr>
-                    <td colspan="4" class="text-center">No transfers recorded.</td>
-                </tr>
-            @endforelse
-        </tbody>
-        <tfoot>
-            <tr class="font-bold">
-                <td colspan="3" class="text-right">Total Transfers:</td>
-                <td class="text-right">{{ number_format($totalTrans, 2) }}</td>
-            </tr>
-        </tfoot>
-    </table>
-
-    <div style="margin-top: 40px; border-top: 2px solid #2196F3; padding-top: 10px;">
-        <h3 class="text-right">Net Financial Movement: {{ number_format($totalInc - $totalExp, 2) }}</h3>
-        {{-- <p class="text-right" style="font-size: 10px; color: #777;">(Income - Expenses)</p> --}}
-    </div>
-
-    <div class="footer">
-        Generated on {{ date('d M, Y H:i A') }} | Page 1
+        </table>
     </div>
 </body>
 

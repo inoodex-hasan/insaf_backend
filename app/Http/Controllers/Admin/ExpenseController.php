@@ -7,7 +7,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 use App\Http\Controllers\Controller;
 use App\Models\{Expense, ChartOfAccount, OfficeAccount, Salary};
-use Barryvdh\DomPDF\Facade\Pdf;
 use Mpdf\Mpdf;
 
 class ExpenseController extends Controller
@@ -130,8 +129,23 @@ class ExpenseController extends Controller
     {
         $this->authorize('*accountant');
 
-        $pdf = Pdf::loadView('admin.expenses.pdf', compact('expense'));
-        return $pdf->download('expense-' . $expense->id . '.pdf');
+        $expense->load(['creator', 'chartOfAccount', 'account']);
+
+        $mpdf = new Mpdf([
+            'mode' => 'utf-8',
+            'format' => 'A4',
+            'margin_top' => 0,
+            'margin_right' => 0,
+            'margin_bottom' => 0,
+            'margin_left' => 0,
+        ]);
+
+        $html = view('admin.expenses.pdf', compact('expense'))->render();
+        $mpdf->WriteHTML($html);
+
+        return response($mpdf->Output('', 'S'))
+            ->header('Content-Type', 'application/pdf')
+            ->header('Content-Disposition', 'attachment; filename="expense-' . $expense->id . '.pdf"');
     }
 
     // public function report(Request $request)
@@ -216,10 +230,10 @@ class ExpenseController extends Controller
         $mpdf = new Mpdf([
             'mode' => 'utf-8',
             'format' => 'A4',
-            'margin_top' => 10,
-            'margin_right' => 10,
-            'margin_bottom' => 10,
-            'margin_left' => 10,
+            'margin_top' => 0,
+            'margin_right' => 0,
+            'margin_bottom' => 0,
+            'margin_left' => 0,
         ]);
 
         $html = view('admin.expenses.report', compact('expenses', 'totalAmount', 'request'))->render();
@@ -264,10 +278,10 @@ class ExpenseController extends Controller
         $mpdf = new Mpdf([
             'mode' => 'utf-8',
             'format' => 'A4',
-            'margin_top' => 10,
-            'margin_right' => 10,
-            'margin_bottom' => 10,
-            'margin_left' => 10,
+            'margin_top' => 0,
+            'margin_right' => 0,
+            'margin_bottom' => 0,
+            'margin_left' => 0,
         ]);
 
         $html = view('admin.expenses.report', compact('expenses', 'totalAmount', 'request'))->render();

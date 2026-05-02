@@ -3,186 +3,244 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Expense Report - #{{ $expense->id }}</title>
+    <title>Expense - #{{ $expense->id }}</title>
     <style>
         @page {
-            margin: 0.5in;
-            footer: html_DocFooter;
+            margin: 0;
         }
 
         body {
-            font-family: 'Helvetica', 'Arial', sans-serif;
-            color: #2c3e50;
-            line-height: 1.5;
             margin: 0;
             padding: 0;
+            font-family: sans-serif;
+            color: #333;
         }
 
-        /* Header Styling */
-        .header-table {
-            width: 100%;
-            border-bottom: 2px solid #47389D;
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-        }
-
-        .report-title {
-            font-size: 24pt;
-            font-weight: bold;
-            color: #47389D;
-            text-transform: uppercase;
-        }
-
-        /* Summary Box */
-        .summary-table {
-            width: 100%;
-            background-color: #f8f9fa;
-            border: 1px solid #e9ecef;
-            margin-bottom: 30px;
-        }
-
-        .summary-label {
-            font-size: 10pt;
-            color: #7f8c8d;
-            padding: 15px 20px 5px 20px;
-        }
-
-        .summary-value {
-            font-size: 18pt;
-            font-weight: bold;
-            color: #2c3e50;
-            padding: 0 20px 15px 20px;
-        }
-
-        .amount-highlight {
-            color: #e91e63;
-            font-size: 22pt;
-        }
-
-        /* Section Layout */
-        .section-header {
-            background-color: #47389D;
-            color: #ffffff;
-            font-size: 11pt;
-            font-weight: bold;
-            padding: 8px 12px;
-            margin-top: 20px;
-        }
-
-        .details-table {
+        table {
             width: 100%;
             border-collapse: collapse;
-            margin-bottom: 10px;
         }
 
-        .details-table td {
+        .pdf-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 210mm;
+            height: 297mm;
+            z-index: 0;
+            background-position: top left;
+            background-repeat: no-repeat;
+            background-size: 210mm 297mm;
+        }
+
+        .content {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            padding: 70px 35px 0 35px;
+            box-sizing: border-box;
+        }
+
+        .expense-heading {
+            margin-top: 100px;
+        }
+
+        .info-box {
+            padding: 15px;
+        }
+
+        .info-box th {
+            text-align: left;
+            font-size: 18px;
+            color: #263a79;
+        }
+
+        .info-box td {
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .expense-meta {
+            text-align: right;
+            vertical-align: top;
+        }
+
+        .expense-meta p {
+            font-size: 14px;
+            margin: 0 0 10px 0;
+        }
+
+        .expense-badge {
+            display: inline-block;
+            background-color: #263a79;
+            color: white;
             padding: 10px 12px;
-            border-bottom: 1px solid #edf2f7;
-            font-size: 10.5pt;
-        }
-
-        .label-cell {
+            line-height: 1.2;
+            margin-bottom: 10px;
             font-weight: bold;
-            color: #4a5568;
-            width: 35%;
-            background-color: #fcfcfc;
         }
 
-        .value-cell {
-            width: 65%;
+        .items-table {
+            margin-top: 30px;
+            border: 1px solid #263a79;
+        }
+
+        .items-table th {
+            color: #fff;
+            padding: 12px 10px;
+            font-weight: normal;
+            text-align: center;
+        }
+
+        .items-table th:nth-child(odd) {
+            background-color: #263a79;
+        }
+
+        .items-table th:nth-child(even) {
+            background-color: #c09f5a;
+        }
+
+        .items-table td {
+            padding: 10px;
+            border: 1px solid #263a79;
+            text-align: center;
+            vertical-align: top;
+        }
+
+        .items-table .text-left {
+            text-align: left;
+        }
+
+        .items-table .text-right {
             text-align: right;
         }
 
-        /* Notes Box */
-        .notes-container {
-            border-left: 4px solid #C2A56D;
-            background-color: #fffdf7;
-            padding: 15px;
-            margin-top: 10px;
-            font-style: italic;
+        .summary-row td {
+            padding: 8px 10px;
+            border: 1px solid #263a79;
         }
 
-        .footer-content {
-            text-align: center;
-            font-size: 9pt;
-            color: #a0aec0;
-            border-top: 1px solid #edf2f7;
-            padding-top: 10px;
+        .summary-label {
+            text-align: right;
+            font-weight: bold;
+        }
+
+        .table-shade {
+            background-color: #eaecf2;
+        }
+
+        .notes {
+            margin-top: 24px;
+            border: 1px solid #263a79;
+        }
+
+        .notes th {
+            width: 20%;
+            background-color: #263a79;
+            color: #fff;
+            padding: 10px;
+            font-weight: normal;
+            text-align: left;
+        }
+
+        .notes td {
+            padding: 10px;
+            color: #322014;
         }
     </style>
 </head>
+@php
+    $bgPath = public_path('assets/images/Invoice_Insaf.jpeg');
+    $bgSrc = file_exists($bgPath) ? 'file:///' . str_replace('\\', '/', $bgPath) : null;
+@endphp
 
 <body>
-    <table class="header-table">
-        <tr>
-            <td class="report-title">Expense Report</td>
-            <td style="text-align: right; vertical-align: bottom; color: #718096;">
-                ID: #{{ $expense->id }}
-            </td>
-        </tr>
-    </table>
-
-    <table class="summary-table">
-        <tr>
-            <td class="summary-label">TOTAL AMOUNT</td>
-            <td class="summary-label" style="text-align: right;">EXPENSE DATE</td>
-        </tr>
-        <tr>
-            <td class="summary-value amount-highlight">
-                {{ number_format($expense->amount, 2) }} <span style="font-size: 12pt;">BDT</span>
-            </td>
-            <td class="summary-value" style="text-align: right;">
-                {{ $expense->expense_date->format('M d, Y') }}
-            </td>
-        </tr>
-    </table>
-
-    <div class="section-header">Basic Information</div>
-    <table class="details-table">
-        <tr>
-            <td class="label-cell">Description</td>
-            <td class="value-cell">{{ $expense->description }}</td>
-        </tr>
-        <tr>
-            <td class="label-cell">Category</td>
-            <td class="value-cell">{{ $expense->category ?: 'General' }}</td>
-        </tr>
-    </table>
-
-    <div class="section-header">Payment & Audit</div>
-    <table class="details-table">
-        <tr>
-            <td class="label-cell">Payment Method</td>
-            <td class="value-cell">{{ $expense->payment_method ?: 'N/A' }}</td>
-        </tr>
-        @if ($expense->office_account)
-            <tr>
-                <td class="label-cell">Account Name</td>
-                <td class="value-cell">{{ $expense->office_account->account_name }}</td>
-            </tr>
-        @endif
-        <tr>
-            <td class="label-cell">Recorded By</td>
-            <td class="value-cell">{{ $expense->creator->name ?? 'System' }}</td>
-        </tr>
-        <tr>
-            <td class="label-cell">Record Created</td>
-            <td class="value-cell">{{ $expense->created_at->format('M d, Y') }}</td>
-        </tr>
-    </table>
-
-    @if ($expense->notes)
-        <div class="section-header">Notes & Comments</div>
-        <div class="notes-container">
-            {{ $expense->notes }}
-        </div>
+    @if ($bgSrc)
+        <div class="pdf-bg" style="background-image: url('{{ $bgSrc }}');"></div>
     @endif
 
-    <htmlpagefooter name="DocFooter">
-        <div class="footer-content">
-            Computer generated document • Generated on {{ now()->format('M d, Y') }}
-        </div>
-    </htmlpagefooter>
+    <div class="content">
+        <table class="expense-heading">
+            <tr>
+                <td style="width: 50%; vertical-align: top;">
+                    <table class="info-box">
+                        <tr>
+                            <th>Expense Details</th>
+                        </tr>
+                        <tr>
+                            <td>{{ $expense->description }}</td>
+                        </tr>
+                        <tr>
+                            <td>{{ $expense->chartOfAccount->name ?? 'General' }}</td>
+                        </tr>
+                    </table>
+                </td>
+                <td style="width: 50%;" class="expense-meta">
+                    <p><span class="expense-badge">Expense No: #{{ $expense->id }}</span></p>
+                    <p><strong>Date:</strong> {{ $expense->expense_date->format('Y-m-d') }}</p>
+                </td>
+            </tr>
+        </table>
+
+        <table class="items-table">
+            <thead>
+                <tr>
+                    <th style="width: 8%;">SL NO.</th>
+                    <th style="width: 36%;" class="text-left">PURPOSE</th>
+                    <th style="width: 16%;">CATEGORY</th>
+                    <th style="width: 14%;">METHOD</th>
+                    <th style="width: 16%;">TOTAL</th>
+                    <th style="width: 10%;">CURRENCY</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="table-shade">1</td>
+                    <td class="text-left">{{ $expense->description }}</td>
+                    <td class="table-shade">{{ $expense->chartOfAccount->name ?? 'General' }}</td>
+                    <td>{{ ucwords(str_replace('_', ' ', $expense->payment_method)) ?: '-' }}</td>
+                    <td class="table-shade text-right">{{ number_format($expense->amount, 2) }}</td>
+                    <td>BDT</td>
+                </tr>
+                <tr class="summary-row">
+                    <td colspan="4" class="summary-label">SUB TOTAL:</td>
+                    <td class="table-shade text-right">{{ number_format($expense->amount, 2) }}</td>
+                    <td>BDT</td>
+                </tr>
+                <tr class="summary-row">
+                    <td colspan="4" class="summary-label">TOTAL PAID:</td>
+                    <td class="table-shade text-right">{{ number_format($expense->amount, 2) }}</td>
+                    <td>BDT</td>
+                </tr>
+                <tr class="summary-row">
+                    <td colspan="4" class="summary-label">TOTAL DUE:</td>
+                    <td class="table-shade text-right">{{ number_format(0, 2) }}</td>
+                    <td>BDT</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <table class="notes">
+            <tr>
+                <th>ACCOUNT</th>
+                <td>{{ $expense->account->account_name ?? 'Cash' }}</td>
+            </tr>
+            <tr>
+                <th>RECORDED BY</th>
+                <td>{{ $expense->creator->name ?? 'System' }}</td>
+            </tr>
+            <tr>
+                <th>CREATED</th>
+                <td>{{ $expense->created_at->format('Y-m-d') }}</td>
+            </tr>
+            @if ($expense->notes)
+                <tr>
+                    <th>NOTES</th>
+                    <td>{{ $expense->notes }}</td>
+                </tr>
+            @endif
+        </table>
+    </div>
 </body>
 
 </html>

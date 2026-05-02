@@ -6,216 +6,263 @@
     <title>Expenses Report</title>
     <style>
         @page {
-            margin: 0.5in;
-            footer: html_DocFooter;
+            margin: 0;
         }
 
         body {
-            font-family: 'Helvetica', 'Arial', sans-serif;
-            color: #2c3e50;
-            line-height: 1.5;
             margin: 0;
             padding: 0;
+            font-family: sans-serif;
+            color: #333;
         }
 
-        /* Header Styling */
-        .header-table {
-            width: 100%;
-            border-bottom: 2px solid #47389D;
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-        }
-
-        .report-title {
-            font-size: 24pt;
-            font-weight: bold;
-            color: #47389D;
-            text-transform: uppercase;
-        }
-
-        /* Filter Info */
-        .filter-info {
-            background-color: #f8f9fa;
-            border: 1px solid #e9ecef;
-            padding: 10px 15px;
-            margin-bottom: 20px;
-            font-size: 9pt;
-            color: #666;
-        }
-
-        .filter-info strong {
-            color: #47389D;
-        }
-
-        /* Summary Box */
-        .summary-box {
-            width: 100%;
-            background-color: #47389D;
-            color: #ffffff;
-            margin-bottom: 20px;
-        }
-
-        .summary-box td {
-            padding: 15px 20px;
-        }
-
-        .summary-label {
-            font-size: 10pt;
-            text-transform: uppercase;
-        }
-
-        .summary-value {
-            font-size: 18pt;
-            font-weight: bold;
-            text-align: right;
-        }
-
-        /* Data Table */
-        .data-table {
+        table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 10px;
         }
 
-        .data-table thead th {
-            background-color: #47389D;
-            color: #ffffff;
-            font-size: 10pt;
-            font-weight: bold;
-            padding: 10px 8px;
+        .pdf-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 210mm;
+            height: 297mm;
+            z-index: 0;
+            background-position: top left;
+            background-repeat: no-repeat;
+            background-size: 210mm 297mm;
+        }
+
+        .content {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            padding: 70px 35px 0 35px;
+            box-sizing: border-box;
+        }
+
+        .report-heading {
+            margin-top: 100px;
+        }
+
+        .info-box {
+            padding: 15px;
+        }
+
+        .info-box th {
             text-align: left;
-            text-transform: uppercase;
+            font-size: 18px;
+            color: #263a79;
         }
 
-        .data-table tbody td {
-            padding: 8px;
-            border-bottom: 1px solid #edf2f7;
-            font-size: 9.5pt;
+        .info-box td {
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .report-meta {
+            text-align: right;
             vertical-align: top;
         }
 
-        .data-table tbody tr:nth-child(even) {
-            background-color: #f8f9fa;
+        .report-meta p {
+            font-size: 14px;
+            margin: 0 0 10px 0;
         }
 
-        .date-cell {
-            white-space: nowrap;
+        .report-badge {
+            display: inline-block;
+            background-color: #263a79;
+            color: white;
+            padding: 10px 12px;
+            line-height: 1.2;
+            margin-bottom: 10px;
             font-weight: bold;
         }
 
-        .amount-cell {
+        .filters {
+            margin-top: 8px;
+            border: 1px solid #263a79;
+        }
+
+        .filters th {
+            width: 20%;
+            background-color: #263a79;
+            color: #fff;
+            padding: 8px 10px;
+            font-weight: normal;
+            text-align: left;
+            font-size: 12px;
+        }
+
+        .filters td {
+            padding: 8px 10px;
+            font-size: 12px;
+            color: #322014;
+        }
+
+        .items-table {
+            margin-top: 24px;
+            border: 1px solid #263a79;
+        }
+
+        .items-table th {
+            color: #fff;
+            padding: 10px 8px;
+            font-weight: normal;
+            text-align: center;
+            font-size: 11px;
+        }
+
+        .items-table th:nth-child(odd) {
+            background-color: #263a79;
+        }
+
+        .items-table th:nth-child(even) {
+            background-color: #c09f5a;
+        }
+
+        .items-table td {
+            padding: 8px;
+            border: 1px solid #263a79;
+            text-align: center;
+            font-size: 10.5px;
+            vertical-align: top;
+        }
+
+        .items-table .text-left {
+            text-align: left;
+        }
+
+        .items-table .text-right {
+            text-align: right;
+        }
+
+        .table-shade {
+            background-color: #eaecf2;
+        }
+
+        .summary-row td {
+            padding: 8px 10px;
+            border: 1px solid #263a79;
+            font-size: 11px;
+        }
+
+        .summary-label {
             text-align: right;
             font-weight: bold;
-            color: #e91e63;
-        }
-
-        .category-badge {
-            background-color: #e3f2fd;
-            color: #1976d2;
-            padding: 2px 8px;
-            border-radius: 3px;
-            font-size: 8pt;
-            display: inline-block;
-        }
-
-        .footer-content {
-            text-align: center;
-            font-size: 9pt;
-            color: #a0aec0;
-            border-top: 1px solid #edf2f7;
-            padding-top: 10px;
         }
 
         .no-data {
+            margin-top: 24px;
+            border: 1px solid #263a79;
+            padding: 28px;
             text-align: center;
-            padding: 40px;
-            color: #a0aec0;
-            font-style: italic;
+            color: #322014;
+            background-color: #eaecf2;
         }
     </style>
 </head>
+@php
+    $bgPath = public_path('assets/images/Invoice_Insaf.jpeg');
+    $bgSrc = file_exists($bgPath) ? 'file:///' . str_replace('\\', '/', $bgPath) : null;
+    $filters = [];
+
+    if ($request->get('search')) {
+        $filters[] = 'Search: ' . $request->get('search');
+    }
+
+    if ($request->get('category')) {
+        $filters[] = 'Category: ' . $request->get('category');
+    }
+
+    if ($request->get('start_date')) {
+        $filters[] = 'From: ' . $request->get('start_date');
+    }
+
+    if ($request->get('end_date')) {
+        $filters[] = 'To: ' . $request->get('end_date');
+    }
+@endphp
 
 <body>
-    <table class="header-table">
-        <tr>
-            <td class="report-title">Expenses Report</td>
-            <td style="text-align: right; vertical-align: bottom; color: #718096; font-size: 10pt;">
-                Generated: {{ now()->format('M d, Y') }}
-            </td>
-        </tr>
-    </table>
-
-    {{-- Filter Information --}}
-    <div class="filter-info">
-        <strong>Filters Applied:</strong>
-        @if ($request->get('search'))
-            | Search: {{ $request->get('search') }}
-        @endif
-        @if ($request->get('category'))
-            | Category: {{ $request->get('category') }}
-        @endif
-        @if ($request->get('start_date'))
-            | From: {{ $request->get('start_date') }}
-        @endif
-        @if ($request->get('end_date'))
-            | To: {{ $request->get('end_date') }}
-        @endif
-        @if (
-            !$request->get('search') &&
-                !$request->get('category') &&
-                !$request->get('start_date') &&
-                !$request->get('end_date'))
-            All Records
-        @endif
-    </div>
-
-    {{-- Summary --}}
-    <table class="summary-box">
-        <tr>
-            <td class="summary-label">Total Expenses: {{ $expenses->count() }} Records</td>
-            <td class="summary-value">{{ number_format($totalAmount, 2) }} BDT</td>
-        </tr>
-    </table>
-
-    {{-- Data Table --}}
-    @if ($expenses->count() > 0)
-        <table class="data-table">
-            <thead>
-                <tr>
-                    <th style="width: 12%;">Date</th>
-                    <th style="width: 25%;">Description</th>
-                    <th style="width: 18%;">Category</th>
-                    <th style="width: 15%;">Amount (BDT)</th>
-                    <th style="width: 15%;">Method</th>
-                    <th style="width: 15%;">Recorded By</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach ($expenses as $expense)
-                    <tr>
-                        <td class="date-cell">{{ $expense->expense_date->format('M d, Y') }}</td>
-                        <td>{{ $expense->description }}</td>
-                        <td>
-                            <span class="category-badge">{{ $expense->chartOfAccount->name ?? 'General' }}</span>
-                        </td>
-                        <td class="amount-cell">{{ number_format($expense->amount, 2) }}</td>
-                        <td>{{ ucwords(str_replace('_', ' ', $expense->payment_method)) ?: '-' }}</td>
-                        <td>{{ $expense->creator->name ?? 'System' }}</td>
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
-    @else
-        <div class="no-data">
-            No expenses found matching the selected filters.
-        </div>
+    @if ($bgSrc)
+        <div class="pdf-bg" style="background-image: url('{{ $bgSrc }}');"></div>
     @endif
 
-    <htmlpagefooter name="DocFooter">
-        <div class="footer-content">
-            Computer generated report
-        </div>
-    </htmlpagefooter>
+    <div class="content">
+        <table class="report-heading">
+            <tr>
+                <td style="width: 50%; vertical-align: top;">
+                    <table class="info-box">
+                        <tr>
+                            <th>Expense List</th>
+                        </tr>
+                        <tr>
+                            <td>Total Records: {{ $expenses->count() }}</td>
+                        </tr>
+                        <tr>
+                            <td>Total Amount: {{ number_format($totalAmount, 2) }} BDT</td>
+                        </tr>
+                    </table>
+                </td>
+                <td style="width: 50%;" class="report-meta">
+                    <p><span class="report-badge">Expense Report</span></p>
+                    <p><strong>Date:</strong> {{ now()->format('Y-m-d') }}</p>
+                </td>
+            </tr>
+        </table>
+
+        <table class="filters">
+            <tr>
+                <th>FILTERS</th>
+                <td>{{ count($filters) ? implode(' | ', $filters) : 'All Records' }}</td>
+            </tr>
+        </table>
+
+        @if ($expenses->count() > 0)
+            <table class="items-table">
+                <thead>
+                    <tr>
+                        <th style="width: 7%;">SL NO.</th>
+                        <th style="width: 13%;">DATE</th>
+                        <th style="width: 28%;" class="text-left">DESCRIPTION</th>
+                        <th style="width: 16%;">CATEGORY</th>
+                        <th style="width: 13%;">AMOUNT</th>
+                        <th style="width: 11%;">METHOD</th>
+                        <th style="width: 12%;">RECORDED BY</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($expenses as $expense)
+                        <tr>
+                            <td class="table-shade">{{ $loop->index + 1 }}</td>
+                            <td>{{ $expense->expense_date->format('Y-m-d') }}</td>
+                            <td class="text-left">{{ $expense->description }}</td>
+                            <td class="table-shade">{{ $expense->chartOfAccount->name ?? 'General' }}</td>
+                            <td class="text-right">{{ number_format($expense->amount, 2) }}</td>
+                            <td>{{ ucwords(str_replace('_', ' ', $expense->payment_method)) ?: '-' }}</td>
+                            <td class="table-shade">{{ $expense->creator->name ?? 'System' }}</td>
+                        </tr>
+                    @endforeach
+                    <tr class="summary-row">
+                        <td colspan="4" class="summary-label">TOTAL EXPENSES:</td>
+                        <td class="table-shade text-right">{{ number_format($totalAmount, 2) }}</td>
+                        <td colspan="2">BDT</td>
+                    </tr>
+                    <tr class="summary-row">
+                        <td colspan="4" class="summary-label">TOTAL RECORDS:</td>
+                        <td class="table-shade text-right">{{ $expenses->count() }}</td>
+                        <td colspan="2">ITEMS</td>
+                    </tr>
+                </tbody>
+            </table>
+        @else
+            <div class="no-data">
+                No expenses found matching the selected filters.
+            </div>
+        @endif
+    </div>
 </body>
 
 </html>
