@@ -23,18 +23,21 @@
         <form action="{{ route('admin.reports.summary') }}" method="GET" class="mb-5 flex flex-wrap items-center gap-4">
             <div class="flex items-center gap-2">
                 <label for="start_date" class="mb-0">From:</label>
-                <input type="date" name="start_date" id="start_date" value="{{ request('start_date') }}" class="form-input w-40">
+                <input type="date" name="start_date" id="start_date" value="{{ request('start_date') }}"
+                    class="form-input w-40">
             </div>
             <div class="flex items-center gap-2">
                 <label for="end_date" class="mb-0">To:</label>
-                <input type="date" name="end_date" id="end_date" value="{{ request('end_date') }}" class="form-input w-40">
+                <input type="date" name="end_date" id="end_date" value="{{ request('end_date') }}"
+                    class="form-input w-40">
             </div>
             <div class="flex items-center gap-2">
                 <label for="month" class="mb-0 text-gray-400">Or Month:</label>
                 <select name="month" id="month" class="form-select w-32">
                     <option value="">Month</option>
                     @foreach (range(1, 12) as $m)
-                        <option value="{{ sprintf('%02d', $m) }}" {{ $month == sprintf('%02d', $m) && !request('start_date') ? 'selected' : '' }}>
+                        <option value="{{ sprintf('%02d', $m) }}"
+                            {{ $month == sprintf('%02d', $m) && !request('start_date') ? 'selected' : '' }}>
                             {{ date('F', mktime(0, 0, 0, $m, 1)) }}
                         </option>
                     @endforeach
@@ -43,7 +46,8 @@
             <div class="flex items-center gap-2">
                 <select name="year" id="year" class="form-select w-32">
                     @foreach (range(date('Y') - 2, date('Y') + 1) as $y)
-                        <option value="{{ $y }}" {{ $year == $y && !request('start_date') ? 'selected' : '' }}>{{ $y }}</option>
+                        <option value="{{ $y }}" {{ $year == $y && !request('start_date') ? 'selected' : '' }}>
+                            {{ $y }}</option>
                     @endforeach
                 </select>
             </div>
@@ -118,8 +122,9 @@
                     </div>
                 </div>
                 <div class="mt-5 text-sm">
-                    Income minus Expenses
+                    Net Income (Income - Expenses)
                 </div>
+
             </div>
         </div>
 

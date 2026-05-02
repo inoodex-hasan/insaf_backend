@@ -165,19 +165,19 @@
     </style>
 </head>
 @php
-$bgPath = public_path('assets/images/Invoice_Insaf_01.jpeg');
-$bgSrc = file_exists($bgPath) ? 'file:///' . str_replace('\\', '/', $bgPath) : null;
-$companyName = $settings['company_name'] ?? $settings['site_name'] ?? config('app.name');
-$totalInc = $payments->sum('amount');
-$totalExp = $expenses->sum('amount');
-$totalTrans = $transfers->sum(function ($transfer) {
-return $transfer->items->sum('debit') ?: $transfer->items->sum('credit');
-});
+    $bgPath = public_path('assets/images/Invoice_Insaf_02.jpg');
+    $bgSrc = file_exists($bgPath) ? 'file:///' . str_replace('\\', '/', $bgPath) : null;
+    $companyName = $settings['company_name'] ?? ($settings['site_name'] ?? config('app.name'));
+    $totalInc = $payments->sum('amount');
+    $totalExp = $expenses->sum('amount');
+    $totalTrans = $transfers->sum(function ($transfer) {
+        return $transfer->items->sum('debit') ?: $transfer->items->sum('credit');
+    });
 @endphp
 
 <body>
     @if ($bgSrc)
-    <div class="pdf-bg" style="background-image: url('{{ $bgSrc }}');"></div>
+        <div class="pdf-bg" style="background-image: url('{{ $bgSrc }}');"></div>
     @endif
 
     <div class="content">
@@ -235,21 +235,21 @@ return $transfer->items->sum('debit') ?: $transfer->items->sum('credit');
             </thead>
             <tbody>
                 @forelse($payments as $payment)
-                <tr>
-                    <td class="{{ $loop->odd ? 'table-shade' : '' }}">
-                        {{ \Carbon\Carbon::parse($payment->payment_date)->format('d M, Y') }}
-                    </td>
-                    <td class="text-left {{ $loop->odd ? 'table-shade' : '' }}" style="text-transform: uppercase;">
-                        {{ $payment->student->first_name ?? 'N/A' }} {{ $payment->student->last_name ?? '' }}
-                    </td>
-                    <td class="{{ $loop->odd ? 'table-shade' : '' }}">{{ $payment->receipt_number ?? '-' }}</td>
-                    <td class="text-right {{ $loop->odd ? 'table-shade' : '' }}">{{ number_format($payment->amount, 2)
-                        }}</td>
-                </tr>
+                    <tr>
+                        <td class="{{ $loop->odd ? 'table-shade' : '' }}">
+                            {{ \Carbon\Carbon::parse($payment->payment_date)->format('d M, Y') }}
+                        </td>
+                        <td class="text-left {{ $loop->odd ? 'table-shade' : '' }}" style="text-transform: uppercase;">
+                            {{ $payment->student->first_name ?? 'N/A' }} {{ $payment->student->last_name ?? '' }}
+                        </td>
+                        <td class="{{ $loop->odd ? 'table-shade' : '' }}">{{ $payment->receipt_number ?? '-' }}</td>
+                        <td class="text-right {{ $loop->odd ? 'table-shade' : '' }}">
+                            {{ number_format($payment->amount, 2) }}</td>
+                    </tr>
                 @empty
-                <tr>
-                    <td colspan="4" class="text-center table-shade">No income recorded.</td>
-                </tr>
+                    <tr>
+                        <td colspan="4" class="text-center table-shade">No income recorded.</td>
+                    </tr>
                 @endforelse
                 <tr class="summary-row">
                     <td colspan="3" class="summary-label">TOTAL INCOME:</td>
@@ -271,24 +271,24 @@ return $transfer->items->sum('debit') ?: $transfer->items->sum('credit');
             </thead>
             <tbody>
                 @forelse($expenses as $expense)
-                <tr>
-                    <td class="{{ $loop->odd ? 'table-shade' : '' }}">
-                        {{ \Carbon\Carbon::parse($expense->expense_date)->format('d M, Y') }}
-                    </td>
-                    <td class="text-left {{ $loop->odd ? 'table-shade' : '' }}" style="text-transform: uppercase;">
-                        {{ $expense->chartOfAccount->name ?? $expense->category ?? '-' }}
-                    </td>
-                    <td class="{{ $loop->odd ? 'table-shade' : '' }}" style="text-transform: uppercase;">
-                        {{ $expense->payment_method ?? '-' }}
-                    </td>
-                    <td class="{{ $loop->odd ? 'table-shade' : '' }}">{{ $expense->creator->name ?? '-' }}</td>
-                    <td class="text-right {{ $loop->odd ? 'table-shade' : '' }}">{{ number_format($expense->amount, 2)
-                        }}</td>
-                </tr>
+                    <tr>
+                        <td class="{{ $loop->odd ? 'table-shade' : '' }}">
+                            {{ \Carbon\Carbon::parse($expense->expense_date)->format('d M, Y') }}
+                        </td>
+                        <td class="text-left {{ $loop->odd ? 'table-shade' : '' }}" style="text-transform: uppercase;">
+                            {{ $expense->chartOfAccount->name ?? ($expense->category ?? '-') }}
+                        </td>
+                        <td class="{{ $loop->odd ? 'table-shade' : '' }}" style="text-transform: uppercase;">
+                            {{ $expense->payment_method ?? '-' }}
+                        </td>
+                        <td class="{{ $loop->odd ? 'table-shade' : '' }}">{{ $expense->creator->name ?? '-' }}</td>
+                        <td class="text-right {{ $loop->odd ? 'table-shade' : '' }}">
+                            {{ number_format($expense->amount, 2) }}</td>
+                    </tr>
                 @empty
-                <tr>
-                    <td colspan="5" class="text-center table-shade">No expenses recorded.</td>
-                </tr>
+                    <tr>
+                        <td colspan="5" class="text-center table-shade">No expenses recorded.</td>
+                    </tr>
                 @endforelse
                 <tr class="summary-row">
                     <td colspan="4" class="summary-label">TOTAL EXPENSES:</td>
@@ -310,29 +310,31 @@ return $transfer->items->sum('debit') ?: $transfer->items->sum('credit');
             </thead>
             <tbody>
                 @forelse($transfers as $transfer)
-                @php
-                $debitItem = $transfer->items->firstWhere('debit', '>', 0);
-                $creditItem = $transfer->items->firstWhere('credit', '>', 0);
-                $transferAmount = $transfer->items->sum('debit') ?: $transfer->items->sum('credit');
-                @endphp
-                <tr>
-                    <td class="{{ $loop->odd ? 'table-shade' : '' }}">
-                        {{ \Carbon\Carbon::parse($transfer->date)->format('d M, Y') }}
-                    </td>
-                    <td class="text-left {{ $loop->odd ? 'table-shade' : '' }}">
-                        {{ $creditItem->chartOfAccount->name ?? 'N/A' }}
-                    </td>
-                    <td class="text-left {{ $loop->odd ? 'table-shade' : '' }}">
-                        {{ $debitItem->chartOfAccount->name ?? 'N/A' }}
-                    </td>
-                    <td class="{{ $loop->odd ? 'table-shade' : '' }}">{{ $transfer->reference_number ?? '-' }}</td>
-                    <td class="text-right {{ $loop->odd ? 'table-shade' : '' }}">{{ number_format($transferAmount, 2) }}
-                    </td>
-                </tr>
+                    @php
+                        $debitItem = $transfer->items->firstWhere('debit', '>', 0);
+                        $creditItem = $transfer->items->firstWhere('credit', '>', 0);
+                        $transferAmount = $transfer->items->sum('debit') ?: $transfer->items->sum('credit');
+                    @endphp
+                    <tr>
+                        <td class="{{ $loop->odd ? 'table-shade' : '' }}">
+                            {{ \Carbon\Carbon::parse($transfer->date)->format('d M, Y') }}
+                        </td>
+                        <td class="text-left {{ $loop->odd ? 'table-shade' : '' }}">
+                            {{ $creditItem->chartOfAccount->name ?? 'N/A' }}
+                        </td>
+                        <td class="text-left {{ $loop->odd ? 'table-shade' : '' }}">
+                            {{ $debitItem->chartOfAccount->name ?? 'N/A' }}
+                        </td>
+                        <td class="{{ $loop->odd ? 'table-shade' : '' }}">{{ $transfer->reference_number ?? '-' }}
+                        </td>
+                        <td class="text-right {{ $loop->odd ? 'table-shade' : '' }}">
+                            {{ number_format($transferAmount, 2) }}
+                        </td>
+                    </tr>
                 @empty
-                <tr>
-                    <td colspan="5" class="text-center table-shade">No transfers recorded.</td>
-                </tr>
+                    <tr>
+                        <td colspan="5" class="text-center table-shade">No transfers recorded.</td>
+                    </tr>
                 @endforelse
                 <tr class="summary-row">
                     <td colspan="4" class="summary-label">TOTAL TRANSFERS:</td>
