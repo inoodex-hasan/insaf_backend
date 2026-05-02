@@ -22,13 +22,13 @@
     <div class="flex flex-wrap items-center justify-between gap-4 print:hidden">
         <h2 class="text-xl font-semibold uppercase">Invoice Details</h2>
         <div class="flex gap-2 text-xs">
-            <button onclick="window.print()" class="btn btn-outline-primary gap-2 font-bold uppercase">
+            {{-- <button onclick="window.print()" class="btn btn-outline-primary gap-2 font-bold uppercase">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path
                         d="M17 17h2a2 2 0 0 0 2-2v-4a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v4a2 2 0 0 0 2 2h2m2 4h6a2 2 0 0 0 2-2v-4a2 2 0 0 0-2-2H9a2 2 0 0 0-2 2v4a2 2 0 0 0 2 2zM17 9V5a2 2 0 0 0-2-2H9a2 2 0 0 0-2 2v4" />
                 </svg>
                 Print
-            </button>
+            </button> --}}
             <a href="{{ route('admin.invoices.edit', $invoice) }}"
                 class="btn btn-outline-warning font-bold uppercase">Edit</a>
             <a href="{{ route('admin.invoices.index') }}" class="btn btn-secondary font-bold uppercase">Back to List</a>
@@ -40,10 +40,11 @@
         <!-- Header -->
         <div class="flex flex-col md:flex-row justify-between mb-8 pb-6 border-b-2 border-primary/20">
             <div class="flex items-center gap-4">
-                @if(get_setting('app_logo'))
+                @if (get_setting('app_logo'))
                     <img src="{{ asset('storage/' . get_setting('app_logo')) }}" alt="Logo" class="h-14 w-auto" />
                 @else
-                    <div class="p-3 bg-primary text-white rounded-xl font-black text-2xl uppercase tracking-tighter shadow-md">
+                    <div
+                        class="p-3 bg-primary text-white rounded-xl font-black text-2xl uppercase tracking-tighter shadow-md">
                         INS</div>
                 @endif
                 <div>
@@ -102,7 +103,7 @@
                     </div>
                     <div>
                         <p class="text-[10px] font-bold text-white-dark uppercase tracking-widest mb-0.5">Status</p>
-                        @if($invoice->status == 'paid')
+                        @if ($invoice->status == 'paid')
                             <span class="badge badge-outline-success text-[10px] font-black">Paid</span>
                         @elseif($invoice->status == 'partially_paid')
                             <span class="badge badge-outline-warning text-[10px] font-black">Partial</span>
@@ -130,14 +131,16 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($invoice->items as $item)
-                        <tr class="border-b border-white-light/50 dark:border-white-light/10 hover:bg-primary/5 transition-all">
+                    @foreach ($invoice->items as $item)
+                        <tr
+                            class="border-b border-white-light/50 dark:border-white-light/10 hover:bg-primary/5 transition-all">
                             <td class="p-4">
                                 <span class="font-bold text-sm text-primary block">{{ $item->chartOfAccount->name }}</span>
                                 <span class="text-xs text-white-dark">{{ $item->description }}</span>
                             </td>
                             <td class="p-4 text-right font-bold">{{ number_format($item->quantity, 0) }}</td>
-                            <td class="p-4 text-right font-mono text-white-dark">{{ number_format($item->unit_price, 2) }}</td>
+                            <td class="p-4 text-right font-mono text-white-dark">{{ number_format($item->unit_price, 2) }}
+                            </td>
                             <td class="p-4 text-right font-bold font-mono text-dark dark:text-white-light">
                                 {{ number_format($item->total, 2) }}</td>
                         </tr>
@@ -159,11 +162,12 @@
         <!-- Footer: Notes & Signatures -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-12 pb-8">
             <div>
-                @if($invoice->notes)
+                @if ($invoice->notes)
                     <div class="p-5 bg-primary/5 border-l-4 border-primary rounded-r-xl">
                         <p class="text-[10px] font-bold uppercase tracking-[3px] text-primary mb-2 opacity-60">Notes:</p>
                         <p class="text-sm text-white-dark leading-relaxed italic">"{{ $invoice->notes }}"</p>
-                        <p class="text-[9px] text-white-dark mt-3 pt-2 border-t border-primary/10">Please quote invoice number
+                        <p class="text-[9px] text-white-dark mt-3 pt-2 border-t border-primary/10">Please quote invoice
+                            number
                             during payment transfer.</p>
                     </div>
                 @endif
