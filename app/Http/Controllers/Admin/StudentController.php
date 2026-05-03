@@ -69,7 +69,7 @@ class StudentController extends Controller
             foreach ($request->file('documents') as $file) {
                 $path = $file->store('documents/students', 'public');
                 $documents[] = [
-                    'name' => $file->getClientOriginalName(),
+                    'name' => $this->sanitizeFilename($file->getClientOriginalName()),
                     'path' => $path,
                 ];
             }
@@ -81,7 +81,7 @@ class StudentController extends Controller
             foreach ($request->file('translation_documents') as $file) {
                 $path = $file->store('documents/students/translations', 'public');
                 $tDocuments[] = [
-                    'name' => $file->getClientOriginalName(),
+                    'name' => $this->sanitizeFilename($file->getClientOriginalName()),
                     'path' => $path,
                 ];
             }
@@ -161,7 +161,7 @@ class StudentController extends Controller
             foreach ($request->file('documents') as $file) {
                 $path = $file->store('documents/students', 'public');
                 $documents[] = [
-                    'name' => $file->getClientOriginalName(),
+                    'name' => $this->sanitizeFilename($file->getClientOriginalName()),
                     'path' => $path,
                 ];
             }
@@ -185,7 +185,7 @@ class StudentController extends Controller
             foreach ($request->file('translation_documents') as $file) {
                 $path = $file->store('documents/students/translations', 'public');
                 $tDocuments[] = [
-                    'name' => $file->getClientOriginalName(),
+                    'name' => $this->sanitizeFilename($file->getClientOriginalName()),
                     'path' => $path,
                 ];
             }
@@ -275,5 +275,32 @@ class StudentController extends Controller
             ->where('status', 1)
             ->orderBy('intake_name')
             ->get(['id', 'intake_name']);
+    }
+
+    /**
+     * Sanitize filename to prevent XSS attacks via malicious filenames
+     *
+     * @param string $filename
+     * @return string
+     */
+    private function sanitizeFilename(string $filename): string
+    {
+        // Remove any HTML/JS tags
+        $filename = strip_tags($filename);
+
+        // Remove special characters that could be used for XSS
+        $filename = preg_replace('/[<>:"|?*\\x00-\\x1f]/', '', $filename);
+
+        // Replace potentially dangerous characters with underscores
+        $filename = preg_replace('/[\'"&<>()\[\]{};`]/', '_', $filename);
+
+        // Limit length
+        if (strlen($filename) > 255) {
+            $extension = pathinfo($filename, PATHINFO_EXTENSION);
+            $basename = pathinfo($filename, PATHINFO_FILENAME);
+            $filename = substr($basename, 0, 250 - strlen($extension)) . '.' . $extension;
+        }
+
+        return $filename;
     }
 }

@@ -55,7 +55,20 @@ class FileServingController extends Controller
 
     private function sanitizePath(string $path): string
     {
-        return str_replace(['..', '~'], '', $path);
+        // URL decode to handle encoded traversal attempts (%2e%2e, etc.)
+        $path = urldecode($path);
+
+        // Normalize slashes and remove null bytes
+        $path = str_replace(['\\', "\0"], ['/', ''], $path);
+
+        // Remove any path components that contain dots (prevents ../, ..\, ....//, etc.)
+        $parts = explode('/', $path);
+        $safeParts = array_filter($parts, function ($part) {
+            return $part !== '' && $part !== '.' && $part !== '..' && !str_contains($part, '..');
+        });
+
+        // Reconstruct safe path
+        return implode('/', $safeParts);
     }
 
     private function resolveMimeType(string $path): string

@@ -1,8 +1,14 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Support\Facades\RateLimiter;
 use App\Http\Controllers\Admin\{ApplicationController, CommissionController, CountryController, CourseController, CourseIntakeController, DashboardController, LeadController, PaymentController, RoleController as LocalRoleController, SettingController, StudentController, UniversityController};
 
+// Rate limiter for login routes (5 attempts per minute per IP)
+RateLimiter::for('login', function () {
+    return Limit::perMinute(5)->by(request()->ip());
+});
 
 Route::get('/', function () {
     return redirect()->route('tyro-login.login');
