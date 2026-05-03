@@ -1,7 +1,7 @@
 <!-- start theme customizer section -->
 <div x-data="customizer">
-    <div class="fixed inset-0 z-[51] hidden bg-[black]/60 px-4 transition-[display]" :class="{ '!block': showCustomizer }"
-        @click="showCustomizer = false"></div>
+    <div class="fixed inset-0 z-[51] hidden bg-[black]/60 px-4 transition-[display]"
+        :class="{ '!block': showCustomizer }" @click="showCustomizer = false"></div>
 
     <nav class="fixed bottom-0 top-0 z-[51] w-full max-w-[400px] bg-white p-4 shadow-[5px_0_25px_0_rgba(94,92,154,0.1)] transition-[right] duration-300 ltr:-right-[400px] rtl:-left-[400px] dark:bg-[#0e1726]"
         :class="{ 'ltr:!right-0 rtl:!left-0': showCustomizer }">
@@ -121,7 +121,7 @@
             </div>
 
             <!-- Layout Style -->
-            <div class="mb-3 rounded-md border border-dashed border-[#e0e6ed] p-3 dark:border-[#1b2e4b]">
+            {{-- <div class="mb-3 rounded-md border border-dashed border-[#e0e6ed] p-3 dark:border-[#1b2e4b]">
                 <h5 class="mb-1 text-base leading-none dark:text-white">Layout Style</h5>
                 <p class="text-xs text-white-dark">Select the primary layout style for your app.</p>
                 <div class="mt-3 grid grid-cols-3 gap-2">
@@ -136,7 +136,7 @@
                         Full
                     </button>
                 </div>
-            </div>
+            </div> --}}
 
             <!-- Direction -->
             <div class="mb-3 rounded-md border border-dashed border-[#e0e6ed] p-3 dark:border-[#1b2e4b]">
