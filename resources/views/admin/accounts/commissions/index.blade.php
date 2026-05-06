@@ -15,7 +15,7 @@
                         </span>
                     @endif
                 </a>
-                <a href="{{ route('admin.commissions.create') }}" class="btn btn-primary">Add Commission</a>
+                <!-- <a href="{{ route('admin.commissions.create') }}" class="btn btn-primary">Add Commission</a> -->
             </div>
         </div>
 
@@ -103,18 +103,20 @@
                                 <td>{{ $commission->claimed_at?->format('M d, Y') ?? '-' }}</td>
                                 <td>
                                     <div class="flex gap-2">
+                                                <a href="{{ route('admin.commissions.show', $commission) }}" class="btn btn-sm btn-secondary">
+                                            View
+                                        </a>
                                         @if($commission->canBeReviewed())
                                             <a href="{{ route('admin.commissions.review', $commission) }}" class="btn btn-sm btn-primary">
                                                 Review
                                             </a>
                                         @elseif($commission->canBePaid())
-                                            <form action="{{ route('admin.commissions.mark-paid', $commission) }}" method="POST" class="inline">
+                                            <form action="{{ route('admin.commissions.mark-paid', $commission) }}" method="POST" class="flex flex-col gap-2">
                                                 @csrf
+                                                <textarea name="paid_notes" rows="2" class="form-input text-sm" placeholder="Enter payment remarks..." required></textarea>
                                                 <button type="submit" class="btn btn-sm btn-success"
                                                     onclick="return confirm('Mark this commission as paid?')">Mark Paid</button>
                                             </form>
-                                        @elseif($commission->isPaid())
-                                            <span class="badge badge-outline-primary">Paid</span>
                                         @endif
                                         <form action="{{ route('admin.commissions.destroy', $commission) }}" method="POST" class="inline">
                                             @csrf

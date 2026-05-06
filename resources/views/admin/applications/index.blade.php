@@ -155,7 +155,7 @@
                             <div class="flex items-center justify-center gap-2">
                                 <a href="{{ route('admin.applications.show', $app) }}"
                                     class="btn btn-sm btn-outline-info">View</a>
-                                @canany(['*application'])
+                                @canany(['*application|*accountant'])
                                 <!-- <a href="{{ route('admin.applications.download-pdf', $app->id) }}"
                                     class="btn btn-sm btn-outline-success">PDF</a> -->
                                 <a href="{{ route('admin.applications.edit', $app->id) }}"

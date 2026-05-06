@@ -98,6 +98,7 @@ Route::prefix('dashboard/commissions')->name('admin.commissions.')->middleware('
     Route::get('/', [CommissionController::class, 'index'])->name('index');
     Route::get('/pending', [CommissionController::class, 'pendingClaims'])->name('pending');
     Route::get('/create', [CommissionController::class, 'create'])->name('create');
+    Route::get('/{commission}', [CommissionController::class, 'show'])->name('show');
     Route::post('/', [CommissionController::class, 'storeStandalone'])->name('store');
     Route::post('application/{application}', [CommissionController::class, 'store'])->name('store.application');
     Route::get('{commission}/review', [CommissionController::class, 'showForReview'])->name('review');
@@ -334,12 +335,12 @@ Route::prefix('dashboard/applications')->name('admin.applications.')->group(func
     Route::get('/{application}/invoice-data', [ApplicationController::class, 'invoiceData'])->name('invoice-data');
     // Route::get('/{application}/invoice', [ApplicationController::class, 'invoice'])->name('invoice')->middleware('can:*consultant|*application');
     // Route::get('/invoices', [ApplicationController::class, 'invoiceIndex'])->name('invoice-index')->middleware('can:*consultant|*application');
-    Route::get('/', [ApplicationController::class, 'index'])->name('index')->middleware('can:*consultant|*application');
+    Route::get('/', [ApplicationController::class, 'index'])->name('index')->middleware('can:*consultant|*application|*accountant');
     Route::get('/create', [ApplicationController::class, 'create'])->name('create')->middleware('can:*application|*consultant');
     Route::post('/', [ApplicationController::class, 'store'])->name('store')->middleware('can:*application|*consultant');
-    Route::get('{application}', [ApplicationController::class, 'show'])->name('show')->middleware('can:*consultant|*application');
-    Route::get('{application}/edit', [ApplicationController::class, 'edit'])->name('edit')->middleware('can:*application');
-    Route::put('{application}', [ApplicationController::class, 'update'])->name('update')->middleware('can:*application');
+    Route::get('{application}', [ApplicationController::class, 'show'])->name('show')->middleware('can:*consultant|*application|*accountant');
+    Route::get('{application}/edit', [ApplicationController::class, 'edit'])->name('edit')->middleware('can:*application|*accountant');
+    Route::put('{application}', [ApplicationController::class, 'update'])->name('update')->middleware('can:*application|*accountant');
     Route::delete('{application}', [ApplicationController::class, 'destroy'])->name('destroy')->middleware('can:*application');
    
 });

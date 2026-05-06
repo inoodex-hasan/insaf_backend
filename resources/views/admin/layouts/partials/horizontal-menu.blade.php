@@ -388,9 +388,9 @@
         @endcanany
     @endif
 
-    @if (auth()->check() && (auth()->user()->hasRole('consultant') || auth()->user()->hasRole('application')))
+    @if (auth()->check() && (auth()->user()->hasRole('consultant') || auth()->user()->hasRole('application') || auth()->user()->hasRole('accountant')))
         <!-- Application -->
-        @canany(['*consultant', '*application'])
+        @canany(['*consultant', '*application', '*accountant'])
             <li class="menu nav-item relative group">
                 <a href="javascript:;" class="nav-link">
                     <div class="flex items-center">
@@ -412,7 +412,7 @@
                     </div>
                 </a>
                 <ul class="sub-menu">
-                    @canany(['*consultant', '*application'])
+                    @canany(['*consultant', '*application', '*accountant'])
                         <li><a href="{{ route('admin.applications.create') }}">Add Application</a></li>
                         <li><a href="{{ route('admin.applications.index') }}">Application List</a></li>
                     @endcanany

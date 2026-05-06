@@ -6,6 +6,7 @@
     @php
         $canEdit = auth()->user()->hasRole('application');
         $canEditStatus = auth()->user()->hasRole('application');
+        $canAccessPaymentTracking = auth()->user()->hasRole('accountant');
     @endphp
     <div>
         <div class="flex items-center justify-between">
@@ -75,10 +76,6 @@
                         <input type="hidden" name="course_id" value="{{ old('course_id', $application->course_id) }}">
                     </div>
 
-
-
-
-
                     <div class="form-group">
                         <label for="course_intake_id">Select Intake</label>
                         <select name="course_intake_id" id="course_intake_id"
@@ -94,44 +91,10 @@
                             value="{{ old('course_intake_id', $application->course_intake_id) }}">
                     </div>
 
-
-
-
-
-                    <!-- <div class="grid grid-cols-1 gap-4 sm:grid-cols-1">
-                                                                    <div class="form-group">
-                                                                        <label for="tuition_fee">Tuition Fee</label>
-                                                                        <input type="number" name="tuition_fee" id="tuition_fee"
-                                                                            class="form-input {{ !$canEdit ? 'bg-gray-100 dark:bg-black/20' : '' }}"
-                                                                            value="{{ old('tuition_fee', $application->tuition_fee) }}" {{ !$canEdit ? 'disabled' : '' }} required>
-                                                                        @if (!$canEdit)
-                                                                            <input type="hidden" name="tuition_fee"
-                                                                                value="{{ old('tuition_fee', $application->tuition_fee) }}">
-                                                                        @endif
-                                                                        @error('tuition_fee')
-                                                                            <span class="text-danger text-sm">{{ $message }}</span>
-                                                                        @enderror
-                                                                    </div>
-                                                                </div> -->
-
-                    <!-- <div class="form-group">
-                                                                        <label for="total_fee">Total Fee <span class="text-danger">*</span></label>
-                                                                        <input type="number" name="total_fee" id="total_fee" step="0.01"
-                                                                            class="form-input {{ !$canEdit ? 'bg-gray-100 dark:bg-black/20' : '' }}"
-                                                                            value="{{ old('total_fee', $application->total_fee) }}" {{ !$canEdit ? 'disabled' : '' }}
-                                                                            required>
-                                                                        @if (!$canEdit)
-                                                                            <input type="hidden" name="total_fee" value="{{ old('total_fee', $application->total_fee) }}">
-                                                                        @endif
-                                                                        @error('total_fee')
-                                                                            <span class="text-danger text-sm">{{ $message }}</span>
-                                                                        @enderror
-                                                                    </div> -->
-
                     <div class="form-group">
                         <label for="status">Application Status</label>
                         <select name="status" id="status"
-                            class="form-select {{ !($canEdit || $canEditStatus) ? 'bg-gray-100 dark:bg-black/20' : '' }}" {{ !($canEdit || $canEditStatus) ? 'disabled' : '' }} required>
+                            class="form-select {{ !($canEdit || $canEditStatus || $canAccessPaymentTracking) ? 'bg-gray-100 dark:bg-black/20' : '' }}" {{ !($canEdit || $canEditStatus || $canAccessPaymentTracking) ? 'disabled' : '' }} required>
                             @foreach (['pending', 'need_revision','ready_for_apply', 'applied', 'under_review', 'offer_issued', 'conditional_offer', 'unconditional_offer', 'rejected', 'withdrawn', 'visa_processing', 'enrolled'] as $status)
                                 <option value="{{ $status }}" {{ old('status', $application->status) == $status ? 'selected' : '' }}>
                                     {{ ucfirst(str_replace('_', ' ', $status)) }}
@@ -158,6 +121,7 @@
                 </div>
 
                 {{-- Application Tracking Section --}}
+                
                 <div class="mt-8">
                     <h5 class="text-lg font-semibold dark:text-white-light uppercase mb-4">Application Tracking</h5>
                     <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
@@ -168,7 +132,7 @@
                                     <label class="flex items-center gap-2 cursor-pointer">
                                         <input type="hidden" name="offer_letter_received" value="0">
                                         <input type="checkbox" name="offer_letter_received" value="1"
-                                            id="offer_letter_received" class="form-checkbox w-5 h-5 text-primary rounded" {{ old('offer_letter_received', $application->offer_letter_received) ? 'checked' : '' }}>
+                                            id="offer_letter_received" class="form-checkbox w-5 h-5 text-primary rounded" {{ old('offer_letter_received', $application->offer_letter_received) ? 'checked' : '' }} {{ !$canEdit ? 'disabled' : '' }}>
                                         <span class="text-sm font-medium">Offer Letter Received</span>
                                     </label>
                                     <input type="date" name="offer_letter_received_date" id="offer_letter_received_date"
@@ -181,7 +145,7 @@
                                     <label class="flex items-center gap-2 cursor-pointer">
                                         <input type="hidden" name="vfs_appointment" value="0">
                                         <input type="checkbox" name="vfs_appointment" value="1" id="vfs_appointment"
-                                            class="form-checkbox w-5 h-5 text-primary rounded" {{ old('vfs_appointment', $application->vfs_appointment) ? 'checked' : '' }}>
+                                            class="form-checkbox w-5 h-5 text-primary rounded" {{ old('vfs_appointment', $application->vfs_appointment) ? 'checked' : '' }} {{ !$canEdit ? 'disabled' : '' }}>
                                         <span class="text-sm font-medium">VFS Appointment</span>
                                     </label>
                                     <input type="date" name="vfs_appointment_date" id="vfs_appointment_date"
@@ -194,7 +158,7 @@
                                     <label class="flex items-center gap-2 cursor-pointer">
                                         <input type="hidden" name="file_submission" value="0">
                                         <input type="checkbox" name="file_submission" value="1" id="file_submission"
-                                            class="form-checkbox w-5 h-5 text-primary rounded" {{ old('file_submission', $application->file_submission) ? 'checked' : '' }}>
+                                            class="form-checkbox w-5 h-5 text-primary rounded" {{ old('file_submission', $application->file_submission) ? 'checked' : '' }} {{ !$canEdit ? 'disabled' : '' }}>
                                         <span class="text-sm font-medium">File Submission</span>
                                     </label>
                                     <input type="date" name="file_submission_date" id="file_submission_date"
@@ -279,6 +243,26 @@
                             </select>
                         </div>
 
+                         {{-- EMGS Score --}}
+                        <div class="form-group">
+                            <label for="emgs_score">EMGS Score</label>
+                            <select name="emgs_score" id="emgs_score"
+                                class="form-select {{ !$canEdit ? 'bg-gray-100 dark:bg-black/20' : '' }}"
+                                style="width: 100%;"
+                                {{ !$canEdit ? 'disabled' : '' }}>
+                                <option value="">Select Score</option>
+                                @foreach([5, 15, 32, 35, 70] as $score)
+                                    <option value="{{ $score }}" {{ old('emgs_score', $application->emgs_score) == $score ? 'selected' : '' }}>{{ $score }}%</option>
+                                @endforeach
+                            </select>
+                            @if (!$canEdit)
+                                <input type="hidden" name="emgs_score" value="{{ old('emgs_score', $application->emgs_score) }}">
+                            @endif
+                            @error('emgs_score')
+                                <span class="text-danger text-sm">{{ $message }}</span>
+                            @enderror
+                        </div>
+
                         {{-- Payment Status Checkboxes --}}
                         <div class="form-group md:col-span-2">
                             <h6 class="text-md font-semibold dark:text-white-light mb-3">Payment Tracking</h6>
@@ -286,42 +270,42 @@
                                 <label class="flex items-center gap-2 cursor-pointer">
                                     <input type="hidden" name="security_deposit_status" value="0">
                                     <input type="checkbox" name="security_deposit_status" value="1"
-                                        id="security_deposit_status" class="form-checkbox w-5 h-5 text-primary rounded" {{ old('security_deposit_status', $application->security_deposit_status) ? 'checked' : '' }}>
+                                        id="security_deposit_status" class="form-checkbox w-5 h-5 text-primary rounded" {{ old('security_deposit_status', $application->security_deposit_status) ? 'checked' : '' }} {{ !$canAccessPaymentTracking ? 'disabled' : '' }}>
                                     <span class="text-sm font-medium">Security Deposit</span>
                                 </label>
 
                                 <label class="flex items-center gap-2 cursor-pointer">
                                     <input type="hidden" name="cvu_fee_status" value="0">
                                     <input type="checkbox" name="cvu_fee_status" value="1" id="cvu_fee_status"
-                                        class="form-checkbox w-5 h-5 text-primary rounded" {{ old('cvu_fee_status', $application->cvu_fee_status) ? 'checked' : '' }}>
+                                        class="form-checkbox w-5 h-5 text-primary rounded" {{ old('cvu_fee_status', $application->cvu_fee_status) ? 'checked' : '' }} {{ !$canAccessPaymentTracking ? 'disabled' : '' }}>
                                     <span class="text-sm font-medium">CVU Fee</span>
                                 </label>
 
                                 <label class="flex items-center gap-2 cursor-pointer">
                                     <input type="hidden" name="admission_fee_status" value="0">
                                     <input type="checkbox" name="admission_fee_status" value="1" id="admission_fee_status"
-                                        class="form-checkbox w-5 h-5 text-primary rounded" {{ old('admission_fee_status', $application->admission_fee_status) ? 'checked' : '' }}>
+                                        class="form-checkbox w-5 h-5 text-primary rounded" {{ old('admission_fee_status', $application->admission_fee_status) ? 'checked' : '' }} {{ !$canAccessPaymentTracking ? 'disabled' : '' }}>
                                     <span class="text-sm font-medium">Admission Fee</span>
                                 </label>
 
                                 <label class="flex items-center gap-2 cursor-pointer">
                                     <input type="hidden" name="final_payment_status" value="0">
                                     <input type="checkbox" name="final_payment_status" value="1" id="final_payment_status"
-                                        class="form-checkbox w-5 h-5 text-primary rounded" {{ old('final_payment_status', $application->final_payment_status) ? 'checked' : '' }}>
+                                        class="form-checkbox w-5 h-5 text-primary rounded" {{ old('final_payment_status', $application->final_payment_status) ? 'checked' : '' }} {{ !$canAccessPaymentTracking ? 'disabled' : '' }}>
                                     <span class="text-sm font-medium">Final Payment</span>
                                 </label>
 
                                 <label class="flex items-center gap-2 cursor-pointer">
                                     <input type="hidden" name="emgs_payment_status" value="0">
                                     <input type="checkbox" name="emgs_payment_status" value="1" id="emgs_payment_status"
-                                        class="form-checkbox w-5 h-5 text-primary rounded" {{ old('emgs_payment_status', $application->emgs_payment_status) ? 'checked' : '' }}>
+                                        class="form-checkbox w-5 h-5 text-primary rounded" {{ old('emgs_payment_status', $application->emgs_payment_status) ? 'checked' : '' }} {{ !$canAccessPaymentTracking ? 'disabled' : '' }}>
                                     <span class="text-sm font-medium">EMGS Payment</span>
                                 </label>
                             </div>
                         </div>
 
                         {{-- EMGS Score --}}
-                        <div class="form-group">
+                        <!-- <div class="form-group">
                             <label for="emgs_score">EMGS Score</label>
                             <select name="emgs_score" id="emgs_score"
                                 class="form-select {{ !$canEdit ? 'bg-gray-100 dark:bg-black/20' : '' }}"
@@ -338,7 +322,7 @@
                             @error('emgs_score')
                                 <span class="text-danger text-sm">{{ $message }}</span>
                             @enderror
-                        </div>
+                        </div> -->
 
                         {{-- Internal Notes --}}
                         <div class="form-group md:col-span-2">
@@ -349,10 +333,11 @@
                         </div>
                     </div>
                 </div>
+                
 
                 <div class="mt-8 flex justify-end gap-4">
                     <a href="{{ route('admin.applications.index') }}" class="btn btn-outline-danger">Cancel</a>
-                    @if ($canEdit || $canEditStatus)
+                    @if ($canEdit || $canEditStatus || $canAccessPaymentTracking)
                         <button type="submit" class="btn btn-primary">Update Application</button>
                     @endif
                 </div>

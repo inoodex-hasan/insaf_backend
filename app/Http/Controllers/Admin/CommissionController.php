@@ -108,6 +108,15 @@ class CommissionController extends Controller
         return view('admin.accounts.commissions.pending', compact('commissions'));
     }
 
+    public function show(Commission $commission)
+    {
+        $this->authorize('*accountant');
+
+        $commission->load(['application.student', 'application.university', 'application.course', 'user', 'reviewer']);
+
+        return view('admin.accounts.commissions.show', compact('commission'));
+    }
+
     public function create()
     {
         $this->authorize('*accountant');
@@ -245,8 +254,13 @@ class CommissionController extends Controller
                 ->with('error', 'Only approved commissions can be marked as paid.');
         }
 
+        $validated = request()->validate([
+            'paid_notes' => 'required|string|max:1000',
+        ]);
+
         $commission->update([
             'workflow_status' => Commission::STATUS_PAID,
+            'review_notes' => $validated['paid_notes'],
         ]);
 
         return redirect()->route('admin.commissions.index')
