@@ -77,26 +77,18 @@
                                     <span class="badge {{ $vClass }} capitalize text-[10px]">{{ str_replace('_', ' ', $video->status) }}</span>
                                 </td>
                                 <td>{{ $video->created_at->format('M d, Y') }}</td>
-                                <td class="text-center">
-                                    <div class="flex items-center justify-center gap-2">
-                                        <!-- Edit Modal Trigger -->
-                                        <button type="button" class="text-primary hover:text-primary-dark" onclick="document.getElementById('edit-modal-{{ $video->id }}').classList.remove('hidden')">
-                                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-                                            </svg>
-                                        </button>
-                                        <!-- Delete Form -->
-                                        <form action="{{ route('admin.marketing.videos.destroy', $video) }}" method="POST" onsubmit="return confirm('Delete this video?');">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="text-danger hover:text-red-700">
-                                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                                    <path d="M3 6h18m-2 0v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6m3 0V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
-                                                </svg>
-                                            </button>
-                                        </form>
-                                    </div>
+                                <td class="flex items-center justify-center gap-2">
+                                    <button type="button"
+                                        class="btn btn-sm btn-outline-primary"
+                                        onclick="document.getElementById('edit-modal-{{ $video->id }}').classList.remove('hidden')">
+                                        Edit
+                                    </button>
+                                    <form action="{{ route('admin.marketing.videos.destroy', $video) }}" method="POST"
+                                        class="inline-block" onsubmit="return confirm('Are you sure?')">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button class="btn btn-sm btn-outline-danger">Delete</button>
+                                    </form>
                                 </td>
                             </tr>
 

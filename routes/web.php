@@ -159,6 +159,7 @@ Route::prefix('dashboard/marketing')->name('admin.marketing.')->group(function (
     Route::prefix('videos')->name('videos.')->middleware('can:*digital_marketing')->group(function () {
         Route::get('/', [App\Http\Controllers\Admin\MarketingVideoController::class, 'index'])->name('index');
         Route::post('/', [App\Http\Controllers\Admin\MarketingVideoController::class, 'store'])->name('store');
+        Route::get('{video}/edit', [App\Http\Controllers\Admin\MarketingVideoController::class, 'edit'])->name('edit');
         Route::put('{video}', [App\Http\Controllers\Admin\MarketingVideoController::class, 'update'])->name('update');
         Route::delete('{video}', [App\Http\Controllers\Admin\MarketingVideoController::class, 'destroy'])->name('destroy');
     });
@@ -167,6 +168,7 @@ Route::prefix('dashboard/marketing')->name('admin.marketing.')->group(function (
     Route::prefix('posters')->name('posters.')->middleware('can:*digital_marketing')->group(function () {
         Route::get('/', [App\Http\Controllers\Admin\MarketingPosterController::class, 'index'])->name('index');
         Route::post('/', [App\Http\Controllers\Admin\MarketingPosterController::class, 'store'])->name('store');
+        Route::get('{poster}/edit', [App\Http\Controllers\Admin\MarketingPosterController::class, 'edit'])->name('edit');
         Route::put('{poster}', [App\Http\Controllers\Admin\MarketingPosterController::class, 'update'])->name('update');
         Route::delete('{poster}', [App\Http\Controllers\Admin\MarketingPosterController::class, 'destroy'])->name('destroy');
     });

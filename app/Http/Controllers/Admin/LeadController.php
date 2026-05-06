@@ -34,6 +34,19 @@ class LeadController extends Controller
             $query->where('status', $request->status);
         }
 
+        // Filter by collected_by (created_by)
+        if ($request->has('collected_by') && $request->collected_by != '') {
+            $query->where('created_by', $request->collected_by);
+        }
+
+        // Filter by follow-up date range
+        if ($request->has('follow_up_from') && $request->follow_up_from != '') {
+            $query->whereDate('next_follow_up_at', '>=', $request->follow_up_from);
+        }
+        if ($request->has('follow_up_to') && $request->follow_up_to != '') {
+            $query->whereDate('next_follow_up_at', '<=', $request->follow_up_to);
+        }
+
         // Search by name or phone
         if ($request->has('search') && $request->search != '') {
             $query->where(function ($q) use ($request) {
@@ -42,9 +55,15 @@ class LeadController extends Controller
             });
         }
 
-        $leads = $query->latest()->paginate(15);
+        // Order by follow-up date (closest first), nulls last
+        $leads = $query->orderByRaw('ISNULL(next_follow_up_at), next_follow_up_at ASC')->paginate(15);
 
-        return view('admin.marketing.leads.index', compact('leads'));
+        // Get users with exact marketing role for filter dropdown
+        $collectors = User::whereHas('roles', function ($q) {
+            $q->where('name', 'marketing');
+        })->orderBy('name')->get(['id', 'name']);
+
+        return view('admin.marketing.leads.index', compact('leads', 'collectors'));
     }
 
     /**

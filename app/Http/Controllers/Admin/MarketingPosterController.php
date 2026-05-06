@@ -40,6 +40,11 @@ class MarketingPosterController extends Controller
             ->with('success', 'Poster added successfully.');
     }
 
+    public function edit(MarketingPoster $poster)
+    {
+        return view('admin.marketing.posters.edit', compact('poster'));
+    }
+
     public function update(Request $request, MarketingPoster $poster)
     {
         $validated = $request->validate([

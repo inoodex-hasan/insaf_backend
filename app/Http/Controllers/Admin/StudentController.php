@@ -247,9 +247,9 @@ class StudentController extends Controller
             'sponsor_phone' => ['nullable', 'string', 'max:50'],
             'passport_validity' => ['nullable', 'date'],
             'documents' => ['nullable', 'array'],
-            'documents.*' => ['nullable', 'file', 'mimes:pdf,doc,docx,jpg,jpeg,png', 'max:5120'], // 5MB limit
+            'documents.*' => ['nullable', 'file', 'mimes:pdf,doc,docx,jpg,jpeg,png', 'max:10240'], // 10MB limit
             'translation_documents' => ['nullable', 'array'],
-            'translation_documents.*' => ['nullable', 'file', 'mimes:pdf,doc,docx,jpg,jpeg,png', 'max:5120'],
+            'translation_documents.*' => ['nullable', 'file', 'mimes:pdf,doc,docx,jpg,jpeg,png', 'max:10240'], // 10MB limit
         ]);
     }
 

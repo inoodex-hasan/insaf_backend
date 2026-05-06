@@ -40,6 +40,11 @@ class MarketingVideoController extends Controller
             ->with('success', 'Video added successfully.');
     }
 
+    public function edit(MarketingVideo $video)
+    {
+        return view('admin.marketing.videos.edit', compact('video'));
+    }
+
     public function update(Request $request, MarketingVideo $video)
     {
         $validated = $request->validate([

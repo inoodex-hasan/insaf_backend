@@ -69,7 +69,7 @@
 
                     <div class="form-group">
                         <label for="university_id">Select University</label>
-                        <select name="university_id" id="university_id" class="form-select" required>
+                        <select name="university_id" id="university_id" class="form-select" >
                             <option value="">Select University</option>
                             @foreach ($universities as $university)
                                 <option value="{{ $university->id }}" {{ old('university_id') == $university->id ? 'selected' : '' }}>
@@ -82,7 +82,7 @@
 
                     <div class="form-group">
                         <label for="course_id">Select Course</label>
-                        <select name="course_id" id="course_id" class="form-select" required>
+                        <select name="course_id" id="course_id" class="form-select" >
                             <option value="">Select Course</option>
                         </select>
                         @error('course_id') <span class="text-danger text-sm">{{ $message }}</span> @enderror
@@ -90,7 +90,7 @@
 
                     <div class="form-group">
                         <label for="course_intake_id">Select Intake</label>
-                        <select name="course_intake_id" id="course_intake_id" class="form-select" required>
+                        <select name="course_intake_id" id="course_intake_id" class="form-select" >
                             <option value="">Select Intake</option>
                         </select>
                         @error('course_intake_id') <span class="text-danger text-sm">{{ $message }}</span> @enderror

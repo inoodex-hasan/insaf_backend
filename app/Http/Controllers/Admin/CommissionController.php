@@ -189,13 +189,13 @@ class CommissionController extends Controller
 
         $validated = $request->validate([
             'amount' => 'required|numeric|min:0',
-            'percentage' => 'nullable|numeric|min:0|max:100',
+            // 'percentage' => 'nullable|numeric|min:0|max:100',
             'review_notes' => 'nullable|string|max:2000',
         ]);
 
         $commission->update([
             'amount' => $validated['amount'],
-            'percentage' => $validated['percentage'],
+            // 'percentage' => $validated['percentage'],
             'workflow_status' => Commission::STATUS_APPROVED,
             'reviewed_by' => auth()->id(),
             'reviewed_at' => now(),

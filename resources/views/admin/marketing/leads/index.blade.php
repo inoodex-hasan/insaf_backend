@@ -46,6 +46,14 @@
                         <option value="Message" {{ request('source') == 'Message' ? 'selected' : '' }}>Message</option>
                         <option value="Chat" {{ request('source') == 'Chat' ? 'selected' : '' }}>Chat</option>
                     </select>
+                    <select name="collected_by" class="form-select w-full min-w-[150px]">
+                        <option value="">Collected By</option>
+                        @foreach($collectors as $collector)
+                            <option value="{{ $collector->id }}" {{ request('collected_by') == $collector->id ? 'selected' : '' }}>{{ $collector->name }}</option>
+                        @endforeach
+                    </select>
+                    <input type="date" name="follow_up_from" value="{{ request('follow_up_from') }}" class="form-input w-full md:w-40" placeholder="Follow-up From" title="Follow-up From" />
+                    <input type="date" name="follow_up_to" value="{{ request('follow_up_to') }}" class="form-input w-full md:w-40" placeholder="Follow-up To" title="Follow-up To" />
                     <button type="submit" class="btn btn-primary">Filter</button>
                     <a href="{{ route('admin.marketing.leads.index') }}" class="btn btn-outline-danger">Reset</a>
                 </div>

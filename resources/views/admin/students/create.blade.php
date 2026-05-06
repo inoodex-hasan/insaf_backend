@@ -257,7 +257,7 @@
                 <div class="form-group md:col-span-2">
                     <label for="documents">Upload Documents</label>
                     <input type="file" name="documents[]" id="documents" class="form-input" multiple />
-                    <span class="text-xs text-white-dark">Multiple documents can be uploaded (PDF, DOC, JPG, PNG). Max 5MB
+                    <span class="text-xs text-white-dark">Multiple documents can be uploaded (PDF, DOC, JPG, PNG). Max 10MB
                         per file.</span>
                     @error('documents.*')
                         <span class="text-danger text-sm">{{ $message }}</span>
@@ -267,7 +267,7 @@
                 <div class="form-group md:col-span-2">
                     <label for="translation_documents">Translation Documents (Optional)</label>
                     <input type="file" name="translation_documents[]" id="translation_documents" class="form-input" multiple />
-                    <span class="text-xs text-white-dark">Multiple translation documents can be uploaded (PDF, DOC, JPG, PNG). Max 5MB per file.</span>
+                    <span class="text-xs text-white-dark">Multiple translation documents can be uploaded (PDF, DOC, JPG, PNG). Max 10MB per file.</span>
                     @error('translation_documents.*')
                         <span class="text-danger text-sm">{{ $message }}</span>
                     @enderror

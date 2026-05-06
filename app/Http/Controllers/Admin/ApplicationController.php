@@ -83,9 +83,9 @@ class ApplicationController extends Controller
     {
         $validated = $request->validate([
             'student_id' => 'required|exists:students,id',
-            'university_id' => 'required|exists:universities,id',
-            'course_id' => 'required|exists:courses,id',
-            'course_intake_id' => 'required|exists:course_intakes,id',
+            'university_id' => 'nullable|exists:universities,id',
+            'course_id' => 'nullable|exists:courses,id',
+            'course_intake_id' => 'nullable|exists:course_intakes,id',
             // 'tuition_fee' => 'required|numeric|min:0',
             // 'total_fee' => 'required|numeric|min:0',
             'status' => 'required|string',
@@ -159,9 +159,9 @@ class ApplicationController extends Controller
     public function update(Request $request, Application $application)
     {
         $validated = $request->validate([
-            'university_id' => 'required|exists:universities,id',
-            'course_id' => 'required|exists:courses,id',
-            'course_intake_id' => 'required|exists:course_intakes,id',
+            'university_id' => 'nullable|exists:universities,id',
+            'course_id' => 'nullable|exists:courses,id',
+            'course_intake_id' => 'nullable|exists:course_intakes,id',
             // 'tuition_fee' => 'required|numeric|min:0',
             // 'total_fee' => 'required|numeric|min:0',
             'status' => 'required|string',

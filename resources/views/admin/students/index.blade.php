@@ -88,7 +88,7 @@
                                                                                                                                 <td>
                                                                                                                                     <span class="badge badge-outline-primary capitalize">{{ $student->current_status }}</span>
                                                                                                                                 </td> -->
-                                <td>{{ $student->address }}</td>
+                                <td>{{ \Illuminate\Support\Str::limit($student->address, 30) }}</td>
                                 <td>
                                     @if ($student->creator)
                                         <span class="badge badge-outline-primary">{{ $student->creator->name }}</span>

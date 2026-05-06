@@ -328,7 +328,7 @@
                                 style="width: 50%;"
                                 {{ !$canEdit ? 'disabled' : '' }}>
                                 <option value="">Select Score</option>
-                                @foreach([10, 20, 30, 40, 50, 60, 70, 80, 90, 100] as $score)
+                                @foreach([5, 15, 32, 35, 70] as $score)
                                     <option value="{{ $score }}" {{ old('emgs_score', $application->emgs_score) == $score ? 'selected' : '' }}>{{ $score }}%</option>
                                 @endforeach
                             </select>
