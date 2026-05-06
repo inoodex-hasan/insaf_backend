@@ -76,9 +76,9 @@
                                 <td>{{ $account->branch_name ?? 'N/A' }}</td>
                                 {{-- <td class="font-semibold">{{ number_format($account->opening_balance ?? 0, 2) }}</td> --}}
                                 @php
-                                    $income = (float) ($account->total_income ?? 0);
-                                    $expense = (float) ($account->total_expense ?? 0);
-                                    $currentBalance = ($account->opening_balance ?? 0) + $income - $expense;
+                                    $totalCredit = (float) ($account->total_income ?? 0);
+                                    $totalDebit = (float) ($account->total_expense ?? 0);
+                                    $currentBalance = ($account->opening_balance ?? 0) + $totalDebit - $totalCredit;
                                 @endphp
                                 {{-- <td class="text-success font-semibold">{{ number_format($income, 2) }}</td>
                                 <td class="text-danger font-semibold">{{ number_format($expense, 2) }}</td> --}}

@@ -279,4 +279,48 @@ class PaymentController extends Controller
             'invoices' => $invoices
         ]);
     }
+
+    public function report(Request $request)
+    {
+        $this->authorize('*accountant');
+
+        $query = Payment::with(['student', 'application', 'collector']);
+
+        // Date range filter
+        if ($startDate = $request->get('start_date')) {
+            $query->whereDate('payment_date', '>=', $startDate);
+        }
+        if ($endDate = $request->get('end_date')) {
+            $query->whereDate('payment_date', '<=', $endDate);
+        }
+
+        // Status filter
+        if ($status = $request->get('payment_status')) {
+            $query->where('payment_status', $status);
+        }
+
+        // Type filter
+        if ($type = $request->get('payment_type')) {
+            $query->where('payment_type', $type);
+        }
+
+        $payments = $query->latest()->get();
+
+        $mpdf = new Mpdf([
+            'mode' => 'utf-8',
+            'format' => 'A4',
+            'margin_top' => 0,
+            'margin_right' => 0,
+            'margin_bottom' => 0,
+            'margin_left' => 0,
+        ]);
+
+        $html = view('admin.payments.pdf', compact('payments', 'request'))->render();
+        $mpdf->WriteHTML($html);
+
+        $outputMode = $request->get('output') === 'download' ? 'D' : 'I';
+
+        return response($mpdf->Output('payments-report.pdf', $outputMode), 200)
+            ->header('Content-Type', 'application/pdf');
+    }
 }

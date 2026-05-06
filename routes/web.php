@@ -82,6 +82,7 @@ Route::prefix('dashboard/students')->name('admin.students.')->group(function () 
 // Payment Management
 Route::prefix('dashboard/payments')->name('admin.payments.')->group(function () {
     Route::get('/', [PaymentController::class, 'index'])->name('index')->middleware('can:*accountant');
+    Route::get('/report', [PaymentController::class, 'report'])->name('report')->middleware('can:*accountant');
     Route::get('/create', [PaymentController::class, 'create'])->name('create')->middleware('can:*accountant');
     Route::post('/', [PaymentController::class, 'store'])->name('store')->middleware('can:*accountant');
     Route::get('{payment}/edit', [PaymentController::class, 'edit'])->name('edit')->middleware('can:*accountant');

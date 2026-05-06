@@ -80,11 +80,11 @@
                         @endforeach
                     </select>
                 </div>
-                <div class="form-group">
+                <!-- <div class="form-group">
                     <label for="invoice_number">Invoice # (Auto-generated if empty)</label>
                     <input type="text" name="invoice_number" id="invoice_number" class="form-input"
                         placeholder="INV-{{ date('Y') }}-XXXX" />
-                </div>
+                </div> -->
             </div>
 
             {{-- Auto-populated Application Details --}}

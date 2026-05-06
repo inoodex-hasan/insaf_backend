@@ -144,8 +144,7 @@
                             <option value="{{ $account->id }}"
                                 {{ old('office_account_id') == $account->id ? 'selected' : '' }}>
                                 {{ $account->account_name }}
-                                ({{ ucfirst($account->account_type) }}{{ $account->provider_name ? ' - ' . $account->provider_name : '' }}
-                                - {{ $account->account_number }})
+                                ({{ ucfirst($account->account_type) }}{{ $account->provider_name ? ' - ' . $account->provider_name : '' }})
                             </option>
                         @endforeach
                     </select>

@@ -112,7 +112,7 @@ class InvoiceController extends Controller
                 'student_id' => $application->student_id,
                 'application_id' => $request->application_id,
                 'university_id' => $application->university_id,
-                'invoice_number' => $request->invoice_number ?? 'INV-' . date('Ymd') . '-' . strtoupper(bin2hex(random_bytes(2))),
+                'invoice_number' => $request->invoice_number ?? $this->generateInvoiceNumber(),
                 'date' => $request->date,
                 'due_date' => $request->due_date,
                 'total_amount' => $totalAmount,
@@ -266,5 +266,26 @@ class InvoiceController extends Controller
         return response($mpdf->Output('', 'S'))
             ->header('Content-Type', 'application/pdf')
             ->header('Content-Disposition', 'attachment; filename="Invoice_' . $invoice->invoice_number . '.pdf"');
+    }
+
+    /**
+     * Generate sequential invoice number starting from 1001
+     */
+    private function generateInvoiceNumber(): string
+    {
+        // Get the highest invoice number overall
+        $lastInvoice = \App\Models\Invoice::orderBy('invoice_number', 'desc')
+            ->first();
+        
+        if ($lastInvoice && preg_match('/(\d+)$/', $lastInvoice->invoice_number, $matches)) {
+            // Extract the numeric part and increment
+            $lastNumber = (int) $matches[1];
+            $nextNumber = $lastNumber + 1;
+        } else {
+            // Start from 1001
+            $nextNumber = 1001;
+        }
+        
+        return "INV-" . $nextNumber;
     }
 }

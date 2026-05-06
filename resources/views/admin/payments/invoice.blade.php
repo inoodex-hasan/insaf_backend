@@ -115,15 +115,25 @@
             text-align: right;
         }
 
-        .summary-row td {
+         .summary-row td {
             padding: 8px 10px;
             border: 1px solid #263a79;
         }
 
-        .summary-label {
-            text-align: right;
+        /*.summary-row td:first-child {
+            text-align: right !important;
             font-weight: bold;
         }
+
+        .summary-row td:nth-child(2),
+        .summary-row td:nth-child(3),
+        .summary-row td:nth-child(4) {
+            text-align: right !important;
+        }
+
+        .summary-row td:last-child {
+            text-align: right !important;
+        } */
 
         .table-shade {
             background-color: #eaecf2;
@@ -221,29 +231,29 @@
                 @endif
 
                 <tr class="summary-row">
-                    <td colspan="4" class="summary-label">SUB TOTAL:</td>
+                    <td colspan="4" class="summary-label" style="text-align: right; font-weight: bold;">SUB TOTAL:</td>
                     <td class="table-shade text-right">{{ number_format($invoiceTotal, 2) }}</td>
                     <td>BDT</td>
                 </tr>
                 <tr class="summary-row">
-                    <td colspan="4" class="summary-label">PAID THIS RECEIPT:</td>
+                    <td colspan="4" class="summary-label" style="text-align: right; font-weight: bold;">PAID THIS RECEIPT:</td>
                     <td class="table-shade text-right">{{ number_format($payment->amount, 2) }}</td>
                     <td>BDT</td>
                 </tr>
                 <tr class="summary-row">
-                    <td colspan="4" class="summary-label">TOTAL PAID:</td>
+                    <td colspan="4" class="summary-label" style="text-align: right; font-weight: bold;">TOTAL PAID:</td>
                     <td class="table-shade text-right">{{ number_format($totalPaid, 2) }}</td>
                     <td>BDT</td>
                 </tr>
                 <tr class="summary-row">
-                    <td colspan="4" class="summary-label">TOTAL DUE:</td>
+                    <td colspan="4" class="summary-label" style="text-align: right; font-weight: bold;">TOTAL DUE:</td>
                     <td class="table-shade text-right">{{ number_format($remainingBalance, 2) }}</td>
                     <td>BDT</td>
                 </tr>
             </tbody>
         </table>
 
-        <table class="payment-details">
+        <!-- <table class="payment-details">
             <tr>
                 <th>PAYMENT TYPE</th>
                 <td>{{ ucwords($payment->payment_type) }} Payment</td>
@@ -268,7 +278,7 @@
                     <td>{{ $payment->notes }}</td>
                 </tr>
             @endif
-        </table>
+        </table> -->
     </div>
 </body>
 

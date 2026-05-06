@@ -29,7 +29,7 @@ class OfficeAccount extends Model
     {
         $totalCredit = $this->journalEntryItems()->sum('credit');
         $totalDebit = $this->journalEntryItems()->sum('debit');
-        return ($this->opening_balance ?? 0) + $totalCredit - $totalDebit;
+        return ($this->opening_balance ?? 0) + $totalDebit - $totalCredit;
     }
 
     /**
@@ -45,6 +45,25 @@ class OfficeAccount extends Model
         static::creating(function ($account) {
             if (auth()->check() && !$account->created_by) {
                 $account->created_by = auth()->id();
+            }
+
+            if (empty($account->chart_of_account_id)) {
+                $coa = ChartOfAccount::create([
+                    'code' => '1' . str_pad(OfficeAccount::max('id') + 1, 4, '0', STR_PAD_LEFT),
+                    'name' => $account->account_name,
+                    'type' => 'asset',
+                    'is_active' => $account->status === 'active',
+                ]);
+                $account->chart_of_account_id = $coa->id;
+            }
+        });
+
+        static::updating(function ($account) {
+            if ($account->isDirty('account_name') && $account->chartOfAccount) {
+                $account->chartOfAccount->update(['name' => $account->account_name]);
+            }
+            if ($account->isDirty('status') && $account->chartOfAccount) {
+                $account->chartOfAccount->update(['is_active' => $account->status === 'active']);
             }
         });
     }

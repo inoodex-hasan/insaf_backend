@@ -61,7 +61,7 @@
                         <th>Student Name</th>
                         <th>University</th>
                         <th>Total Amount</th>
-                        <th>Billing Status</th>
+                        <!-- <th>Billing Status</th> -->
                         <th class="text-center">Action</th>
                     </tr>
                 </thead>
@@ -79,7 +79,7 @@
                             <td class="text-xs">{{ $invoice->university->name ?? 'N/A' }}</td>
                             <td class="font-black text-dark dark:text-white-light font-mono">
                                 {{ number_format($invoice->total_amount, 2) }}</td>
-                            <td>
+                            <!-- <td>
                                 @if($invoice->status == 'paid')
                                     <span class="badge badge-outline-success uppercase text-[10px] font-black">Fully Paid</span>
                                 @elseif($invoice->status == 'partial')
@@ -87,7 +87,7 @@
                                 @else
                                     <span class="badge badge-outline-danger uppercase text-[10px] font-black">Unpaid</span>
                                 @endif
-                            </td>
+                            </td> -->
                             <td class="flex items-center justify-center gap-2">
                                 <a href="{{ route('admin.invoices.show', $invoice) }}"
                                     class="btn btn-sm btn-outline-primary">View</a>

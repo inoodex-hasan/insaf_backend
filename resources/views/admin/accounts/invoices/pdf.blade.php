@@ -178,7 +178,7 @@
                         <td class="table-shade">{{ $loop->index + 1 }}</td>
                         <td class="text-left">{{ $item->description }}</td>
                         <td class="table-shade">{{ number_format($item->unit_price, 2) }}</td>
-                        <td>{{ $item->quantity ?? '-' }}</td>
+                        <td> - </td>
                         <td class="table-shade">{{ number_format($item->total, 2) }}</td>
                         <td>BDT</td>
                     </tr>
