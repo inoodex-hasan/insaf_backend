@@ -44,6 +44,10 @@
                     <option value="submitted" {{ request('cl_status') == 'submitted' ? 'selected' : '' }}>Submitted</option>
                 </select>
             </div>
+            <div class="w-40">
+                <label class="text-xs font-bold text-gray-500 mb-1 block">VFS Date</label>
+                <input type="date" name="vfs_date" value="{{ request('vfs_date') }}" class="form-input w-full" />
+            </div>
             <div class="flex gap-2">
                 <button type="submit" class="btn btn-primary">Search</button>
                 @if(request()->hasAny(['search', 'sop_status', 'cv_status', 'cl_status']))
@@ -61,6 +65,7 @@
                     <tr class="border-b border-gray-200 dark:border-gray-700">
                         <th class="text-left py-3 px-2">Application ID</th>
                         <th class="text-left py-3 px-2">Student</th>
+                        <th class="text-center py-3 px-2">VFS Appointment</th>
                         <th class="text-center py-3 px-2">SOP</th>
                         <th class="text-center py-3 px-2">CV</th>
                         <th class="text-center py-3 px-2">CL</th>
@@ -78,6 +83,12 @@
                         <tr class="border-b border-gray-100 dark:border-gray-800">
                             <td class="py-3 px-2 font-medium">{{ $app->application_id }}</td>
                             <td class="py-3 px-2">{{ $app->student->full_name ?? 'Unknown' }}</td>
+                            <td class="py-3 px-2 text-center">
+                                @php
+                                    $vfsDate = $app->vfs_appointment_date ? \Carbon\Carbon::parse($app->vfs_appointment_date)->format('M d, Y') : 'Not Set';
+                                @endphp
+                                    <span class="text-xs">{{ $vfsDate }}</span>
+                            </td>
                             <td class="py-3 px-2 text-center">
                                 @php
                                     $sop = $docStatus['sop'] ?? null;
@@ -109,7 +120,7 @@
                     @empty
                         <tr>
                             <td colspan="6" class="text-center py-10 text-gray-500">
-                                @if(request()->hasAny(['search', 'sop_status', 'cv_status', 'cl_status']))
+                                @if(request()->hasAny(['search', 'sop_status', 'cv_status', 'cl_status', 'vfs_date']))
                                     No applications match your filters.
                                 @else
                                     No applications found.
@@ -120,7 +131,6 @@
                 </tbody>
             </table>
         </div>
-
         <div class="mt-4">
             {{ $applications->links() }}
         </div>

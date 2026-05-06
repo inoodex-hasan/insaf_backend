@@ -72,8 +72,15 @@ class MarketingDocumentController extends Controller
                 $q->where('document_type', 'cl')->where('status', $request->cl_status);
             });
         }
+        
+        // Filter by VFS appointment date
+        if ($request->filled('vfs_date')) {
+            $query->whereDate('vfs_appointment_date', $request->vfs_date);
+        }
 
-        $applications = $query->orderBy('created_at', 'desc')
+        // Group applications by VFS appointment date
+        $applications = $query->orderBy('vfs_appointment_date', 'asc')
+            ->orderBy('created_at', 'desc')
             ->paginate(20)
             ->withQueryString();
 
