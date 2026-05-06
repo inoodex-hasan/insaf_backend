@@ -29,149 +29,12 @@
             </form>
         </div>
 
-        {{-- Employee Account Details Section --}}
-        <div class="mb-6 p-4 bg-blue/5 rounded-lg border border-blue/20">
-            <div class="flex items-center justify-between mb-3">
-                <h3 class="text-lg font-semibold">Employee Account Details</h3>
-                <button type="button" id="toggleAccountDetailsForm" class="btn btn-sm btn-outline-primary">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
-                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                        class="mr-1">
-                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
-                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
-                    </svg>
-                    Edit Account Details
-                </button>
-            </div>
-            <p class="text-sm text-white-dark mb-3">Set or update each employee's bank account details for salary transfers.
-            </p>
-
-            <form action="{{ route('admin.salaries.bulk-update-account-details') }}" method="POST" id="accountDetailsForm"
-                class="hidden">
-                @csrf
-                <div class="overflow-x-auto">
-                    <table class="table-hover w-full table-auto">
-                        <thead>
-                            <tr>
-                                <th>Employee</th>
-                                <th>Account Number</th>
-                                <th>Bank Name</th>
-                                <th>Bank Branch</th>
-                                <th>Routing Number</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($salaries as $index => $salary)
-                                <input type="hidden" name="employees[{{ $index }}][user_id]"
-                                    value="{{ $salary['user_id'] }}" />
-                                <tr>
-                                    <td class="font-semibold">{{ $salary['name'] }}</td>
-                                    <td>
-                                        <input type="text" name="employees[{{ $index }}][account_number]"
-                                            value="{{ $salary['account_number'] ?? '' }}" class="form-input w-40" />
-                                    </td>
-                                    <td>
-                                        <input type="text" name="employees[{{ $index }}][bank_name]"
-                                            value="{{ $salary['bank_name'] ?? '' }}" class="form-input w-40" />
-                                    </td>
-                                    <td>
-                                        <input type="text" name="employees[{{ $index }}][bank_branch]"
-                                            value="{{ $salary['bank_branch'] ?? '' }}" class="form-input w-40" />
-                                    </td>
-                                    <td>
-                                        <input type="text" name="employees[{{ $index }}][routing_number]"
-                                            value="{{ $salary['routing_number'] ?? '' }}" class="form-input w-32" />
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-                <div class="mt-4 flex justify-end">
-                    <button type="submit" class="btn btn-primary gap-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
-                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                            stroke-linejoin="round">
-                            <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />
-                            <polyline points="17 21 17 13 7 13 7 21" />
-                            <polyline points="7 3 7 8 15 8" />
-                        </svg>
-                        Save All Account Details
-                    </button>
-                </div>
-            </form>
-        </div>
-        <div class="mb-6 p-4 bg-primary/5 rounded-lg border border-primary/20">
-            <div class="flex items-center justify-between mb-3">
-                <h3 class="text-lg font-semibold">Employee Basic Salaries</h3>
-                <button type="button" id="toggleBasicSalaryForm" class="btn btn-sm btn-outline-primary">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
-                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                        class="mr-1">
-                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
-                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
-                    </svg>
-                    Edit Basic Salaries
-                </button>
-            </div>
-            <p class="text-sm text-white-dark mb-3">Set or update each employee's monthly basic salary. These values will
-                auto-fill when generating salaries.</p>
-
-            <form action="{{ route('admin.salaries.bulk-update-basic-salary') }}" method="POST" id="basicSalaryForm"
-                class="hidden">
-                @csrf
-                <div class="overflow-x-auto">
-                    <table class="table-hover w-full table-auto">
-                        <thead>
-                            <tr>
-                                <th>Employee</th>
-                                <th>Role</th>
-                                <th>Current Basic Salary</th>
-                                <th>New Basic Salary</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($salaries as $index => $salary)
-                                <input type="hidden" name="employees[{{ $index }}][user_id]"
-                                    value="{{ $salary['user_id'] }}" />
-                                <tr>
-                                    <td class="font-semibold">{{ $salary['name'] }}</td>
-                                    <td>{{ $salary['designation'] }}</td>
-                                    <td>
-                                        @php
-                                            $user = \App\Models\User::find($salary['user_id']);
-                                        @endphp
-                                        <span
-                                            class="text-white-dark">{{ number_format($user->basic_salary ?? 0, 2) }}</span>
-                                    </td>
-                                    <td>
-                                        <input type="number" step="0.01" min="0"
-                                            name="employees[{{ $index }}][basic_salary]"
-                                            value="{{ $user->basic_salary ?? 0 }}" class="form-input w-32" required />
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-                <div class="mt-4 flex justify-end">
-                    <button type="submit" class="btn btn-primary gap-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
-                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                            stroke-linejoin="round">
-                            <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />
-                            <polyline points="17 21 17 13 7 13 7 21" />
-                            <polyline points="7 3 7 8 15 8" />
-                        </svg>
-                        Save All Basic Salaries
-                    </button>
-                </div>
-            </form>
-        </div>
-
         <form action="{{ route('admin.salaries.bulk-store') }}" method="POST">
             @csrf
             <input type="hidden" name="month" value="{{ $month }}" />
+            <div class="mb-4 flex justify-end">
+                <button type="button" id="addCustomSalaryRow" class="btn btn-outline-primary">Add Custom Employee</button>
+            </div>
             <div class="datatable">
                 <div class="overflow-x-auto">
                     <table class="table-hover w-full table-auto">
@@ -188,60 +51,57 @@
                                 {{-- <th>Action</th> --}}
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="salaryRowsBody">
                             @forelse($salaries as $index => $salary)
+                                <input type="hidden" name="salaries[{{ $index }}][id]"
+                                    value="{{ $salary['id'] ?? '' }}" />
                                 <input type="hidden" name="salaries[{{ $index }}][user_id]"
                                     value="{{ $salary['user_id'] ?? '' }}" />
-                                <input type="hidden" name="salaries[{{ $index }}][employee_name]"
-                                    value="{{ $salary['name'] }}" />
-                                <input type="hidden" name="salaries[{{ $index }}][designation]"
-                                    value="{{ $salary['designation'] }}" />
+                                @if (!empty($salary['user_id']))
+                                    <input type="hidden" name="salaries[{{ $index }}][employee_name]"
+                                        value="{{ $salary['name'] }}" />
+                                @endif
+                                @if (!empty($salary['user_id']))
+                                    <input type="hidden" name="salaries[{{ $index }}][account_number]"
+                                        value="{{ $salary['account_number'] ?? '' }}" />
+                                    <input type="hidden" name="salaries[{{ $index }}][bank_name]"
+                                        value="{{ $salary['bank_name'] ?? '' }}" />
+                                @endif
+                                <input type="hidden" name="salaries[{{ $index }}][bank_branch]"
+                                    value="{{ $salary['bank_branch'] ?? '' }}" />
+                                <input type="hidden" name="salaries[{{ $index }}][routing_number]"
+                                    value="{{ $salary['routing_number'] ?? '' }}" />
                                 <tr>
-                                    <td>{{ $salary['name'] }}</td>
-                                    <td>{{ $salary['designation'] }}</td>
+                                    <td><input type="text" name="salaries[{{ $index }}][employee_name]"
+                                            value="{{ $salary['name'] }}" class="form-input w-52" required /></td>
+                                    <td><input type="text" name="salaries[{{ $index }}][designation]"
+                                            value="{{ $salary['designation'] }}" class="form-input w-32" /></td>
                                     <td>
-                                        @if ($salary['id'])
-                                            {{ number_format($salary['basic_salary'], 2) }}
-                                            <input type="hidden" name="salaries[{{ $index }}][basic_salary]"
-                                                value="{{ $salary['basic_salary'] }}" />
-                                        @else
-                                            <input type="number" step="0.01"
-                                                name="salaries[{{ $index }}][basic_salary]"
-                                                value="{{ $salary['basic_salary'] }}" class="form-input w-40" required />
-                                        @endif
+                                        <input type="number" step="0.01"
+                                            name="salaries[{{ $index }}][basic_salary]"
+                                            value="{{ $salary['basic_salary'] }}" class="form-input w-40" required />
                                     </td>
                                     <td>
-                                        @if ($salary['id'])
-                                            {{ number_format($salary['bonus'], 2) }}
-                                            <input type="hidden" name="salaries[{{ $index }}][bonus]"
-                                                value="{{ $salary['bonus'] }}" />
-                                        @else
-                                            <input type="number" step="0.01"
-                                                name="salaries[{{ $index }}][bonus]"
-                                                value="{{ $salary['bonus'] }}" class="form-input w-24" />
-                                        @endif
+                                        <input type="number" step="0.01"
+                                            name="salaries[{{ $index }}][bonus]"
+                                            value="{{ $salary['bonus'] }}" class="form-input w-24" />
                                     </td>
                                     <td>
-                                        @if ($salary['id'])
-                                            {{ number_format($salary['deduction'], 2) }}
-                                            <input type="hidden" name="salaries[{{ $index }}][deduction]"
-                                                value="{{ $salary['deduction'] }}" />
-                                        @else
-                                            <input type="number" step="0.01"
-                                                name="salaries[{{ $index }}][deduction]"
-                                                value="{{ $salary['deduction'] }}" class="form-input w-24" />
-                                        @endif
+                                        <input type="number" step="0.01"
+                                            name="salaries[{{ $index }}][deduction]"
+                                            value="{{ $salary['deduction'] }}" class="form-input w-24" />
                                     </td>
                                     <td class="font-bold text-primary">
-                                        @if ($salary['id'])
-                                            {{ number_format($salary['net_salary'], 2) }}
-                                        @else
-                                            <span
-                                                id="net-{{ $index }}">{{ number_format($salary['net_salary'], 2) }}</span>
-                                        @endif
+                                        <span id="net-{{ $index }}">{{ number_format($salary['net_salary'], 2) }}</span>
                                     </td>
-                                    <td>{{ $salary['account_number'] ?? 'N/A' }}</td>
-                                    <td>{{ $salary['bank_name'] ?? 'N/A' }}</td>
+                                    <td>
+                                        <input type="text" name="salaries[{{ $index }}][account_number]"
+                                            value="{{ $salary['account_number'] ?? '' }}" class="form-input w-40" />
+                                    </td>
+                                    <td>
+                                        <input type="text" name="salaries[{{ $index }}][bank_name]"
+                                            value="{{ $salary['bank_name'] ?? '' }}" class="form-input w-40" />
+                                    </td>
                                     {{-- <td>
                                         @if ($salary['id'])
                                             <span class="badge badge-outline-success">Exists</span>
@@ -283,20 +143,6 @@
     </div>
 
     <script>
-        // Toggle basic salary form visibility
-        document.getElementById('toggleBasicSalaryForm').addEventListener('click', function() {
-            const form = document.getElementById('basicSalaryForm');
-            form.classList.toggle('hidden');
-            this.textContent = form.classList.contains('hidden') ? 'Edit Basic Salaries' : 'Hide Basic Salaries';
-        });
-
-        // Toggle account details form visibility
-        document.getElementById('toggleAccountDetailsForm').addEventListener('click', function() {
-            const form = document.getElementById('accountDetailsForm');
-            form.classList.toggle('hidden');
-            this.textContent = form.classList.contains('hidden') ? 'Edit Account Details' : 'Hide Account Details';
-        });
-
         function calculateNet(index) {
             const basic = parseFloat(document.querySelector(`input[name="salaries[${index}][basic_salary]"]`).value) || 0;
             const bonus = parseFloat(document.querySelector(`input[name="salaries[${index}][bonus]"]`).value) || 0;
@@ -307,15 +153,45 @@
 
         document.addEventListener('DOMContentLoaded', function() {
             @foreach ($salaries as $index => $salary)
-                @if (!$salary['id'])
-                    document.querySelector(`input[name="salaries[{{ $index }}][basic_salary]"]`)
-                        .addEventListener('input', () => calculateNet({{ $index }}));
-                    document.querySelector(`input[name="salaries[{{ $index }}][bonus]"]`).addEventListener(
-                        'input', () => calculateNet({{ $index }}));
-                    document.querySelector(`input[name="salaries[{{ $index }}][deduction]"]`)
-                        .addEventListener('input', () => calculateNet({{ $index }}));
-                @endif
+                document.querySelector(`input[name="salaries[{{ $index }}][basic_salary]"]`)
+                    .addEventListener('input', () => calculateNet({{ $index }}));
+                document.querySelector(`input[name="salaries[{{ $index }}][bonus]"]`).addEventListener(
+                    'input', () => calculateNet({{ $index }}));
+                document.querySelector(`input[name="salaries[{{ $index }}][deduction]"]`)
+                    .addEventListener('input', () => calculateNet({{ $index }}));
             @endforeach
+
+            const salaryRowsBody = document.getElementById('salaryRowsBody');
+            const addCustomSalaryRowBtn = document.getElementById('addCustomSalaryRow');
+            let salaryRowIndex = {{ count($salaries) }};
+
+            addCustomSalaryRowBtn.addEventListener('click', function() {
+                const index = salaryRowIndex++;
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <input type="hidden" name="salaries[${index}][id]" value="" />
+                    <input type="hidden" name="salaries[${index}][user_id]" value="" />
+                    <input type="hidden" name="salaries[${index}][designation]" value="Custom" />
+                    <input type="hidden" name="salaries[${index}][bank_branch]" value="" />
+                    <input type="hidden" name="salaries[${index}][routing_number]" value="" />
+                    <td><input type="text" name="salaries[${index}][employee_name]" class="form-input w-52" placeholder="Employee name" required /></td>
+                    <td>Custom</td>
+                    <td><input type="number" step="0.01" min="0" name="salaries[${index}][basic_salary]" value="0" class="form-input w-40" required /></td>
+                    <td><input type="number" step="0.01" min="0" name="salaries[${index}][bonus]" value="0" class="form-input w-24" /></td>
+                    <td><input type="number" step="0.01" min="0" name="salaries[${index}][deduction]" value="0" class="form-input w-24" /></td>
+                    <td class="font-bold text-primary"><span id="net-${index}">0.00</span></td>
+                    <td><input type="text" name="salaries[${index}][account_number]" class="form-input w-40" placeholder="Account no" /></td>
+                    <td><input type="text" name="salaries[${index}][bank_name]" class="form-input w-40" placeholder="Bank name" /></td>
+                `;
+
+                salaryRowsBody.appendChild(tr);
+                document.querySelector(`input[name="salaries[${index}][basic_salary]"]`)
+                    .addEventListener('input', () => calculateNet(index));
+                document.querySelector(`input[name="salaries[${index}][bonus]"]`)
+                    .addEventListener('input', () => calculateNet(index));
+                document.querySelector(`input[name="salaries[${index}][deduction]"]`)
+                    .addEventListener('input', () => calculateNet(index));
+            });
         });
     </script>
 @endsection

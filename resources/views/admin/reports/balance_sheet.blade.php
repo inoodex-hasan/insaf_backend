@@ -6,7 +6,7 @@
     <div class="flex flex-wrap items-center justify-between gap-4">
         <h2 class="text-xl font-semibold uppercase">Balance Sheet</h2>
         <div class="flex items-center gap-2">
-            <a href="{{ route('admin.reports.balance-sheet.pdf', ['as_of_date' => $asOfDate, 'output' => 'preview']) }}" target="_blank" class="btn btn-outline-primary gap-2">
+            <a href="{{ route('admin.reports.balance-sheet.pdf', ['as_of_date' => $asOfDate, 'from_date' => $fromDate, 'output' => 'preview']) }}" target="_blank" class="btn btn-outline-primary gap-2">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
                     stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5">
                     <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
@@ -17,7 +17,7 @@
                 </svg>
                 Preview
             </a>
-            <a href="{{ route('admin.reports.balance-sheet.pdf', ['as_of_date' => $asOfDate, 'output' => 'download']) }}" class="btn btn-outline-success gap-2">
+            <a href="{{ route('admin.reports.balance-sheet.pdf', ['as_of_date' => $asOfDate, 'from_date' => $fromDate, 'output' => 'download']) }}" class="btn btn-outline-success gap-2">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
                     stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5">
                     <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>

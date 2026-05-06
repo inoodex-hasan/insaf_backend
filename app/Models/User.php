@@ -28,12 +28,8 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'email',
+        'username',
         'password',
-        'basic_salary',
-        'account_number',
-        'bank_name',
-        'bank_branch',
-        'ifsc_code',
     ];
 
     /**
@@ -58,4 +54,5 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
 }

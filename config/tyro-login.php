@@ -229,7 +229,7 @@ return [
     | The field used for login. Options: 'email', 'username', 'both'
     |
     */
-    'login_field' => env('TYRO_LOGIN_FIELD', 'email'),
+    'login_field' => env('TYRO_LOGIN_FIELD', 'both'),
 
     /*
     |--------------------------------------------------------------------------

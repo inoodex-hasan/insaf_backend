@@ -18,7 +18,7 @@ class SalaryExport implements FromCollection, WithHeadings, WithMapping
 
     public function collection()
     {
-        return Salary::with('user')
+        return Salary::with('user.roles')
             ->where('month', $this->month)
             ->get();
     }
@@ -44,7 +44,7 @@ class SalaryExport implements FromCollection, WithHeadings, WithMapping
     {
         return [
             $salary->employee_name,
-            $salary->user->roles->first()->name ?? 'Employee',
+            $salary->user?->roles?->first()?->name ?? 'Custom',
             // $salary->basic_salary,
             // $salary->bonus,
             // $salary->tax_deduction + $salary->insurance_deduction + $salary->other_deductions,

@@ -423,7 +423,7 @@
                                 <li><a href="{{ route('admin.office-accounts.index') }}" class="block rounded-md px-3 py-2 text-sm hover:bg-gray-100 dark:hover:bg-[#1b2e4b]">Accounts</a></li>
                             </ul>
                         </li>
-                        <li><a href="{{ route('admin.budgets.index') }}" class="block rounded-md px-3 py-2 text-sm hover:bg-white hover:shadow-sm dark:hover:bg-[#0e1726]">Budgets</a></li>
+                        <!-- <li><a href="{{ route('admin.budgets.index') }}" class="block rounded-md px-3 py-2 text-sm hover:bg-white hover:shadow-sm dark:hover:bg-[#0e1726]">Budgets</a></li> -->
                         <li class="nav-item" x-data="{ childOpen: false }">
                             <a href="javascript:;" @click="childOpen = !childOpen" class="group flex items-center justify-between rounded-md px-3 py-2 hover:bg-white hover:shadow-sm dark:hover:bg-[#0e1726]">
                                 <span class="text-sm">Reports</span>

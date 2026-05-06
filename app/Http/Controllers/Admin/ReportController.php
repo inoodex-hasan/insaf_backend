@@ -175,20 +175,27 @@ class ReportController extends Controller
     public function balanceSheetPdf(Request $request)
     {
         $asOfDate = $request->get('as_of_date', date('Y-m-d'));
+        $fromDate = $request->get('from_date');
         $date = Carbon::parse($asOfDate)->endOfDay();
 
-        // Fetch all accounts with their debit/credit sums up to the date
+        // Fetch all accounts with their debit/credit sums within the range
         $accounts = \App\Models\ChartOfAccount::withSum([
-            'journalEntryItems as total_debit' => function ($query) use ($date) {
-                $query->whereHas('journalEntry', function ($q) use ($date) {
+            'journalEntryItems as total_debit' => function ($query) use ($fromDate, $date) {
+                $query->whereHas('journalEntry', function ($q) use ($fromDate, $date) {
                     $q->where('date', '<=', $date);
+                    if ($fromDate) {
+                        $q->where('date', '>=', $fromDate);
+                    }
                 });
             }
         ], 'debit')
             ->withSum([
-                'journalEntryItems as total_credit' => function ($query) use ($date) {
-                    $query->whereHas('journalEntry', function ($q) use ($date) {
+                'journalEntryItems as total_credit' => function ($query) use ($fromDate, $date) {
+                    $query->whereHas('journalEntry', function ($q) use ($fromDate, $date) {
                         $q->where('date', '<=', $date);
+                        if ($fromDate) {
+                            $q->where('date', '>=', $fromDate);
+                        }
                     });
                 }
             ], 'credit')

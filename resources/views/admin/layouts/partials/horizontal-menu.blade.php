@@ -687,7 +687,7 @@
                         </li>
 
                         {{-- Budgets & Reports --}}
-                        <li><a href="{{ route('admin.budgets.index') }}">Budgets</a></li>
+                        <!-- <li><a href="{{ route('admin.budgets.index') }}">Budgets</a></li> -->
                         <li class="menu nav-item relative group px-0">
                             <a href="javascript:;" class="flex justify-between items-center w-full">
                                 Reports

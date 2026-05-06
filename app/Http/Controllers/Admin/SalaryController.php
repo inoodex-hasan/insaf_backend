@@ -16,6 +16,10 @@ class SalaryController extends Controller
     public function index(Request $request)
     {
         $query = Salary::with(['user', 'creator']);
+        $selectedMonth = $request->get('month');
+        if (blank($selectedMonth)) {
+            $selectedMonth = now()->format('Y-m');
+        }
 
         if ($search = $request->get('search')) {
             $query->where(function ($q) use ($search) {
@@ -29,9 +33,7 @@ class SalaryController extends Controller
             $query->where('payment_status', $status);
         }
 
-        if ($month = $request->get('month')) {
-            $query->where('month', $month);
-        }
+        $query->where('month', $selectedMonth);
 
         $salaries = $query->latest()->paginate(15)->withQueryString();
 
@@ -43,7 +45,7 @@ class SalaryController extends Controller
             'total_partial' => Salary::where('payment_status', 'partial')->sum(DB::raw('net_salary - paid_amount')),
         ];
 
-        return view('admin.salaries.index', compact('salaries', 'stats'));
+        return view('admin.salaries.index', compact('salaries', 'stats', 'selectedMonth'));
     }
 
     public function create()
@@ -145,6 +147,11 @@ class SalaryController extends Controller
         foreach ($employees as $employee) {
             // Check if salary already exists for this month
             $existingSalary = Salary::where('user_id', $employee->id)->where('month', $month)->first();
+            $latestSalary = Salary::where('user_id', $employee->id)
+                ->whereNotNull('user_id')
+                ->latest('month')
+                ->latest('id')
+                ->first();
 
             if ($existingSalary) {
                 // Use existing
@@ -158,15 +165,15 @@ class SalaryController extends Controller
                     'deduction' => $existingSalary->tax_deduction + $existingSalary->insurance_deduction + $existingSalary->other_deductions,
                     'net_salary' => $existingSalary->net_salary,
                     'status' => $existingSalary->payment_status,
-                    'account_number' => $employee->account_number,
-                    'bank_name' => $employee->bank_name,
-                    'bank_branch' => $employee->bank_branch,
-                    'routing_number' => $employee->routing_number,
+                    'account_number' => $existingSalary->account_number,
+                    'bank_name' => $existingSalary->bank_name,
+                    'bank_branch' => $existingSalary->bank_branch,
+                    'routing_number' => $existingSalary->routing_number,
                 ];
             } else {
-                // Use user's saved basic salary
+                // Use employee's latest salary as default seed data
                 $designation = $employee->roles->first()->name ?? 'Employee';
-                $basic = $employee->basic_salary ?? 0;
+                $basic = $latestSalary?->basic_salary ?? 0;
                 $bonus = 0;
                 $deduction = 0;
                 $net = $basic + $bonus - $deduction;
@@ -181,12 +188,35 @@ class SalaryController extends Controller
                     'deduction' => $deduction,
                     'net_salary' => $net,
                     'status' => 'pending',
-                    'account_number' => $employee->account_number,
-                    'bank_name' => $employee->bank_name,
-                    'bank_branch' => $employee->bank_branch,
-                    'routing_number' => $employee->routing_number,
+                    'account_number' => $latestSalary?->account_number,
+                    'bank_name' => $latestSalary?->bank_name,
+                    'bank_branch' => $latestSalary?->bank_branch,
+                    'routing_number' => $latestSalary?->routing_number,
                 ];
             }
+        }
+
+        // Include custom salary rows (not linked to users) for this month
+        $customSalaries = Salary::where('month', $month)
+            ->whereNull('user_id')
+            ->get();
+
+        foreach ($customSalaries as $customSalary) {
+            $salaries[] = [
+                'id' => $customSalary->id,
+                'user_id' => null,
+                'name' => $customSalary->employee_name,
+                'designation' => 'Custom',
+                'basic_salary' => (float) $customSalary->basic_salary,
+                'bonus' => (float) $customSalary->bonus,
+                'deduction' => (float) ($customSalary->tax_deduction + $customSalary->insurance_deduction + $customSalary->other_deductions),
+                'net_salary' => (float) $customSalary->net_salary,
+                'status' => $customSalary->payment_status,
+                'account_number' => $customSalary->account_number,
+                'bank_name' => $customSalary->bank_name,
+                'bank_branch' => $customSalary->bank_branch,
+                'routing_number' => $customSalary->routing_number,
+            ];
         }
 
         return view('admin.salaries.generate', compact('salaries', 'month'));
@@ -197,47 +227,79 @@ class SalaryController extends Controller
         $validated = $request->validate([
             'month' => ['required', 'string', 'regex:/^\d{4}-(0[1-9]|1[0-2])$/'],
             'salaries' => ['required', 'array'],
+            'salaries.*.id' => ['nullable', 'exists:salaries,id'],
             'salaries.*.user_id' => ['nullable', 'exists:users,id'],
             'salaries.*.employee_name' => ['required', 'string', 'max:255'],
             'salaries.*.basic_salary' => ['required', 'numeric', 'min:0'],
             'salaries.*.bonus' => ['nullable', 'numeric', 'min:0'],
             'salaries.*.deduction' => ['nullable', 'numeric', 'min:0'],
+            'salaries.*.account_number' => ['nullable', 'string', 'max:255'],
+            'salaries.*.bank_name' => ['nullable', 'string', 'max:255'],
+            'salaries.*.bank_branch' => ['nullable', 'string', 'max:255'],
+            'salaries.*.routing_number' => ['nullable', 'string', 'max:255'],
         ]);
 
         $created = 0;
+        $updated = 0;
         foreach ($validated['salaries'] as $salaryData) {
-            // Check if already exists
-            $existing = Salary::where('user_id', $salaryData['user_id'])
-                ->where('month', $validated['month'])
-                ->first();
-
-            if (!$existing) {
-                Salary::create([
-                    'user_id' => $salaryData['user_id'],
-                    'employee_name' => $salaryData['employee_name'],
-                    'month' => $validated['month'],
-                    'basic_salary' => $salaryData['basic_salary'],
-                    'bonus' => $salaryData['bonus'] ?? 0,
-                    'overtime_amount' => 0,
-                    'allowances' => 0,
-                    'tax_deduction' => $salaryData['deduction'] ?? 0,
-                    'insurance_deduction' => 0,
-                    'other_deductions' => 0,
-                    'payment_status' => 'pending',
-                ]);
-                $created++;
+            if (!empty($salaryData['id'])) {
+                $salary = Salary::find($salaryData['id']);
+                if ($salary) {
+                    $salary->update([
+                        'employee_name' => $salaryData['employee_name'],
+                        'basic_salary' => $salaryData['basic_salary'],
+                        'bonus' => $salaryData['bonus'] ?? 0,
+                        'tax_deduction' => $salaryData['deduction'] ?? 0,
+                        'account_number' => $salaryData['account_number'] ?? null,
+                        'bank_name' => $salaryData['bank_name'] ?? null,
+                        'bank_branch' => $salaryData['bank_branch'] ?? null,
+                        'routing_number' => $salaryData['routing_number'] ?? null,
+                    ]);
+                    $updated++;
+                }
+                continue;
             }
+
+            if (!empty($salaryData['user_id'])) {
+                $existing = Salary::where('user_id', $salaryData['user_id'])
+                    ->where('month', $validated['month'])
+                    ->first();
+
+                if ($existing) {
+                    continue;
+                }
+            }
+
+            Salary::create([
+                'user_id' => $salaryData['user_id'] ?? null,
+                'employee_name' => $salaryData['employee_name'],
+                'month' => $validated['month'],
+                'basic_salary' => $salaryData['basic_salary'],
+                'bonus' => $salaryData['bonus'] ?? 0,
+                'overtime_amount' => 0,
+                'allowances' => 0,
+                'tax_deduction' => $salaryData['deduction'] ?? 0,
+                'insurance_deduction' => 0,
+                'other_deductions' => 0,
+                'payment_status' => 'pending',
+                'account_number' => $salaryData['account_number'] ?? null,
+                'bank_name' => $salaryData['bank_name'] ?? null,
+                'bank_branch' => $salaryData['bank_branch'] ?? null,
+                'routing_number' => $salaryData['routing_number'] ?? null,
+            ]);
+            $created++;
         }
 
         return redirect()
             ->route('admin.salaries.index')
-            ->with('success', "{$created} salary records created successfully.");
+            ->with('success', "{$created} salary records created and {$updated} updated successfully.");
     }
 
     public function bulkUpdateBasicSalary(Request $request)
     {
 
         $validated = $request->validate([
+            'month' => ['required', 'string', 'regex:/^\d{4}-(0[1-9]|1[0-2])$/'],
             'employees' => ['required', 'array'],
             'employees.*.user_id' => ['required', 'exists:users,id'],
             'employees.*.basic_salary' => ['required', 'numeric', 'min:0'],
@@ -245,8 +307,18 @@ class SalaryController extends Controller
 
         $updated = 0;
         foreach ($validated['employees'] as $employeeData) {
-            User::where('id', $employeeData['user_id'])
-                ->update(['basic_salary' => $employeeData['basic_salary']]);
+            $employee = User::find($employeeData['user_id']);
+
+            Salary::updateOrCreate(
+                [
+                    'user_id' => $employeeData['user_id'],
+                    'month' => $validated['month'],
+                ],
+                [
+                    'employee_name' => $employee?->name ?? 'Employee',
+                    'basic_salary' => $employeeData['basic_salary'],
+                ]
+            );
             $updated++;
         }
 
@@ -259,6 +331,7 @@ class SalaryController extends Controller
     {
 
         $validated = $request->validate([
+            'month' => ['required', 'string', 'regex:/^\d{4}-(0[1-9]|1[0-2])$/'],
             'employees' => ['required', 'array'],
             'employees.*.user_id' => ['required', 'exists:users,id'],
             'employees.*.account_number' => ['nullable', 'string', 'max:255'],
@@ -269,13 +342,24 @@ class SalaryController extends Controller
 
         $updated = 0;
         foreach ($validated['employees'] as $employeeData) {
-            User::where('id', $employeeData['user_id'])
-                ->update([
+            $employee = User::find($employeeData['user_id']);
+
+            Salary::updateOrCreate(
+                [
+                    'user_id' => $employeeData['user_id'],
+                    'month' => $validated['month'],
+                ],
+                [
+                    'employee_name' => $employee?->name ?? 'Employee',
+                    'basic_salary' => Salary::where('user_id', $employeeData['user_id'])
+                        ->latest('month')
+                        ->value('basic_salary') ?? 0,
                     'account_number' => $employeeData['account_number'],
                     'bank_name' => $employeeData['bank_name'],
                     'bank_branch' => $employeeData['bank_branch'],
                     'routing_number' => $employeeData['routing_number'],
-                ]);
+                ]
+            );
             $updated++;
         }
 
@@ -288,15 +372,19 @@ class SalaryController extends Controller
     {
         $request->validate(['user_id' => 'required|exists:users,id']);
 
+        $salary = Salary::where('user_id', $request->user_id)
+            ->latest('month')
+            ->latest('id')
+            ->first();
         $user = User::find($request->user_id);
 
         return response()->json([
             'name' => $user->name,
             'email' => $user->email,
-            'account_number' => $user->account_number,
-            'bank_name' => $user->bank_name,
-            'bank_branch' => $user->bank_branch,
-            'routing_number' => $user->routing_number,
+            'account_number' => $salary?->account_number,
+            'bank_name' => $salary?->bank_name,
+            'bank_branch' => $salary?->bank_branch,
+            'routing_number' => $salary?->routing_number,
         ]);
     }
 
@@ -432,7 +520,10 @@ class SalaryController extends Controller
             'paid_amount' => ['nullable', 'numeric', 'min:0'],
             'payment_date' => ['nullable', 'date'],
             'payment_method' => ['nullable', 'in:cash,bank_transfer,mobile_banking,cheque'],
+            'account_number' => ['nullable', 'string', 'max:255'],
             'bank_name' => ['nullable', 'string', 'max:255'],
+            'bank_branch' => ['nullable', 'string', 'max:255'],
+            'routing_number' => ['nullable', 'string', 'max:255'],
             'transaction_id' => ['nullable', 'string', 'max:255'],
             'notes' => ['nullable', 'string'],
         ]);

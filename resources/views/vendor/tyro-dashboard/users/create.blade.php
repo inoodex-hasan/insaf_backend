@@ -52,6 +52,15 @@
 
                 <div class="form-row">
                     <div class="form-group">
+                        <label for="username" class="form-label">User ID</label>
+                        <input type="text" id="username" name="username" class="form-input @error('username') is-invalid @enderror"
+                            value="{{ old('username') }}" required placeholder="EMP001">
+                        @error('username')
+                            <span class="form-error">{{ $message }}</span>
+                        @enderror
+                    </div>
+
+                    <div class="form-group">
                         <label for="password" class="form-label">Password</label>
                         <input type="password" id="password" name="password"
                             class="form-input @error('password') is-invalid @enderror" required placeholder="••••••••">

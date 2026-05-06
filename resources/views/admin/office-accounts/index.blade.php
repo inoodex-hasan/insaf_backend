@@ -35,7 +35,7 @@
                     </button>
                 </div>
                 <div class="flex gap-2">
-                    <select name="account_type" class="form-select w-full md:w-40 pr-10">
+                    <select name="account_type" class="form-select w-full min-w-[120px] pr-10">
                         <option value="">Type</option>
                         <option value="bank" {{ request('account_type') == 'bank' ? 'selected' : '' }}>Bank</option>
                         <option value="mfs" {{ request('account_type') == 'mfs' ? 'selected' : '' }}>MFS</option>

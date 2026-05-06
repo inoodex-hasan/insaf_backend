@@ -53,6 +53,14 @@
                 </div>
 
                 <div class="form-group">
+                    <label for="username" class="form-label">User ID</label>
+                    <input type="text" id="username" name="username" class="form-input @error('username') is-invalid @enderror" value="{{ old('username', $editUser->username) }}" required>
+                    @error('username')
+                        <span class="form-error">{{ $message }}</span>
+                    @enderror
+                </div>
+
+                <div class="form-group">
                     <label for="password" class="form-label">
                         New Password <span class="form-label-optional">(leave blank to keep current)</span>
                     </label>

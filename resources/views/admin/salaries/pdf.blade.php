@@ -95,10 +95,10 @@
             @foreach ($salaries as $salary)
                 <tr>
                     <td>{{ $salary->employee_name }}</td>
-                    <td>{{ $salary->user->roles->first()->name ?? 'Employee' }}</td>
+                    <td>{{ $salary->user?->roles?->first()?->name ?? 'Custom' }}</td>
                     <td class="text-right">{{ number_format($salary->basic_salary, 2) }}</td>
-                    <td>{{ $salary->user->account_number ?? 'N/A' }}</td>
-                    <td>{{ $salary->user->bank_name ?? 'N/A' }}</td>
+                    <td>{{ $salary->account_number ?? 'N/A' }}</td>
+                    <td>{{ $salary->bank_name ?? 'N/A' }}</td>
                     <td class="text-right">{{ number_format($salary->bonus, 2) }}</td>
                     <td class="text-right">
                         {{ number_format($salary->tax_deduction + $salary->insurance_deduction + $salary->other_deductions, 2) }}
