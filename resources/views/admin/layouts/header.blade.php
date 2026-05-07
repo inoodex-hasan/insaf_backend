@@ -43,10 +43,50 @@
                 </ul>
             </div>
 
-            <div
-                class="flex items-center space-x-1.5 ltr:ml-auto rtl:mr-auto rtl:space-x-reverse dark:text-[#d0d2d6] sm:flex-1 ltr:sm:ml-0 sm:rtl:mr-0 lg:space-x-2">
-                <div class="sm:ltr:mr-auto sm:rtl:ml-auto">
-
+            <div class="flex items-center space-x-1.5 ltr:ml-auto rtl:mr-auto rtl:space-x-reverse dark:text-[#d0d2d6] sm:flex-1 ltr:sm:ml-0 sm:rtl:mr-0 lg:space-x-2">
+                <div class="sm:ltr:mr-auto sm:rtl:ml-auto w-full max-w-[500px]">
+                    @if (isset($activeCurrencies) && $activeCurrencies->count() > 0)
+                        <div class="relative flex h-10 items-center overflow-hidden px-4" 
+                             x-data="{
+                                active: 0,
+                                count: {{ $activeCurrencies->count() }},
+                                paused: false,
+                                init() {
+                                    setInterval(() => {
+                                        if (!this.paused) {
+                                            this.active = (this.active + 1) % this.count;
+                                        }
+                                    }, 4000)
+                                }
+                             }"
+                             @mouseenter="paused = true"
+                             @mouseleave="paused = false">
+                            @foreach ($activeCurrencies as $index => $currency)
+                                <div class="absolute inset-0 flex items-center justify-center px-4 transition-all duration-700 ease-in-out whitespace-nowrap"
+                                     x-show="active === {{ $index }}"
+                                     x-transition:enter="transition ease-out duration-700"
+                                     x-transition:enter-start="opacity-0 translate-y-6"
+                                     x-transition:enter-end="opacity-100 translate-y-0"
+                                     x-transition:leave="transition ease-in duration-700 absolute"
+                                     x-transition:leave-start="opacity-100 translate-y-0"
+                                     x-transition:leave-end="opacity-0 -translate-y-6">
+                                    
+                                    <div class="flex items-center space-x-4 text-sm rtl:space-x-reverse">
+                                        <div class="flex items-center space-x-2 rtl:space-x-reverse">
+                                            <span class="rounded bg-primary px-1.5 py-0.5 text-[10px] font-black text-white uppercase">{{ $currency->code }}</span>
+                                            <!-- <span class="font-bold text-gray-800 dark:text-white-light">{{ $currency->name }}</span> -->
+                                        </div>
+                                        <span class="h-1 w-1 rounded-full bg-primary/30"></span>
+                                        <div class="flex items-center space-x-2">
+                                            <span class="text-lg font-bold text-gray-500">1 {{ $currency->code }} =</span>
+                                            <span class="text-lg font-bold font-black text-success">{{ number_format($currency->exchange_rate, 2) }}</span>
+                                            <span class="text-lg font-bold text-gray-400">BDT</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                    @endif
                 </div>
 
                 <div>

@@ -19,6 +19,14 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // Share active currencies with all views for the header ticker
+        \Illuminate\Support\Facades\View::composer('*', function ($view) {
+            $activeCurrencies = \Illuminate\Support\Facades\Cache::remember('active_currencies', 3600, function () {
+                return \App\Models\Currency::active()->get();
+            });
+            $view->with('activeCurrencies', $activeCurrencies);
+        });
+
         // echo "Booting AppServiceProvider\n";
         \Illuminate\Support\Facades\Gate::before(function ($user, $ability) {
             // Super-admin bypass

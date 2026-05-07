@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Support\Facades\RateLimiter;
-use App\Http\Controllers\Admin\{ApplicationController, CommissionController, CountryController, CourseController, CourseIntakeController, DashboardController, LeadController, PaymentController, RoleController as LocalRoleController, SettingController, StudentController, UniversityController};
+use App\Http\Controllers\Admin\{ApplicationController, CommissionController, CountryController, CourseController, CourseIntakeController, CurrencyController, DashboardController, LeadController, PaymentController, RoleController as LocalRoleController, SettingController, StudentController, UniversityController};
 
 // Rate limiter for login routes (5 attempts per minute per IP)
 RateLimiter::for('login', function () {
@@ -301,7 +301,15 @@ Route::prefix('dashboard/reports')->name('admin.reports.')->group(function () {
     Route::get('/download-pdf', [App\Http\Controllers\Admin\ReportController::class, 'downloadPdf'])->name('download-pdf')->middleware('can:*accountant');
 });
 
-// Currencies - REMOVED: Currency functionality removed from project
+// Currency Management
+Route::prefix('dashboard/currencies')->name('admin.currencies.')->group(function () {
+    Route::get('/', [CurrencyController::class, 'index'])->name('index');
+    Route::get('/create', [CurrencyController::class, 'create'])->name('create')->middleware('can:*accountant');
+    Route::post('/', [CurrencyController::class, 'store'])->name('store')->middleware('can:*accountant');
+    Route::get('{currency}/edit', [CurrencyController::class, 'edit'])->name('edit')->middleware('can:*accountant');
+    Route::put('{currency}', [CurrencyController::class, 'update'])->name('update')->middleware('can:*accountant');
+    Route::delete('{currency}', [CurrencyController::class, 'destroy'])->name('destroy')->middleware('can:*accountant');
+});
 
 // Salary Management
 Route::prefix('dashboard/salaries')->name('admin.salaries.')->group(function () {

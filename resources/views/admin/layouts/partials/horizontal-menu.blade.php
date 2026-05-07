@@ -55,7 +55,31 @@
                 <span class="px-1">Dashboard</span>
             </div>
         </a>
-    </li>
+    <!-- <li class="menu nav-item relative group">
+        <a href="javascript:;" class="nav-link">
+            <div class="flex items-center">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="shrink-0">
+                    <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+                    <path d="M12 6V18M9 9H13.5C14.3284 9 15 9.67157 15 10.5C15 11.3284 14.3284 12 13.5 12H10.5C9.67157 12 9 12.6716 9 13.5C9 14.3284 9.67157 15 10.5 15H15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span class="px-1">Currencies</span>
+            </div>
+            <div class="right_arrow">
+                <svg class="h-4 w-4 rotate-90 transition-transform duration-300 group-hover:rotate-0"
+                    width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path d="M9 5L15 12L9 19" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                </svg>
+            </div>
+        </a>
+        <ul class="sub-menu">
+            @if (auth()->user()->hasRole('accountant'))
+                <li><a href="{{ route('admin.currencies.create') }}">Add Currency</a></li>
+            @endif
+            <li><a href="{{ route('admin.currencies.index') }}">Manage Currency</a></li>
+        </ul>
+    </li> -->
 
     @if (auth()->check() && auth()->user()->hasRole(role: 'editor'))
         <li class="menu nav-item relative group">
@@ -686,8 +710,25 @@
                             </ul>
                         </li>
 
-                        {{-- Budgets & Reports --}}
-                        <!-- <li><a href="{{ route('admin.budgets.index') }}">Budgets</a></li> -->
+                        <!-- Currencies -->
+                         <li class="menu nav-item relative group px-0">
+                            <a href="javascript:;" class="flex justify-between items-center w-full">
+                                Currency
+                                <svg class="h-3 w-3 rotate-90" viewBox="0 0 24 24" fill="none">
+                                    <path d="M9 5L15 12L9 19" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                                        stroke-linejoin="round" />
+                                </svg>
+                            </a>
+                            <ul
+                                class="child-menu absolute ltr:left-full rtl:right-full top-0 ml-1 hidden min-w-[180px] bg-white shadow-lg rounded-md z-50 dark:bg-[#0e1726]">
+                                <li><a href="{{ route('admin.currencies.create') }}"    
+                                        class="block px-4 py-2 hover:bg-gray-100">Add Currency</a></li>
+                                <li><a href="{{ route('admin.currencies.index') }}"
+                                        class="block px-4 py-2 hover:bg-gray-100">Manage Currency   </a></li>
+                            </ul>
+                        </li>
+
+                        <!-- Budgets & Reports -->
                         <li class="menu nav-item relative group px-0">
                             <a href="javascript:;" class="flex justify-between items-center w-full">
                                 Reports

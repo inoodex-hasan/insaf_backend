@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Models\{Application, Country, Course, CourseIntake, Lead, Payment, Salary, Student, University};
+use App\Models\{Application, Country, Course, CourseIntake, Currency, Lead, Payment, Salary, Student, University};
 use HasinHayder\Tyro\Models\{Privilege, Role};
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -16,6 +16,8 @@ class DashboardController extends Controller
         if (auth()->check() && auth()->user()->hasRole('digital-marketing')) {
             return redirect()->route('admin.marketing.campaigns.index');
         }
+
+        $activeCurrencies = Currency::active()->get();
 
         $userModel = config('tyro-dashboard.user_model', 'App\\Models\\User');
 
@@ -46,6 +48,6 @@ class DashboardController extends Controller
 
         $payments = Payment::latest()->paginate(15);
 
-        return view('admin.dashboard', compact('stats', 'leads', 'students', 'applications', 'payments'));
+        return view('admin.dashboard', compact('stats', 'leads', 'students', 'applications', 'payments', 'activeCurrencies'));
     }
 }

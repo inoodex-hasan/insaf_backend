@@ -423,6 +423,20 @@
                                 <li><a href="{{ route('admin.office-accounts.index') }}" class="block rounded-md px-3 py-2 text-sm hover:bg-gray-100 dark:hover:bg-[#1b2e4b]">Accounts</a></li>
                             </ul>
                         </li>
+                        <li class="nav-item" x-data="{ childOpen: false }">
+                            <a href="javascript:;" @click="childOpen = !childOpen" class="group flex items-center justify-between rounded-md px-3 py-2 hover:bg-white hover:shadow-sm dark:hover:bg-[#0e1726]">
+                                <span class="text-sm">Currencies</span>
+                                <svg class="h-3 w-3 transition-transform" :class="childOpen ? 'rotate-180' : ''" viewBox="0 0 24 24" fill="none">
+                                    <path d="M19 9l-7 7-7-7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                                </svg>
+                            </a>
+                            <ul x-show="childOpen" x-collapse class="mt-1 space-y-1 rounded-md bg-white p-2 shadow-sm dark:bg-[#0e1726]">
+                                @if(auth()->user()->hasRole('accountant'))
+                                    <li><a href="{{ route('admin.currencies.create') }}" class="block rounded-md px-3 py-2 text-sm hover:bg-gray-100 dark:hover:bg-[#1b2e4b]">Add Currency</a></li>
+                                @endif
+                                <li><a href="{{ route('admin.currencies.index') }}" class="block rounded-md px-3 py-2 text-sm hover:bg-gray-100 dark:hover:bg-[#1b2e4b]">Manage Currency</a></li>
+                            </ul>
+                        </li>
                         <!-- <li><a href="{{ route('admin.budgets.index') }}" class="block rounded-md px-3 py-2 text-sm hover:bg-white hover:shadow-sm dark:hover:bg-[#0e1726]">Budgets</a></li> -->
                         <li class="nav-item" x-data="{ childOpen: false }">
                             <a href="javascript:;" @click="childOpen = !childOpen" class="group flex items-center justify-between rounded-md px-3 py-2 hover:bg-white hover:shadow-sm dark:hover:bg-[#0e1726]">
