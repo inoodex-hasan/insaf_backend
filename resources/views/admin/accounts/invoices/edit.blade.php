@@ -128,9 +128,27 @@
             </div>
 
             <div class="mt-5">
-                <label for="notes">Internal Notes</label>
-                <textarea name="notes" id="notes" class="form-textarea" rows="2"
-                    placeholder="Public notes appearing on invoice...">{{ $invoice->notes }}</textarea>
+                <label>Notes <span class="text-xs text-white-dark">(appears on invoice PDF)</span></label>
+                <input type="hidden" name="notes" id="notes" value="{{ $invoice->notes }}" />
+                <div class="flex flex-col gap-2 mt-2" id="notes-container">
+                    @php
+                        $existingNotes = array_filter(explode("\n", $invoice->notes ?? ''));
+                        $defaultNotes = [
+                            'Payment is due within 7 days of invoice date.',
+                            'Amount is not Refundable.',
+                            'Late payments may be subject to additional charges.',
+                        ];
+                        $allNotes = collect($defaultNotes)->merge(
+                            collect($existingNotes)->filter(fn($n) => !in_array($n, $defaultNotes))
+                        );
+                    @endphp
+                    @foreach ($allNotes as $note)
+                        <div class="flex items-center gap-2">
+                            <input type="checkbox" class="note-checkbox" {{ in_array($note, $existingNotes) || !in_array($note, $defaultNotes) ? 'checked' : '' }} />
+                            <input type="text" class="form-input text-sm note-text flex-1" value="{{ $note }}" />
+                        </div>
+                    @endforeach
+                </div>
             </div>
         </div>
 
@@ -272,6 +290,7 @@
 
                 init() {
                     this.initNiceSelect();
+                    this.syncNotes();
                     this.calculateTotals();
                 },
 
@@ -333,11 +352,25 @@
                     }).format(val);
                 },
 
+                syncNotes() {
+                    const rows = document.querySelectorAll('#notes-container > div');
+                    const notes = [];
+                    rows.forEach(row => {
+                        const checkbox = row.querySelector('.note-checkbox');
+                        const text = row.querySelector('.note-text');
+                        if (checkbox && checkbox.checked && text && text.value.trim()) {
+                            notes.push(text.value.trim());
+                        }
+                    });
+                    document.getElementById('notes').value = notes.join('\n');
+                },
+
                 submitInvoice() {
                     this.calculateTotals();
                     if (this.grandTotal <= 0) {
                         return;
                     }
+                    this.syncNotes();
                     document.getElementById('invoice-form').submit();
                 }
             }

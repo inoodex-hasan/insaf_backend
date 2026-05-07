@@ -134,7 +134,7 @@
 
     <div class="content">
         {{-- Invoice Header Info --}}
-        <table style='margin-top: 100px;'>
+        <table style='margin-top: 80px;'>
             <tr>
                 <td style="width: 50%; vertical-align: top;">
                     <table class="info-box">
@@ -154,7 +154,8 @@
                             style="display: inline-block; background-color: #263a79; color: white; padding: 10px 10px; line-height: 1.2; margin-bottom: 10px;">Invoice
                             No:
                             {{ $invoice->invoice_number }}</strong></p>
-                    <p style="padding-top: 10px !important;"><strong>Date:</strong>
+                    <!-- <br/> -->
+                    <p style="margin: 10px 0;"><strong>Date:</strong>
                         {{ $invoice->date->format('Y-m-d') }}</p>
                 </td>
             </tr>
@@ -202,6 +203,15 @@
                 </tr>
             </tbody>
         </table>
+
+        @if ($invoice->notes)
+            <div class="status-note" style="margin-top: 25px; padding: 10px 15px; border-left: 4px solid #263a79; background-color: #eaecf2;">
+                <strong style="color: #263a79;">Note:</strong><br/>
+                @foreach (array_filter(explode("\n", $invoice->notes)) as $i => $line)
+                    {{ $i + 1 }}. {{ $line }}<br/>
+                @endforeach
+            </div>
+        @endif
 
     </div>
 

@@ -273,19 +273,19 @@ class InvoiceController extends Controller
      */
     private function generateInvoiceNumber(): string
     {
-        // Get the highest invoice number overall
-        $lastInvoice = \App\Models\Invoice::orderBy('invoice_number', 'desc')
+        $datePart = now()->format('Ymd');
+
+        // Find the last invoice number for today
+        $lastInvoice = Invoice::where('invoice_number', 'like', "INV-{$datePart}-%")
+            ->orderBy('invoice_number', 'desc')
             ->first();
-        
-        if ($lastInvoice && preg_match('/(\d+)$/', $lastInvoice->invoice_number, $matches)) {
-            // Extract the numeric part and increment
-            $lastNumber = (int) $matches[1];
-            $nextNumber = $lastNumber + 1;
+
+        if ($lastInvoice && preg_match('/INV-\d{8}-(\d+)$/', $lastInvoice->invoice_number, $matches)) {
+            $nextNumber = (int) $matches[1] + 1;
         } else {
-            // Start from 1001
-            $nextNumber = 1001;
+            $nextNumber = 1000;
         }
-        
-        return "INV-" . $nextNumber;
+
+        return "INV-{$datePart}-{$nextNumber}";
     }
 }

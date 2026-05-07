@@ -165,16 +165,17 @@
                 @if ($invoice->notes)
                     <div class="p-5 bg-primary/5 border-l-4 border-primary rounded-r-xl">
                         <p class="text-[10px] font-bold uppercase tracking-[3px] text-primary mb-2 opacity-60">Notes:</p>
-                        <p class="text-sm text-white-dark leading-relaxed italic">"{{ $invoice->notes }}"</p>
-                        <p class="text-[9px] text-white-dark mt-3 pt-2 border-t border-primary/10">Please quote invoice
-                            number
-                            during payment transfer.</p>
+                        <ol class="text-sm text-white-dark leading-relaxed list-decimal list-inside space-y-1">
+                            @foreach (array_filter(explode("\n", $invoice->notes)) as $line)
+                                <li>{{ $line }}</li>
+                            @endforeach
+                        </ol>
                     </div>
                 @endif
             </div>
 
             <div class="flex flex-col justify-end pt-8">
-                <div class="grid grid-cols-2 gap-8 text-center">
+                <!-- <div class="grid grid-cols-2 gap-8 text-center">
                     <div class="flex flex-col items-center">
                         <div class="w-full h-px bg-white-dark/30 mb-2"></div>
                         <p class="font-bold uppercase text-[9px] tracking-widest text-white-dark">Student Signature</p>
@@ -185,7 +186,7 @@
                         <p class="text-[7px] text-white-dark mt-0.5">For {{ get_setting('app_name', 'Insaf Education') }}
                         </p>
                     </div>
-                </div>
+                </div> -->
 
                 <div class="mt-8 text-right">
                     <p class="text-[8px] text-white-dark tracking-[5px] uppercase opacity-40">System generated document</p>

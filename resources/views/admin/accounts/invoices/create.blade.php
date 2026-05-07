@@ -119,9 +119,22 @@
             </div>
 
             <div class="mt-5">
-                <label for="notes">Internal Notes</label>
-                <textarea name="notes" id="notes" class="form-textarea" rows="2"
-                    placeholder="Public notes appearing on invoice..."></textarea>
+                <label>Notes <span class="text-xs text-white-dark">(appears on invoice PDF)</span></label>
+                <input type="hidden" name="notes" id="notes" value="" />
+                <div class="flex flex-col gap-2 mt-2" id="notes-container">
+                    <div class="flex items-center gap-2">
+                        <input type="checkbox" class="note-checkbox" checked />
+                        <input type="text" class="form-input text-sm note-text flex-1" value="Payment is due within 7 days of invoice date." />
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <input type="checkbox" class="note-checkbox" checked />
+                        <input type="text" class="form-input text-sm note-text flex-1" value="Amount is not Refundable." />
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <input type="checkbox" class="note-checkbox" />
+                        <input type="text" class="form-input text-sm note-text flex-1" value="Late payments may be subject to additional charges." />
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -154,7 +167,7 @@
                     <thead>
                         <tr class="bg-primary/5">
                             <th class="p-3 text-left w-1/4 uppercase text-[10px] tracking-widest">Revenue Head</th>
-                            <th class="p-3 text-left uppercase text-[10px] tracking-widest">Service Description</th>
+                            <th class="p-3 text-left uppercase text-[10px] tracking-widest"> Description</th>
                             <th class="p-3 text-right w-24 uppercase text-[10px] tracking-widest">Qty</th>
                             <th class="p-3 text-right w-32 uppercase text-[10px] tracking-widest">Amount</th>
                             <th class="p-3 text-right w-40 uppercase text-[10px] tracking-widest text-primary">Subtotal
@@ -269,6 +282,7 @@
 
                 init() {
                     this.initNiceSelect();
+                    this.syncNotes();
                     if (this.selectedApplication) {
                         this.onApplicationSelect();
                     }
@@ -363,11 +377,25 @@
                     }).format(val);
                 },
 
+                syncNotes() {
+                    const rows = document.querySelectorAll('#notes-container > div');
+                    const notes = [];
+                    rows.forEach(row => {
+                        const checkbox = row.querySelector('.note-checkbox');
+                        const text = row.querySelector('.note-text');
+                        if (checkbox && checkbox.checked && text && text.value.trim()) {
+                            notes.push(text.value.trim());
+                        }
+                    });
+                    document.getElementById('notes').value = notes.join('\n');
+                },
+
                 submitInvoice() {
                     this.calculateTotals();
                     if (this.grandTotal <= 0) {
                         return;
                     }
+                    this.syncNotes();
                     document.getElementById('invoice-form').submit();
                 }
             }
