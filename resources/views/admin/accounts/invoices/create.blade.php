@@ -124,15 +124,15 @@
                 <div class="flex flex-col gap-2 mt-2" id="notes-container">
                     <div class="flex items-center gap-2">
                         <input type="checkbox" class="note-checkbox" checked />
-                        <input type="text" class="form-input text-sm note-text flex-1" value="Payment is due within 7 days of invoice date." />
+                        <input type="text" class="form-input text-sm note-text flex-1" value="This payment is non refundable." />
                     </div>
                     <div class="flex items-center gap-2">
                         <input type="checkbox" class="note-checkbox" checked />
-                        <input type="text" class="form-input text-sm note-text flex-1" value="Amount is not Refundable." />
+                        <input type="text" class="form-input text-sm note-text flex-1" value="This Payment is Refundable According to University Policy." />
                     </div>
                     <div class="flex items-center gap-2">
                         <input type="checkbox" class="note-checkbox" />
-                        <input type="text" class="form-input text-sm note-text flex-1" value="Late payments may be subject to additional charges." />
+                        <input type="text" class="form-input text-sm note-text flex-1" value="This payment is non refundable, if the applicant will take back his/her file after getting offer letter." />
                     </div>
                 </div>
             </div>

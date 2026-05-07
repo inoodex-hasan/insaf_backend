@@ -132,15 +132,20 @@
                 <input type="hidden" name="notes" id="notes" value="{{ $invoice->notes }}" />
                 <div class="flex flex-col gap-2 mt-2" id="notes-container">
                     @php
-                        $existingNotes = array_filter(explode("\n", $invoice->notes ?? ''));
+                        // Clean up notes by handling different line breaks and trimming whitespace
+                        $rawNotes = str_replace("\r\n", "\n", $invoice->notes ?? '');
+                        $existingNotes = array_filter(array_map('trim', explode("\n", $rawNotes)));
+                        
                         $defaultNotes = [
-                            'Payment is due within 7 days of invoice date.',
-                            'Amount is not Refundable.',
-                            'Late payments may be subject to additional charges.',
+                            'This payment is non refundable.',
+                            'This Payment is Refundable According to University Policy.',
+                            'This payment is non refundable, if the applicant will take back his/her file after getting offer letter.',
                         ];
+
+                        // Normalize defaults for comparison
                         $allNotes = collect($defaultNotes)->merge(
-                            collect($existingNotes)->filter(fn($n) => !in_array($n, $defaultNotes))
-                        );
+                            collect($existingNotes)->filter(fn($n) => !in_array(trim($n), $defaultNotes))
+                        )->unique()->values();
                     @endphp
                     @foreach ($allNotes as $note)
                         <div class="flex items-center gap-2">
