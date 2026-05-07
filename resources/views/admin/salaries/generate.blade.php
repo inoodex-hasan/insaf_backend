@@ -33,86 +33,71 @@
             @csrf
             <input type="hidden" name="month" value="{{ $month }}" />
             <div class="mb-4 flex justify-end">
-                <button type="button" id="addCustomSalaryRow" class="btn btn-outline-primary">Add Custom Employee</button>
+                <button type="button" id="addCustomSalaryRow" class="btn btn-outline-primary">Add Employee</button>
             </div>
             <div class="datatable">
                 <div class="overflow-x-auto">
                     <table class="table-hover w-full table-auto">
                         <thead>
                             <tr>
-                                <th>Name</th>
-                                <th>Designation</th>
+                                <th class="w-10">
+                                    <input type="checkbox" id="selectAll" class="form-checkbox" checked />
+                                </th>
+                                <th class="w-16 text-center">SL</th>
+                                <th>Employee Name</th>
                                 <th>Basic Salary</th>
                                 <th>Bonus</th>
                                 <th>Deduction</th>
                                 <th>Net Salary</th>
-                                <th>Account Number</th>
-                                <th>Bank Name</th>
-                                {{-- <th>Action</th> --}}
+                                <th>Savings Account</th>
+                                <th class="w-10 text-center"></th>
                             </tr>
                         </thead>
-                        <tbody id="salaryRowsBody">
+                        <tbody id="salary-rows">
                             @forelse($salaries as $index => $salary)
-                                <input type="hidden" name="salaries[{{ $index }}][id]"
-                                    value="{{ $salary['id'] ?? '' }}" />
-                                <input type="hidden" name="salaries[{{ $index }}][user_id]"
-                                    value="{{ $salary['user_id'] ?? '' }}" />
-                                @if (!empty($salary['user_id']))
-                                    <input type="hidden" name="salaries[{{ $index }}][employee_name]"
-                                        value="{{ $salary['name'] }}" />
-                                @endif
-                                @if (!empty($salary['user_id']))
-                                    <input type="hidden" name="salaries[{{ $index }}][account_number]"
-                                        value="{{ $salary['account_number'] ?? '' }}" />
-                                    <input type="hidden" name="salaries[{{ $index }}][bank_name]"
-                                        value="{{ $salary['bank_name'] ?? '' }}" />
-                                @endif
-                                <input type="hidden" name="salaries[{{ $index }}][bank_branch]"
-                                    value="{{ $salary['bank_branch'] ?? '' }}" />
-                                <input type="hidden" name="salaries[{{ $index }}][routing_number]"
-                                    value="{{ $salary['routing_number'] ?? '' }}" />
-                                <tr>
-                                    <td><input type="text" name="salaries[{{ $index }}][employee_name]"
-                                            value="{{ $salary['name'] }}" class="form-input w-52" required /></td>
-                                    <td><input type="text" name="salaries[{{ $index }}][designation]"
-                                            value="{{ $salary['designation'] }}" class="form-input w-32" /></td>
+                                <tr class="salary-row group transition-all duration-200" data-index="{{ $index }}">
+                                    <td>
+                                        <input type="checkbox" class="form-checkbox row-checkbox" checked />
+                                    </td>
+                                    <td class="sl-number text-center">{{ $index + 1 }}</td>
+                                    <td>
+                                        <input type="hidden" name="salaries[{{ $index }}][id]" value="{{ $salary['id'] ?? '' }}" />
+                                        <input type="hidden" name="salaries[{{ $index }}][user_id]" value="{{ $salary['user_id'] ?? '' }}" />
+                                        <input type="hidden" name="salaries[{{ $index }}][designation]" value="{{ $salary['designation'] ?? 'Staff' }}" />
+                                        <input type="text" name="salaries[{{ $index }}][employee_name]"
+                                            value="{{ $salary['name'] ?? $salary['employee_name'] ?? '' }}" class="form-input" required />
+                                    </td>
                                     <td>
                                         <input type="number" step="0.01"
                                             name="salaries[{{ $index }}][basic_salary]"
-                                            value="{{ $salary['basic_salary'] }}" class="form-input w-40" required />
+                                            value="{{ $salary['basic_salary'] }}" class="form-input w-32 calc-input" required />
                                     </td>
                                     <td>
                                         <input type="number" step="0.01"
                                             name="salaries[{{ $index }}][bonus]"
-                                            value="{{ $salary['bonus'] }}" class="form-input w-24" />
+                                            value="{{ $salary['bonus'] ?? 0 }}" class="form-input w-24 calc-input" />
                                     </td>
                                     <td>
                                         <input type="number" step="0.01"
                                             name="salaries[{{ $index }}][deduction]"
-                                            value="{{ $salary['deduction'] }}" class="form-input w-24" />
+                                            value="{{ $salary['deduction'] ?? 0 }}" class="form-input w-24 calc-input" />
                                     </td>
                                     <td class="font-bold text-primary">
-                                        <span id="net-{{ $index }}">{{ number_format($salary['net_salary'], 2) }}</span>
+                                        <span class="net-salary-display">{{ number_format($salary['net_salary'] ?? $salary['basic_salary'], 2) }}</span>
                                     </td>
                                     <td>
                                         <input type="text" name="salaries[{{ $index }}][account_number]"
                                             value="{{ $salary['account_number'] ?? '' }}" class="form-input w-40" />
                                     </td>
-                                    <td>
-                                        <input type="text" name="salaries[{{ $index }}][bank_name]"
-                                            value="{{ $salary['bank_name'] ?? '' }}" class="form-input w-40" />
+                                    <td class="text-center">
+                                        <button type="button" class="text-danger remove-row opacity-0 group-hover:opacity-100 transition-opacity">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                                        </button>
                                     </td>
-                                    {{-- <td>
-                                        @if ($salary['id'])
-                                            <span class="badge badge-outline-success">Exists</span>
-                                        @else
-                                            <span class="badge badge-outline-warning">New</span>
-                                        @endif
-                                    </td> --}}
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="7" class="text-center">No employees found.</td>
+                                    <td colspan="8" class="text-center">No employees found.</td>
                                 </tr>
                             @endforelse
                         </tbody>
@@ -143,54 +128,119 @@
     </div>
 
     <script>
-        function calculateNet(index) {
-            const basic = parseFloat(document.querySelector(`input[name="salaries[${index}][basic_salary]"]`).value) || 0;
-            const bonus = parseFloat(document.querySelector(`input[name="salaries[${index}][bonus]"]`).value) || 0;
-            const deduction = parseFloat(document.querySelector(`input[name="salaries[${index}][deduction]"]`).value) || 0;
-            const net = basic + bonus - deduction;
-            document.getElementById(`net-${index}`).textContent = net.toFixed(2);
-        }
-
         document.addEventListener('DOMContentLoaded', function() {
-            @foreach ($salaries as $index => $salary)
-                document.querySelector(`input[name="salaries[{{ $index }}][basic_salary]"]`)
-                    .addEventListener('input', () => calculateNet({{ $index }}));
-                document.querySelector(`input[name="salaries[{{ $index }}][bonus]"]`).addEventListener(
-                    'input', () => calculateNet({{ $index }}));
-                document.querySelector(`input[name="salaries[{{ $index }}][deduction]"]`)
-                    .addEventListener('input', () => calculateNet({{ $index }}));
-            @endforeach
-
-            const salaryRowsBody = document.getElementById('salaryRowsBody');
+            const salaryRowsBody = document.getElementById('salary-rows');
             const addCustomSalaryRowBtn = document.getElementById('addCustomSalaryRow');
+            const selectAllBtn = document.getElementById('selectAll');
             let salaryRowIndex = {{ count($salaries) }};
+
+            // Function to update SL numbers
+            function updateSL() {
+                const rows = document.querySelectorAll('.salary-row');
+                rows.forEach((row, index) => {
+                    const slCell = row.querySelector('.sl-number');
+                    if (slCell) slCell.textContent = index + 1;
+                });
+            }
+
+            // Function to handle row checkbox state
+            function handleRowState(row) {
+                const checkbox = row.querySelector('.row-checkbox');
+                const inputs = row.querySelectorAll('input:not(.row-checkbox)');
+                
+                if (checkbox.checked) {
+                    row.classList.remove('opacity-40', 'grayscale-[0.5]');
+                    inputs.forEach(input => input.disabled = false);
+                } else {
+                    row.classList.add('opacity-40', 'grayscale-[0.5]');
+                    inputs.forEach(input => input.disabled = true);
+                }
+            }
+
+            // Select All logic
+            selectAllBtn.addEventListener('change', function() {
+                const checkboxes = document.querySelectorAll('.row-checkbox');
+                checkboxes.forEach(cb => {
+                    cb.checked = this.checked;
+                    handleRowState(cb.closest('.salary-row'));
+                });
+            });
+
+            // Row checkbox event delegation
+            salaryRowsBody.addEventListener('change', function(e) {
+                if (e.target.classList.contains('row-checkbox')) {
+                    handleRowState(e.target.closest('.salary-row'));
+                }
+            });
+
+            // Function to calculate net salary for a row
+            function calculateRowNet(row) {
+                const basic = parseFloat(row.querySelector('input[name*="[basic_salary]"]').value) || 0;
+                const bonus = parseFloat(row.querySelector('input[name*="[bonus]"]').value) || 0;
+                const deduction = parseFloat(row.querySelector('input[name*="[deduction]"]').value) || 0;
+                const net = basic + bonus - deduction;
+                
+                const display = row.querySelector('.net-salary-display');
+                if (display) {
+                    display.textContent = net.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                }
+            }
+
+            // Calculation event delegation
+            salaryRowsBody.addEventListener('input', function(e) {
+                if (e.target.classList.contains('calc-input')) {
+                    calculateRowNet(e.target.closest('.salary-row'));
+                }
+            });
 
             addCustomSalaryRowBtn.addEventListener('click', function() {
                 const index = salaryRowIndex++;
                 const tr = document.createElement('tr');
+                tr.className = 'salary-row group transition-all duration-200';
+                tr.dataset.index = index;
                 tr.innerHTML = `
-                    <input type="hidden" name="salaries[${index}][id]" value="" />
-                    <input type="hidden" name="salaries[${index}][user_id]" value="" />
-                    <input type="hidden" name="salaries[${index}][designation]" value="Custom" />
-                    <input type="hidden" name="salaries[${index}][bank_branch]" value="" />
-                    <input type="hidden" name="salaries[${index}][routing_number]" value="" />
-                    <td><input type="text" name="salaries[${index}][employee_name]" class="form-input w-52" placeholder="Employee name" required /></td>
-                    <td>Custom</td>
-                    <td><input type="number" step="0.01" min="0" name="salaries[${index}][basic_salary]" value="0" class="form-input w-40" required /></td>
-                    <td><input type="number" step="0.01" min="0" name="salaries[${index}][bonus]" value="0" class="form-input w-24" /></td>
-                    <td><input type="number" step="0.01" min="0" name="salaries[${index}][deduction]" value="0" class="form-input w-24" /></td>
-                    <td class="font-bold text-primary"><span id="net-${index}">0.00</span></td>
-                    <td><input type="text" name="salaries[${index}][account_number]" class="form-input w-40" placeholder="Account no" /></td>
-                    <td><input type="text" name="salaries[${index}][bank_name]" class="form-input w-40" placeholder="Bank name" /></td>
+                    <td>
+                        <input type="checkbox" class="form-checkbox row-checkbox" checked />
+                    </td>
+                    <td class="sl-number text-center"></td>
+                    <td>
+                        <input type="hidden" name="salaries[${index}][id]" value="" />
+                        <input type="hidden" name="salaries[${index}][user_id]" value="" />
+                        <input type="hidden" name="salaries[${index}][designation]" value="Staff" />
+                        <input type="text" name="salaries[${index}][employee_name]" class="form-input" placeholder="Employee name" required />
+                    </td>
+                    <td>
+                        <input type="number" step="0.01" min="0" name="salaries[${index}][basic_salary]" value="0" class="form-input w-32 calc-input" required />
+                    </td>
+                    <td>
+                        <input type="number" step="0.01" min="0" name="salaries[${index}][bonus]" value="0" class="form-input w-24 calc-input" />
+                    </td>
+                    <td>
+                        <input type="number" step="0.01" min="0" name="salaries[${index}][deduction]" value="0" class="form-input w-24 calc-input" />
+                    </td>
+                    <td class="font-bold text-primary">
+                        <span class="net-salary-display">0.00</span>
+                    </td>
+                    <td>
+                        <input type="text" name="salaries[${index}][account_number]" class="form-input w-40" placeholder="Account no" />
+                    </td>
+                    <td class="text-center">
+                        <button type="button" class="text-danger remove-row opacity-0 group-hover:opacity-100 transition-opacity">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                        </button>
+                    </td>
                 `;
 
                 salaryRowsBody.appendChild(tr);
-                document.querySelector(`input[name="salaries[${index}][basic_salary]"]`)
-                    .addEventListener('input', () => calculateNet(index));
-                document.querySelector(`input[name="salaries[${index}][bonus]"]`)
-                    .addEventListener('input', () => calculateNet(index));
-                document.querySelector(`input[name="salaries[${index}][deduction]"]`)
-                    .addEventListener('input', () => calculateNet(index));
+                updateSL();
+            });
+
+            // Handle row removal
+            document.addEventListener('click', function(e) {
+                if (e.target.closest('.remove-row')) {
+                    e.target.closest('.salary-row').remove();
+                    updateSL();
+                }
             });
         });
     </script>

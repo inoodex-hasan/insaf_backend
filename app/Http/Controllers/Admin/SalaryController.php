@@ -136,86 +136,39 @@ class SalaryController extends Controller
 
     public function generate(Request $request)
     {
-        // Get all users as employees (excluding admins)
-        $employees = User::whereDoesntHave('roles', function ($q) {
-            $q->where('name', 'admin');
-        })->with('roles')->get();
-
         $month = $request->get('month', now()->format('Y-m'));
 
-        $salaries = [];
-        foreach ($employees as $employee) {
-            // Check if salary already exists for this month
-            $existingSalary = Salary::where('user_id', $employee->id)->where('month', $month)->first();
-            $latestSalary = Salary::where('user_id', $employee->id)
-                ->whereNotNull('user_id')
-                ->latest('month')
-                ->latest('id')
-                ->first();
+        // 1. Check if salaries already exist for this specific month
+        $existingSalaries = Salary::where('month', $month)->orderBy('id', 'asc')->get();
 
-            if ($existingSalary) {
-                // Use existing
-                $salaries[] = [
-                    'id' => $existingSalary->id,
-                    'user_id' => $employee->id,
-                    'name' => $employee->name,
-                    'designation' => $employee->roles->first()->name ?? 'Employee',
-                    'basic_salary' => $existingSalary->basic_salary,
-                    'bonus' => $existingSalary->bonus,
-                    'deduction' => $existingSalary->tax_deduction + $existingSalary->insurance_deduction + $existingSalary->other_deductions,
-                    'net_salary' => $existingSalary->net_salary,
-                    'status' => $existingSalary->payment_status,
-                    'account_number' => $existingSalary->account_number,
-                    'bank_name' => $existingSalary->bank_name,
-                    'bank_branch' => $existingSalary->bank_branch,
-                    'routing_number' => $existingSalary->routing_number,
-                ];
-            } else {
-                // Use employee's latest salary as default seed data
-                $designation = $employee->roles->first()->name ?? 'Employee';
-                $basic = $latestSalary?->basic_salary ?? 0;
-                $bonus = 0;
-                $deduction = 0;
-                $net = $basic + $bonus - $deduction;
-
-                $salaries[] = [
-                    'id' => null,
-                    'user_id' => $employee->id,
-                    'name' => $employee->name,
-                    'designation' => $designation,
-                    'basic_salary' => $basic,
-                    'bonus' => $bonus,
-                    'deduction' => $deduction,
-                    'net_salary' => $net,
-                    'status' => 'pending',
-                    'account_number' => $latestSalary?->account_number,
-                    'bank_name' => $latestSalary?->bank_name,
-                    'bank_branch' => $latestSalary?->bank_branch,
-                    'routing_number' => $latestSalary?->routing_number,
-                ];
+        // 2. If NO salaries exist for this month, pull from the most recent month instead
+        if ($existingSalaries->isEmpty()) {
+            $latestMonth = Salary::latest('month')->value('month');
+            if ($latestMonth) {
+                $existingSalaries = Salary::where('month', $latestMonth)->get();
+                // Clear the IDs so they are treated as NEW records for the current month
+                foreach ($existingSalaries as $s) {
+                    $s->id = null;
+                }
             }
         }
 
-        // Include custom salary rows (not linked to users) for this month
-        $customSalaries = Salary::where('month', $month)
-            ->whereNull('user_id')
-            ->get();
-
-        foreach ($customSalaries as $customSalary) {
+        $salaries = [];
+        foreach ($existingSalaries as $salary) {
             $salaries[] = [
-                'id' => $customSalary->id,
-                'user_id' => null,
-                'name' => $customSalary->employee_name,
-                'designation' => 'Custom',
-                'basic_salary' => (float) $customSalary->basic_salary,
-                'bonus' => (float) $customSalary->bonus,
-                'deduction' => (float) ($customSalary->tax_deduction + $customSalary->insurance_deduction + $customSalary->other_deductions),
-                'net_salary' => (float) $customSalary->net_salary,
-                'status' => $customSalary->payment_status,
-                'account_number' => $customSalary->account_number,
-                'bank_name' => $customSalary->bank_name,
-                'bank_branch' => $customSalary->bank_branch,
-                'routing_number' => $customSalary->routing_number,
+                'id' => $salary->id, // Will be null if pulled from previous month
+                'user_id' => $salary->user_id,
+                'name' => $salary->employee_name,
+                'designation' => $salary->designation ?? 'Employee',
+                'basic_salary' => (float) $salary->basic_salary,
+                'bonus' => (float) $salary->bonus,
+                'deduction' => (float) ($salary->tax_deduction + $salary->insurance_deduction + $salary->other_deductions),
+                'net_salary' => (float) $salary->net_salary,
+                'status' => $salary->payment_status,
+                'account_number' => $salary->account_number,
+                'bank_name' => $salary->bank_name,
+                'bank_branch' => $salary->bank_branch,
+                'routing_number' => $salary->routing_number,
             ];
         }
 
