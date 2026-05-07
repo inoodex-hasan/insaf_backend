@@ -158,11 +158,13 @@ CREATE TABLE `cache` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 INSERT INTO `cache` (`key`, `value`, `expiration`) VALUES
-('admin-dashboard-cache-tyro:user-1:roles',	'a:1:{i:0;s:5:\"admin\";}',	1778066376),
-('admin-dashboard-cache-tyro:user-4:privileges',	'a:4:{i:0;s:11:\"*accountant\";i:1;s:8:\"*payment\";i:2;s:10:\"*comission\";i:3;s:8:\"*invoice\";}',	1778068445),
-('admin-dashboard-cache-tyro:user-4:roles',	'a:1:{i:0;s:10:\"accountant\";}',	1778068445),
-('admin-dashboard-cache-tyro:user-6:privileges',	'a:1:{i:0;s:12:\"*application\";}',	1778067086),
-('admin-dashboard-cache-tyro:user-6:roles',	'a:1:{i:0;s:11:\"application\";}',	1778067086);
+('admin-dashboard-cache-active_currencies',	'O:39:\"Illuminate\\Database\\Eloquent\\Collection\":2:{s:8:\"\0*\0items\";a:3:{i:0;O:19:\"App\\Models\\Currency\":33:{s:13:\"\0*\0connection\";s:5:\"mysql\";s:8:\"\0*\0table\";s:10:\"currencies\";s:13:\"\0*\0primaryKey\";s:2:\"id\";s:10:\"\0*\0keyType\";s:3:\"int\";s:12:\"incrementing\";b:1;s:7:\"\0*\0with\";a:0:{}s:12:\"\0*\0withCount\";a:0:{}s:19:\"preventsLazyLoading\";b:0;s:10:\"\0*\0perPage\";i:15;s:6:\"exists\";b:1;s:18:\"wasRecentlyCreated\";b:0;s:28:\"\0*\0escapeWhenCastingToString\";b:0;s:13:\"\0*\0attributes\";a:9:{s:2:\"id\";i:1;s:4:\"name\";s:9:\"US Dollar\";s:4:\"code\";s:3:\"USD\";s:6:\"symbol\";s:1:\"$\";s:13:\"exchange_rate\";s:12:\"124.00000000\";s:9:\"is_active\";i:1;s:10:\"is_default\";i:0;s:10:\"created_at\";s:19:\"2026-05-07 06:08:25\";s:10:\"updated_at\";s:19:\"2026-05-07 06:15:27\";}s:11:\"\0*\0original\";a:9:{s:2:\"id\";i:1;s:4:\"name\";s:9:\"US Dollar\";s:4:\"code\";s:3:\"USD\";s:6:\"symbol\";s:1:\"$\";s:13:\"exchange_rate\";s:12:\"124.00000000\";s:9:\"is_active\";i:1;s:10:\"is_default\";i:0;s:10:\"created_at\";s:19:\"2026-05-07 06:08:25\";s:10:\"updated_at\";s:19:\"2026-05-07 06:15:27\";}s:10:\"\0*\0changes\";a:0:{}s:11:\"\0*\0previous\";a:0:{}s:8:\"\0*\0casts\";a:3:{s:13:\"exchange_rate\";s:9:\"decimal:2\";s:9:\"is_active\";s:7:\"boolean\";s:10:\"is_default\";s:7:\"boolean\";}s:17:\"\0*\0classCastCache\";a:0:{}s:21:\"\0*\0attributeCastCache\";a:0:{}s:13:\"\0*\0dateFormat\";N;s:10:\"\0*\0appends\";a:0:{}s:19:\"\0*\0dispatchesEvents\";a:0:{}s:14:\"\0*\0observables\";a:0:{}s:12:\"\0*\0relations\";a:0:{}s:10:\"\0*\0touches\";a:0:{}s:27:\"\0*\0relationAutoloadCallback\";N;s:26:\"\0*\0relationAutoloadContext\";N;s:10:\"timestamps\";b:1;s:13:\"usesUniqueIds\";b:0;s:9:\"\0*\0hidden\";a:0:{}s:10:\"\0*\0visible\";a:0:{}s:11:\"\0*\0fillable\";a:6:{i:0;s:4:\"name\";i:1;s:4:\"code\";i:2;s:6:\"symbol\";i:3;s:13:\"exchange_rate\";i:4;s:9:\"is_active\";i:5;s:10:\"is_default\";}s:10:\"\0*\0guarded\";a:1:{i:0;s:1:\"*\";}}i:1;O:19:\"App\\Models\\Currency\":33:{s:13:\"\0*\0connection\";s:5:\"mysql\";s:8:\"\0*\0table\";s:10:\"currencies\";s:13:\"\0*\0primaryKey\";s:2:\"id\";s:10:\"\0*\0keyType\";s:3:\"int\";s:12:\"incrementing\";b:1;s:7:\"\0*\0with\";a:0:{}s:12:\"\0*\0withCount\";a:0:{}s:19:\"preventsLazyLoading\";b:0;s:10:\"\0*\0perPage\";i:15;s:6:\"exists\";b:1;s:18:\"wasRecentlyCreated\";b:0;s:28:\"\0*\0escapeWhenCastingToString\";b:0;s:13:\"\0*\0attributes\";a:9:{s:2:\"id\";i:2;s:4:\"name\";s:4:\"Euro\";s:4:\"code\";s:3:\"EUR\";s:6:\"symbol\";s:3:\"€\";s:13:\"exchange_rate\";s:12:\"147.00000000\";s:9:\"is_active\";i:1;s:10:\"is_default\";i:0;s:10:\"created_at\";s:19:\"2026-05-07 06:10:59\";s:10:\"updated_at\";s:19:\"2026-05-07 06:10:59\";}s:11:\"\0*\0original\";a:9:{s:2:\"id\";i:2;s:4:\"name\";s:4:\"Euro\";s:4:\"code\";s:3:\"EUR\";s:6:\"symbol\";s:3:\"€\";s:13:\"exchange_rate\";s:12:\"147.00000000\";s:9:\"is_active\";i:1;s:10:\"is_default\";i:0;s:10:\"created_at\";s:19:\"2026-05-07 06:10:59\";s:10:\"updated_at\";s:19:\"2026-05-07 06:10:59\";}s:10:\"\0*\0changes\";a:0:{}s:11:\"\0*\0previous\";a:0:{}s:8:\"\0*\0casts\";a:3:{s:13:\"exchange_rate\";s:9:\"decimal:2\";s:9:\"is_active\";s:7:\"boolean\";s:10:\"is_default\";s:7:\"boolean\";}s:17:\"\0*\0classCastCache\";a:0:{}s:21:\"\0*\0attributeCastCache\";a:0:{}s:13:\"\0*\0dateFormat\";N;s:10:\"\0*\0appends\";a:0:{}s:19:\"\0*\0dispatchesEvents\";a:0:{}s:14:\"\0*\0observables\";a:0:{}s:12:\"\0*\0relations\";a:0:{}s:10:\"\0*\0touches\";a:0:{}s:27:\"\0*\0relationAutoloadCallback\";N;s:26:\"\0*\0relationAutoloadContext\";N;s:10:\"timestamps\";b:1;s:13:\"usesUniqueIds\";b:0;s:9:\"\0*\0hidden\";a:0:{}s:10:\"\0*\0visible\";a:0:{}s:11:\"\0*\0fillable\";a:6:{i:0;s:4:\"name\";i:1;s:4:\"code\";i:2;s:6:\"symbol\";i:3;s:13:\"exchange_rate\";i:4;s:9:\"is_active\";i:5;s:10:\"is_default\";}s:10:\"\0*\0guarded\";a:1:{i:0;s:1:\"*\";}}i:2;O:19:\"App\\Models\\Currency\":33:{s:13:\"\0*\0connection\";s:5:\"mysql\";s:8:\"\0*\0table\";s:10:\"currencies\";s:13:\"\0*\0primaryKey\";s:2:\"id\";s:10:\"\0*\0keyType\";s:3:\"int\";s:12:\"incrementing\";b:1;s:7:\"\0*\0with\";a:0:{}s:12:\"\0*\0withCount\";a:0:{}s:19:\"preventsLazyLoading\";b:0;s:10:\"\0*\0perPage\";i:15;s:6:\"exists\";b:1;s:18:\"wasRecentlyCreated\";b:0;s:28:\"\0*\0escapeWhenCastingToString\";b:0;s:13:\"\0*\0attributes\";a:9:{s:2:\"id\";i:3;s:4:\"name\";s:13:\"British Pound\";s:4:\"code\";s:3:\"GBP\";s:6:\"symbol\";s:2:\"£\";s:13:\"exchange_rate\";s:12:\"170.00000000\";s:9:\"is_active\";i:1;s:10:\"is_default\";i:0;s:10:\"created_at\";s:19:\"2026-05-07 06:11:33\";s:10:\"updated_at\";s:19:\"2026-05-07 06:11:33\";}s:11:\"\0*\0original\";a:9:{s:2:\"id\";i:3;s:4:\"name\";s:13:\"British Pound\";s:4:\"code\";s:3:\"GBP\";s:6:\"symbol\";s:2:\"£\";s:13:\"exchange_rate\";s:12:\"170.00000000\";s:9:\"is_active\";i:1;s:10:\"is_default\";i:0;s:10:\"created_at\";s:19:\"2026-05-07 06:11:33\";s:10:\"updated_at\";s:19:\"2026-05-07 06:11:33\";}s:10:\"\0*\0changes\";a:0:{}s:11:\"\0*\0previous\";a:0:{}s:8:\"\0*\0casts\";a:3:{s:13:\"exchange_rate\";s:9:\"decimal:2\";s:9:\"is_active\";s:7:\"boolean\";s:10:\"is_default\";s:7:\"boolean\";}s:17:\"\0*\0classCastCache\";a:0:{}s:21:\"\0*\0attributeCastCache\";a:0:{}s:13:\"\0*\0dateFormat\";N;s:10:\"\0*\0appends\";a:0:{}s:19:\"\0*\0dispatchesEvents\";a:0:{}s:14:\"\0*\0observables\";a:0:{}s:12:\"\0*\0relations\";a:0:{}s:10:\"\0*\0touches\";a:0:{}s:27:\"\0*\0relationAutoloadCallback\";N;s:26:\"\0*\0relationAutoloadContext\";N;s:10:\"timestamps\";b:1;s:13:\"usesUniqueIds\";b:0;s:9:\"\0*\0hidden\";a:0:{}s:10:\"\0*\0visible\";a:0:{}s:11:\"\0*\0fillable\";a:6:{i:0;s:4:\"name\";i:1;s:4:\"code\";i:2;s:6:\"symbol\";i:3;s:13:\"exchange_rate\";i:4;s:9:\"is_active\";i:5;s:10:\"is_default\";}s:10:\"\0*\0guarded\";a:1:{i:0;s:1:\"*\";}}}s:28:\"\0*\0escapeWhenCastingToString\";b:0;}',	1778151138),
+('admin-dashboard-cache-tyro:user-1:roles',	'a:1:{i:0;s:5:\"admin\";}',	1778137146),
+('admin-dashboard-cache-tyro:user-4:privileges',	'a:4:{i:0;s:11:\"*accountant\";i:1;s:8:\"*payment\";i:2;s:10:\"*comission\";i:3;s:8:\"*invoice\";}',	1778149254),
+('admin-dashboard-cache-tyro:user-4:roles',	'a:1:{i:0;s:10:\"accountant\";}',	1778149254),
+('admin-dashboard-cache-tyro:user-5:roles',	'a:1:{i:0;s:6:\"editor\";}',	1778137211),
+('admin-dashboard-cache-tyro:user-6:privileges',	'a:1:{i:0;s:12:\"*application\";}',	1778136154),
+('admin-dashboard-cache-tyro:user-6:roles',	'a:1:{i:0;s:11:\"application\";}',	1778136153);
 
 DROP TABLE IF EXISTS `cache_locks`;
 CREATE TABLE `cache_locks` (
@@ -293,6 +295,26 @@ INSERT INTO `courses` (`id`, `university_id`, `name`, `degree_level`, `duration`
 (4,	3,	'Cyber Security',	'Masters',	'6 Month',	NULL,	1,	'2026-04-15 00:06:14',	'2026-04-15 00:07:32'),
 (5,	5,	'Physics',	'Masters',	'12',	NULL,	1,	'2026-04-27 04:01:46',	'2026-04-27 04:01:46');
 
+DROP TABLE IF EXISTS `currencies`;
+CREATE TABLE `currencies` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `code` varchar(3) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `symbol` varchar(10) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `exchange_rate` decimal(16,8) NOT NULL DEFAULT '1.00000000',
+  `is_active` tinyint(1) NOT NULL DEFAULT '1',
+  `is_default` tinyint(1) NOT NULL DEFAULT '0',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `currencies_code_unique` (`code`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+INSERT INTO `currencies` (`id`, `name`, `code`, `symbol`, `exchange_rate`, `is_active`, `is_default`, `created_at`, `updated_at`) VALUES
+(1,	'US Dollar',	'USD',	'$',	124.00000000,	1,	0,	'2026-05-07 00:08:25',	'2026-05-07 00:15:27'),
+(2,	'Euro',	'EUR',	'€',	147.00000000,	1,	0,	'2026-05-07 00:10:59',	'2026-05-07 00:10:59'),
+(3,	'British Pound',	'GBP',	'£',	170.00000000,	1,	0,	'2026-05-07 00:11:33',	'2026-05-07 00:11:33');
+
 DROP TABLE IF EXISTS `expenses`;
 CREATE TABLE `expenses` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
@@ -323,14 +345,14 @@ CREATE TABLE `expenses` (
 
 INSERT INTO `expenses` (`id`, `chart_of_account_id`, `description`, `amount`, `expense_date`, `payment_method`, `office_account_id`, `created_by`, `notes`, `created_at`, `updated_at`, `salary_id`, `journal_entry_id`) VALUES
 (14,	5,	'Furniture Buy',	5000.00,	'2026-04-20',	'cash',	NULL,	4,	'Furniture Buy',	'2026-04-20 00:38:22',	'2026-04-20 00:38:22',	NULL,	NULL),
-(15,	3,	'Salary Payment - Inoodex (2026-05)',	15000.00,	'2026-05-06',	'bank_transfer',	5,	4,	NULL,	'2026-05-06 04:44:31',	'2026-05-06 04:44:31',	33,	NULL),
-(16,	3,	'Salary Payment - Marketing (2026-05)',	18000.00,	'2026-05-06',	'bank_transfer',	5,	4,	NULL,	'2026-05-06 04:44:31',	'2026-05-06 04:44:31',	34,	NULL),
-(17,	3,	'Salary Payment - Consultant (2026-05)',	12000.00,	'2026-05-06',	'bank_transfer',	5,	4,	NULL,	'2026-05-06 04:44:31',	'2026-05-06 04:44:31',	35,	NULL),
-(18,	3,	'Salary Payment - Accountant (2026-05)',	20000.00,	'2026-05-06',	'bank_transfer',	5,	4,	NULL,	'2026-05-06 04:44:31',	'2026-05-06 04:44:31',	36,	NULL),
-(19,	3,	'Salary Payment - Editor (2026-05)',	12000.00,	'2026-05-06',	'bank_transfer',	5,	4,	NULL,	'2026-05-06 04:44:31',	'2026-05-06 04:44:31',	37,	NULL),
-(20,	3,	'Salary Payment - Application (2026-05)',	15000.00,	'2026-05-06',	'bank_transfer',	5,	4,	NULL,	'2026-05-06 04:44:31',	'2026-05-06 04:44:31',	38,	NULL),
-(21,	3,	'Salary Payment - Digital Marketing (2026-05)',	10000.00,	'2026-05-06',	'bank_transfer',	5,	4,	NULL,	'2026-05-06 04:44:31',	'2026-05-06 04:44:31',	39,	NULL),
-(22,	3,	'Salary Payment - Office Staff (2026-05)',	15000.00,	'2026-05-06',	'bank_transfer',	5,	4,	NULL,	'2026-05-06 04:44:31',	'2026-05-06 04:44:31',	40,	NULL);
+(15,	3,	'Salary Payment - Inoodex (2026-05)',	15000.00,	'2026-05-06',	'bank_transfer',	5,	4,	NULL,	'2026-05-06 04:44:31',	'2026-05-06 04:44:31',	NULL,	NULL),
+(16,	3,	'Salary Payment - Marketing (2026-05)',	18000.00,	'2026-05-06',	'bank_transfer',	5,	4,	NULL,	'2026-05-06 04:44:31',	'2026-05-06 04:44:31',	NULL,	NULL),
+(17,	3,	'Salary Payment - Consultant (2026-05)',	12000.00,	'2026-05-06',	'bank_transfer',	5,	4,	NULL,	'2026-05-06 04:44:31',	'2026-05-06 04:44:31',	NULL,	NULL),
+(18,	3,	'Salary Payment - Accountant (2026-05)',	20000.00,	'2026-05-06',	'bank_transfer',	5,	4,	NULL,	'2026-05-06 04:44:31',	'2026-05-06 04:44:31',	NULL,	NULL),
+(19,	3,	'Salary Payment - Editor (2026-05)',	12000.00,	'2026-05-06',	'bank_transfer',	5,	4,	NULL,	'2026-05-06 04:44:31',	'2026-05-06 04:44:31',	NULL,	NULL),
+(20,	3,	'Salary Payment - Application (2026-05)',	15000.00,	'2026-05-06',	'bank_transfer',	5,	4,	NULL,	'2026-05-06 04:44:31',	'2026-05-06 04:44:31',	NULL,	NULL),
+(21,	3,	'Salary Payment - Digital Marketing (2026-05)',	10000.00,	'2026-05-06',	'bank_transfer',	5,	4,	NULL,	'2026-05-06 04:44:31',	'2026-05-06 04:44:31',	NULL,	NULL),
+(22,	3,	'Salary Payment - Office Staff (2026-05)',	15000.00,	'2026-05-06',	'bank_transfer',	5,	4,	NULL,	'2026-05-06 04:44:31',	'2026-05-06 04:44:31',	NULL,	NULL);
 
 DROP TABLE IF EXISTS `failed_jobs`;
 CREATE TABLE `failed_jobs` (
@@ -394,7 +416,8 @@ CREATE TABLE `invoice_items` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 INSERT INTO `invoice_items` (`id`, `invoice_id`, `chart_of_account_id`, `description`, `quantity`, `unit_price`, `subtotal`, `tax_amount`, `total`, `created_at`, `updated_at`) VALUES
-(11,	5,	6,	'security deposit fee from student',	1.00,	5000.00,	5000.00,	0.00,	5000.00,	'2026-04-27 05:28:59',	'2026-04-27 05:28:59');
+(11,	5,	6,	'security deposit fee from student',	1.00,	5000.00,	5000.00,	0.00,	5000.00,	'2026-04-27 05:28:59',	'2026-04-27 05:28:59'),
+(40,	12,	6,	'asdrg',	1.00,	500.00,	500.00,	0.00,	500.00,	'2026-05-07 01:10:53',	'2026-05-07 01:10:53');
 
 DROP TABLE IF EXISTS `invoices`;
 CREATE TABLE `invoices` (
@@ -421,7 +444,8 @@ CREATE TABLE `invoices` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 INSERT INTO `invoices` (`id`, `student_id`, `application_id`, `university_id`, `invoice_number`, `date`, `due_date`, `total_amount`, `status`, `notes`, `created_at`, `updated_at`) VALUES
-(5,	8,	12,	5,	'INV-20260427-F287',	'2026-04-27',	'2026-04-30',	5000.00,	'draft',	'security fee',	'2026-04-27 05:28:59',	'2026-04-27 05:28:59');
+(5,	8,	12,	5,	'INV-20260427-F287',	'2026-04-27',	'2026-04-30',	5000.00,	'draft',	'security fee',	'2026-04-27 05:28:59',	'2026-04-27 05:28:59'),
+(12,	8,	12,	5,	'INV-20260507-1001',	'2026-05-07',	'2026-05-14',	500.00,	'draft',	'This payment is non refundable.\r\nThis Payment is Refundable According to University Policy.\r\nThis payment is non refundable, if the applicant will take back his/her file after getting offer letter.',	'2026-05-07 01:10:52',	'2026-05-07 01:10:52');
 
 DROP TABLE IF EXISTS `job_batches`;
 CREATE TABLE `job_batches` (
@@ -705,7 +729,8 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (104,	'2026_05_06_000000_backfill_chart_of_account_id_for_office_accounts',	60),
 (105,	'2026_05_06_000001_fix_office_accounts_coa_foreign_key',	61),
 (106,	'2026_05_06_120000_move_salary_account_fields_from_users_to_salaries',	62),
-(107,	'2026_05_06_130000_add_username_to_users_for_login',	63);
+(107,	'2026_05_06_130000_add_username_to_users_for_login',	63),
+(108,	'2026_05_07_115300_create_currencies_table',	64);
 
 DROP TABLE IF EXISTS `notifications`;
 CREATE TABLE `notifications` (
@@ -727,7 +752,7 @@ INSERT INTO `notifications` (`id`, `type`, `notifiable_type`, `notifiable_id`, `
 ('3a8c8032-3d76-4d45-ac57-b1293a5ad9d1',	'App\\Notifications\\NewApplicationNotification',	'App\\Models\\User',	6,	'{\"application_id\":13,\"application_number\":\"APP-2026-00002\",\"student_name\":\"Sybil Nichols\",\"created_by\":\"Inoodex\",\"message\":\"New application APP-2026-00002 created by Inoodex\",\"link\":\"http:\\/\\/127.0.0.1:8000\\/dashboard\\/applications\\/13\\/edit\"}',	'2026-05-05 22:35:44',	'2026-05-05 22:28:26',	'2026-05-05 22:35:44'),
 ('3b9c3a71-77f6-42b1-a0c1-3fa6e9da4486',	'App\\Notifications\\NewLeadSubmitted',	'App\\Models\\User',	3,	'{\"lead_id\":6,\"student_name\":\"Hasan\",\"phone\":\"0120320020\",\"created_by\":\"Marketing\",\"message\":\"New lead submitted by Marketing\",\"link\":\"http:\\/\\/127.0.0.1:8000\\/dashboard\\/marketing\\/leads\\/6\"}',	'2026-02-22 10:56:19',	'2026-02-22 03:55:24',	'2026-02-22 10:56:19'),
 ('3d8759c4-3a76-4f5c-a99a-e1957c4f7282',	'App\\Notifications\\NewApplicationNotification',	'App\\Models\\User',	6,	'{\"application_id\":11,\"application_number\":\"APP-2026-00001\",\"student_name\":\"Md Hasan\",\"created_by\":\"Consultant\",\"message\":\"New application APP-2026-00001 created by Consultant\",\"link\":\"http:\\/\\/127.0.0.1:8000\\/dashboard\\/applications\\/11\\/edit\"}',	'2026-04-15 03:41:56',	'2026-04-15 02:17:11',	'2026-04-15 03:41:56'),
-('40594f0f-ca0c-443a-9fc1-f07f215bf713',	'App\\Notifications\\NewApplicationNotification',	'App\\Models\\User',	6,	'{\"application_id\":12,\"application_number\":\"APP-2026-00001\",\"student_name\":\"Md Hasan\",\"created_by\":\"Inoodex\",\"message\":\"New application APP-2026-00001 created by Inoodex\",\"link\":\"http:\\/\\/127.0.0.1:8000\\/dashboard\\/applications\\/12\\/edit\"}',	NULL,	'2026-04-27 04:36:01',	'2026-04-27 04:36:01'),
+('40594f0f-ca0c-443a-9fc1-f07f215bf713',	'App\\Notifications\\NewApplicationNotification',	'App\\Models\\User',	6,	'{\"application_id\":12,\"application_number\":\"APP-2026-00001\",\"student_name\":\"Md Hasan\",\"created_by\":\"Inoodex\",\"message\":\"New application APP-2026-00001 created by Inoodex\",\"link\":\"http:\\/\\/127.0.0.1:8000\\/dashboard\\/applications\\/12\\/edit\"}',	'2026-05-07 00:18:57',	'2026-04-27 04:36:01',	'2026-05-07 00:18:57'),
 ('48ef3682-ba23-434a-9947-2e087b1b64e4',	'App\\Notifications\\NewLeadSubmitted',	'App\\Models\\User',	3,	'{\"lead_id\":8,\"student_name\":\"Md Hasan\",\"phone\":\"01234567890\",\"created_by\":\"Inoodex\",\"message\":\"New lead submitted by Inoodex\",\"link\":\"http:\\/\\/127.0.0.1:8000\\/dashboard\\/marketing\\/leads\\/8\"}',	NULL,	'2026-04-27 04:14:00',	'2026-04-27 04:14:00'),
 ('4919412a-a1be-4937-b3e5-477292752eaa',	'App\\Notifications\\NewLeadSubmitted',	'App\\Models\\User',	3,	'{\"lead_id\":4,\"student_name\":\"Ashraful Islam\",\"phone\":\"01195674368\",\"created_by\":\"Marketing\",\"message\":\"New lead submitted by Marketing\",\"link\":\"http:\\/\\/127.0.0.1:8000\\/dashboard\\/marketing\\/leads\\/4\"}',	'2026-02-18 05:00:58',	'2026-02-18 05:00:49',	'2026-02-18 05:00:58'),
 ('4aeba9c4-3e3a-4d9d-bbcd-83bb23f1bb8f',	'App\\Notifications\\NewApplicationNotification',	'App\\Models\\User',	6,	'{\"application_id\":10,\"application_number\":\"APP-2026-00001\",\"student_name\":\"Md Hasan\",\"created_by\":\"Consultant\",\"message\":\"New application APP-2026-00001 created by Consultant\",\"link\":\"http:\\/\\/127.0.0.1:8000\\/dashboard\\/applications\\/10\\/edit\"}',	'2026-04-10 23:13:06',	'2026-02-22 11:22:42',	'2026-04-10 23:13:06'),
@@ -955,21 +980,56 @@ CREATE TABLE `salaries` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 INSERT INTO `salaries` (`id`, `user_id`, `employee_name`, `month`, `basic_salary`, `overtime_amount`, `bonus`, `allowances`, `gross_salary`, `tax_deduction`, `insurance_deduction`, `other_deductions`, `net_salary`, `paid_amount`, `payment_status`, `payment_date`, `payment_method`, `account_number`, `bank_name`, `bank_branch`, `routing_number`, `transaction_id`, `journal_entry_id`, `notes`, `created_by`, `created_at`, `updated_at`) VALUES
-(26,	1,	'Inoodex',	'2026-04',	15000.00,	0.00,	0.00,	0.00,	15000.00,	0.00,	0.00,	0.00,	15000.00,	0.00,	'pending',	NULL,	NULL,	'679',	'Dean Snow',	'Dicta deserunt enim',	'781',	NULL,	NULL,	NULL,	4,	'2026-04-30 01:11:16',	'2026-04-30 01:11:16'),
-(27,	2,	'Marketing',	'2026-04',	18000.00,	0.00,	0.00,	0.00,	18000.00,	0.00,	0.00,	0.00,	18000.00,	0.00,	'pending',	NULL,	NULL,	'474',	'Aphrodite Spencer',	'Laborum Anim ducimu',	'564',	NULL,	NULL,	NULL,	4,	'2026-04-30 01:11:16',	'2026-04-30 01:11:16'),
-(28,	3,	'Consultant',	'2026-04',	12000.00,	0.00,	0.00,	0.00,	12000.00,	0.00,	0.00,	0.00,	12000.00,	0.00,	'pending',	NULL,	NULL,	'134',	'Kuame Atkins',	'Fugit dolorem sapie',	'730',	NULL,	NULL,	NULL,	4,	'2026-04-30 01:11:16',	'2026-04-30 01:11:16'),
-(29,	4,	'Accountant',	'2026-04',	20000.00,	0.00,	0.00,	0.00,	20000.00,	0.00,	0.00,	0.00,	20000.00,	0.00,	'pending',	NULL,	NULL,	'216',	'Elaine Hancock',	'Unde consectetur co',	'692',	NULL,	NULL,	NULL,	4,	'2026-04-30 01:11:16',	'2026-04-30 01:11:16'),
-(30,	5,	'Editor',	'2026-04',	12000.00,	0.00,	0.00,	0.00,	12000.00,	0.00,	0.00,	0.00,	12000.00,	0.00,	'pending',	NULL,	NULL,	'974',	'Talon Sloan',	'Voluptas exercitatio',	'453',	NULL,	NULL,	NULL,	4,	'2026-04-30 01:11:16',	'2026-04-30 01:11:16'),
-(31,	6,	'Application',	'2026-04',	15000.00,	0.00,	0.00,	0.00,	15000.00,	0.00,	0.00,	0.00,	15000.00,	0.00,	'pending',	NULL,	NULL,	'365',	'Yolanda Pugh',	'Aperiam qui labore c',	'410',	NULL,	NULL,	NULL,	4,	'2026-04-30 01:11:16',	'2026-04-30 01:11:16'),
-(32,	7,	'Digital Marketing',	'2026-04',	10000.00,	0.00,	0.00,	0.00,	10000.00,	0.00,	0.00,	0.00,	10000.00,	0.00,	'pending',	NULL,	NULL,	'170',	'Dennis Ross',	'Aut deleniti officia',	'641',	NULL,	NULL,	NULL,	4,	'2026-04-30 01:11:16',	'2026-04-30 01:11:16'),
-(33,	1,	'Inoodex',	'2026-05',	15000.00,	0.00,	0.00,	0.00,	15000.00,	0.00,	0.00,	0.00,	15000.00,	15000.00,	'paid',	'2026-05-06',	'bank_transfer',	'679',	'Dean Snow',	'Dicta deserunt enim',	'781',	NULL,	NULL,	NULL,	4,	'2026-05-06 04:24:28',	'2026-05-06 04:44:31'),
-(34,	2,	'Marketing',	'2026-05',	18000.00,	0.00,	0.00,	0.00,	18000.00,	0.00,	0.00,	0.00,	18000.00,	18000.00,	'paid',	'2026-05-06',	'bank_transfer',	'474',	'Aphrodite Spencer',	'Laborum Anim ducimu',	'564',	NULL,	NULL,	NULL,	4,	'2026-05-06 04:24:28',	'2026-05-06 04:44:31'),
-(35,	3,	'Consultant',	'2026-05',	12000.00,	0.00,	0.00,	0.00,	12000.00,	0.00,	0.00,	0.00,	12000.00,	12000.00,	'paid',	'2026-05-06',	'bank_transfer',	'134',	'Kuame Atkins',	'Fugit dolorem sapie',	'730',	NULL,	NULL,	NULL,	4,	'2026-05-06 04:24:28',	'2026-05-06 04:44:31'),
-(36,	4,	'Accountant',	'2026-05',	20000.00,	0.00,	0.00,	0.00,	20000.00,	0.00,	0.00,	0.00,	20000.00,	20000.00,	'paid',	'2026-05-06',	'bank_transfer',	'216',	'Elaine Hancock',	'Unde consectetur co',	'692',	NULL,	NULL,	NULL,	4,	'2026-05-06 04:24:28',	'2026-05-06 04:44:31'),
-(37,	5,	'Editor',	'2026-05',	12000.00,	0.00,	0.00,	0.00,	12000.00,	0.00,	0.00,	0.00,	12000.00,	12000.00,	'paid',	'2026-05-06',	'bank_transfer',	'974',	'Talon Sloan',	'Voluptas exercitatio',	'453',	NULL,	NULL,	NULL,	4,	'2026-05-06 04:24:28',	'2026-05-06 04:44:31'),
-(38,	6,	'Application',	'2026-05',	15000.00,	0.00,	0.00,	0.00,	15000.00,	0.00,	0.00,	0.00,	15000.00,	15000.00,	'paid',	'2026-05-06',	'bank_transfer',	'365',	'Yolanda Pugh',	'Aperiam qui labore c',	'410',	NULL,	NULL,	NULL,	4,	'2026-05-06 04:24:28',	'2026-05-06 04:44:31'),
-(39,	7,	'Digital Marketing',	'2026-05',	10000.00,	0.00,	0.00,	0.00,	10000.00,	0.00,	0.00,	0.00,	10000.00,	10000.00,	'paid',	'2026-05-06',	'bank_transfer',	'170',	'Dennis Ross',	'Aut deleniti officia',	'641',	NULL,	NULL,	NULL,	4,	'2026-05-06 04:24:28',	'2026-05-06 04:44:31'),
-(40,	NULL,	'Office Staff',	'2026-05',	15000.00,	0.00,	0.00,	0.00,	15000.00,	0.00,	0.00,	0.00,	15000.00,	15000.00,	'paid',	'2026-05-06',	'bank_transfer',	'165',	'John Donne',	NULL,	NULL,	NULL,	NULL,	NULL,	4,	'2026-05-06 04:24:28',	'2026-05-06 04:44:31');
+(141,	NULL,	'Md. Abul Hasan Saidy',	'2026-05',	60000.00,	0.00,	0.00,	0.00,	60000.00,	0.00,	0.00,	0.00,	60000.00,	0.00,	'pending',	NULL,	NULL,	'3781-101-83523',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	'2026-05-07 01:49:18',	'2026-05-07 01:52:13'),
+(142,	NULL,	'Mohammad Faisal',	'2026-05',	60000.00,	0.00,	0.00,	0.00,	60000.00,	0.00,	0.00,	0.00,	60000.00,	0.00,	'pending',	NULL,	NULL,	'3781-101-83725',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	'2026-05-07 01:49:18',	'2026-05-07 01:52:13'),
+(143,	NULL,	'Insan Kamal Shafat',	'2026-05',	40000.00,	0.00,	0.00,	0.00,	40000.00,	0.00,	0.00,	0.00,	40000.00,	0.00,	'pending',	NULL,	NULL,	'3781-101-83764',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	'2026-05-07 01:49:18',	'2026-05-07 01:52:13'),
+(144,	NULL,	'Sakib Hasan',	'2026-05',	46000.00,	0.00,	0.00,	0.00,	46000.00,	0.00,	0.00,	0.00,	46000.00,	0.00,	'pending',	NULL,	NULL,	'3781-101-83536',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	'2026-05-07 01:49:18',	'2026-05-07 01:52:13'),
+(145,	NULL,	'Lutfur Kabir Rana',	'2026-05',	40000.00,	0.00,	0.00,	0.00,	40000.00,	0.00,	0.00,	0.00,	40000.00,	0.00,	'pending',	NULL,	NULL,	'3781-101-83501',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	'2026-05-07 01:49:18',	'2026-05-07 01:52:13'),
+(146,	NULL,	'Sharafat Ullah Mohim',	'2026-05',	40000.00,	0.00,	0.00,	0.00,	40000.00,	0.00,	0.00,	0.00,	40000.00,	0.00,	'pending',	NULL,	NULL,	'3781-101-83756',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	'2026-05-07 01:49:18',	'2026-05-07 01:52:13'),
+(147,	NULL,	'Mainul Hasan',	'2026-05',	40000.00,	0.00,	0.00,	0.00,	40000.00,	0.00,	0.00,	0.00,	40000.00,	0.00,	'pending',	NULL,	NULL,	'3781-101-83609',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	'2026-05-07 01:49:18',	'2026-05-07 01:52:13'),
+(148,	NULL,	'Singmay Chowdhury',	'2026-05',	30000.00,	0.00,	0.00,	0.00,	30000.00,	0.00,	0.00,	0.00,	30000.00,	0.00,	'pending',	NULL,	NULL,	'3781-101-83540',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	'2026-05-07 01:49:18',	'2026-05-07 01:52:13'),
+(149,	NULL,	'Arif Hossain Nayan',	'2026-05',	17000.00,	0.00,	0.00,	0.00,	17000.00,	0.00,	0.00,	0.00,	17000.00,	0.00,	'pending',	NULL,	NULL,	'3781-101-83710',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	'2026-05-07 01:49:18',	'2026-05-07 01:52:13'),
+(150,	NULL,	'Abdul Alim Shezan',	'2026-05',	32000.00,	0.00,	0.00,	0.00,	32000.00,	0.00,	0.00,	0.00,	32000.00,	0.00,	'pending',	NULL,	NULL,	'3781-101-83586',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	'2026-05-07 01:49:18',	'2026-05-07 01:52:13'),
+(151,	NULL,	'Moshraful Islam',	'2026-05',	30000.00,	0.00,	0.00,	0.00,	30000.00,	0.00,	0.00,	0.00,	30000.00,	0.00,	'pending',	NULL,	NULL,	'3781-101-83560',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	'2026-05-07 01:49:18',	'2026-05-07 01:52:13'),
+(152,	NULL,	'Harunur Rashid',	'2026-05',	15000.00,	0.00,	0.00,	0.00,	15000.00,	0.00,	0.00,	0.00,	15000.00,	0.00,	'pending',	NULL,	NULL,	'3781-101-83684',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	'2026-05-07 01:49:18',	'2026-05-07 01:52:13'),
+(153,	NULL,	'Abu haider',	'2026-05',	13000.00,	0.00,	0.00,	0.00,	13000.00,	0.00,	0.00,	0.00,	13000.00,	0.00,	'pending',	NULL,	NULL,	'3781-101-83783',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	'2026-05-07 01:49:18',	'2026-05-07 01:52:13'),
+(154,	NULL,	'Anta Tasnim Rafa',	'2026-05',	17500.00,	0.00,	0.00,	0.00,	17500.00,	0.00,	0.00,	0.00,	17500.00,	0.00,	'pending',	NULL,	NULL,	'3781-101-83555',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	'2026-05-07 01:49:18',	'2026-05-07 01:52:13'),
+(155,	NULL,	'Kawcer Hossen Rakib',	'2026-05',	25000.00,	0.00,	0.00,	0.00,	25000.00,	0.00,	0.00,	0.00,	25000.00,	0.00,	'pending',	NULL,	NULL,	'3781-101-83497',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	'2026-05-07 01:49:18',	'2026-05-07 01:52:13'),
+(156,	NULL,	'Md Shohan',	'2026-05',	15000.00,	0.00,	0.00,	0.00,	15000.00,	0.00,	0.00,	0.00,	15000.00,	0.00,	'pending',	NULL,	NULL,	'3781-101-83706',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	'2026-05-07 01:49:18',	'2026-05-07 01:52:13'),
+(157,	NULL,	'Mahabub Hossain Alif',	'2026-05',	15000.00,	0.00,	0.00,	0.00,	15000.00,	0.00,	0.00,	0.00,	15000.00,	0.00,	'pending',	NULL,	NULL,	'3781-101-83730',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	'2026-05-07 01:49:18',	'2026-05-07 01:52:13'),
+(158,	NULL,	'Shah Amanat Ullah',	'2026-05',	15000.00,	0.00,	0.00,	0.00,	15000.00,	0.00,	0.00,	0.00,	15000.00,	0.00,	'pending',	NULL,	NULL,	'3781-101-83747',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	'2026-05-07 01:49:18',	'2026-05-07 01:52:13'),
+(159,	NULL,	'MOSHAROF RONY',	'2026-05',	9000.00,	0.00,	0.00,	0.00,	9000.00,	0.00,	0.00,	0.00,	9000.00,	0.00,	'pending',	NULL,	NULL,	'3781-101-83594',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	'2026-05-07 01:49:18',	'2026-05-07 01:52:13'),
+(160,	NULL,	'Mohammed Abdullah',	'2026-05',	11000.00,	0.00,	0.00,	0.00,	11000.00,	0.00,	0.00,	0.00,	11000.00,	0.00,	'pending',	NULL,	NULL,	'3781-101-83693',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	'2026-05-07 01:49:19',	'2026-05-07 01:52:13'),
+(161,	NULL,	'Chelsi Rema',	'2026-05',	13000.00,	0.00,	0.00,	0.00,	13000.00,	0.00,	0.00,	0.00,	13000.00,	0.00,	'pending',	NULL,	NULL,	'3781-101-83779',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	'2026-05-07 01:49:19',	'2026-05-07 01:52:13'),
+(162,	NULL,	'Emelia Ani Areng',	'2026-05',	13000.00,	0.00,	0.00,	0.00,	13000.00,	0.00,	0.00,	0.00,	13000.00,	0.00,	'pending',	NULL,	NULL,	'3781-101-83667',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	'2026-05-07 01:49:19',	'2026-05-07 01:52:13'),
+(163,	NULL,	'Rakesh Saha',	'2026-05',	8000.00,	0.00,	0.00,	0.00,	8000.00,	0.00,	0.00,	0.00,	8000.00,	0.00,	'pending',	NULL,	NULL,	'3781-101-83652',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	'2026-05-07 01:49:19',	'2026-05-07 01:52:13'),
+(164,	NULL,	'Barsha Saha',	'2026-05',	8000.00,	0.00,	0.00,	0.00,	8000.00,	0.00,	0.00,	0.00,	8000.00,	0.00,	'pending',	NULL,	NULL,	'3781-101-83630',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	'2026-05-07 01:49:19',	'2026-05-07 01:52:13'),
+(165,	NULL,	'Riad Mia',	'2026-05',	21000.00,	0.00,	0.00,	0.00,	21000.00,	0.00,	0.00,	0.00,	21000.00,	0.00,	'pending',	NULL,	NULL,	'3781-101-83822',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	'2026-05-07 01:49:19',	'2026-05-07 01:52:13'),
+(166,	NULL,	'Md. Abul Hasan Saidy',	'2026-04',	60000.00,	0.00,	0.00,	0.00,	60000.00,	0.00,	0.00,	0.00,	60000.00,	0.00,	'pending',	NULL,	NULL,	'3781-101-83523',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	4,	'2026-05-07 01:57:38',	'2026-05-07 01:57:38'),
+(167,	NULL,	'Mohammad Faisal',	'2026-04',	60000.00,	0.00,	0.00,	0.00,	60000.00,	0.00,	0.00,	0.00,	60000.00,	0.00,	'pending',	NULL,	NULL,	'3781-101-83725',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	4,	'2026-05-07 01:57:38',	'2026-05-07 01:57:38'),
+(168,	NULL,	'Insan Kamal Shafat',	'2026-04',	40000.00,	0.00,	0.00,	0.00,	40000.00,	0.00,	0.00,	0.00,	40000.00,	0.00,	'pending',	NULL,	NULL,	'3781-101-83764',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	4,	'2026-05-07 01:57:38',	'2026-05-07 01:57:38'),
+(169,	NULL,	'Sakib Hasan',	'2026-04',	46000.00,	0.00,	0.00,	0.00,	46000.00,	0.00,	0.00,	0.00,	46000.00,	0.00,	'pending',	NULL,	NULL,	'3781-101-83536',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	4,	'2026-05-07 01:57:38',	'2026-05-07 01:57:38'),
+(170,	NULL,	'Lutfur Kabir Rana',	'2026-04',	40000.00,	0.00,	0.00,	0.00,	40000.00,	0.00,	0.00,	0.00,	40000.00,	0.00,	'pending',	NULL,	NULL,	'3781-101-83501',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	4,	'2026-05-07 01:57:38',	'2026-05-07 01:57:38'),
+(171,	NULL,	'Sharafat Ullah Mohim',	'2026-04',	40000.00,	0.00,	0.00,	0.00,	40000.00,	0.00,	0.00,	0.00,	40000.00,	0.00,	'pending',	NULL,	NULL,	'3781-101-83756',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	4,	'2026-05-07 01:57:38',	'2026-05-07 01:57:38'),
+(172,	NULL,	'Mainul Hasan',	'2026-04',	40000.00,	0.00,	0.00,	0.00,	40000.00,	0.00,	0.00,	0.00,	40000.00,	0.00,	'pending',	NULL,	NULL,	'3781-101-83609',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	4,	'2026-05-07 01:57:38',	'2026-05-07 01:57:38'),
+(173,	NULL,	'Singmay Chowdhury',	'2026-04',	30000.00,	0.00,	0.00,	0.00,	30000.00,	0.00,	0.00,	0.00,	30000.00,	0.00,	'pending',	NULL,	NULL,	'3781-101-83540',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	4,	'2026-05-07 01:57:38',	'2026-05-07 01:57:38'),
+(174,	NULL,	'Arif Hossain Nayan',	'2026-04',	17000.00,	0.00,	0.00,	0.00,	17000.00,	0.00,	0.00,	0.00,	17000.00,	0.00,	'pending',	NULL,	NULL,	'3781-101-83710',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	4,	'2026-05-07 01:57:38',	'2026-05-07 01:57:38'),
+(175,	NULL,	'Abdul Alim Shezan',	'2026-04',	32000.00,	0.00,	0.00,	0.00,	32000.00,	0.00,	0.00,	0.00,	32000.00,	0.00,	'pending',	NULL,	NULL,	'3781-101-83586',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	4,	'2026-05-07 01:57:38',	'2026-05-07 01:57:38'),
+(176,	NULL,	'Moshraful Islam',	'2026-04',	30000.00,	0.00,	0.00,	0.00,	30000.00,	0.00,	0.00,	0.00,	30000.00,	0.00,	'pending',	NULL,	NULL,	'3781-101-83560',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	4,	'2026-05-07 01:57:38',	'2026-05-07 01:57:38'),
+(177,	NULL,	'Harunur Rashid',	'2026-04',	15000.00,	0.00,	0.00,	0.00,	15000.00,	0.00,	0.00,	0.00,	15000.00,	0.00,	'pending',	NULL,	NULL,	'3781-101-83684',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	4,	'2026-05-07 01:57:38',	'2026-05-07 01:57:38'),
+(178,	NULL,	'Abu haider',	'2026-04',	13000.00,	0.00,	0.00,	0.00,	13000.00,	0.00,	0.00,	0.00,	13000.00,	0.00,	'pending',	NULL,	NULL,	'3781-101-83783',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	4,	'2026-05-07 01:57:38',	'2026-05-07 01:57:38'),
+(179,	NULL,	'Anta Tasnim Rafa',	'2026-04',	17500.00,	0.00,	0.00,	0.00,	17500.00,	0.00,	0.00,	0.00,	17500.00,	0.00,	'pending',	NULL,	NULL,	'3781-101-83555',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	4,	'2026-05-07 01:57:38',	'2026-05-07 01:57:38'),
+(180,	NULL,	'Kawcer Hossen Rakib',	'2026-04',	25000.00,	0.00,	0.00,	0.00,	25000.00,	0.00,	0.00,	0.00,	25000.00,	0.00,	'pending',	NULL,	NULL,	'3781-101-83497',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	4,	'2026-05-07 01:57:38',	'2026-05-07 01:57:38'),
+(181,	NULL,	'Md Shohan',	'2026-04',	15000.00,	0.00,	0.00,	0.00,	15000.00,	0.00,	0.00,	0.00,	15000.00,	0.00,	'pending',	NULL,	NULL,	'3781-101-83706',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	4,	'2026-05-07 01:57:38',	'2026-05-07 01:57:38'),
+(182,	NULL,	'Mahabub Hossain Alif',	'2026-04',	15000.00,	0.00,	0.00,	0.00,	15000.00,	0.00,	0.00,	0.00,	15000.00,	0.00,	'pending',	NULL,	NULL,	'3781-101-83730',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	4,	'2026-05-07 01:57:38',	'2026-05-07 01:57:38'),
+(183,	NULL,	'Shah Amanat Ullah',	'2026-04',	15000.00,	0.00,	0.00,	0.00,	15000.00,	0.00,	0.00,	0.00,	15000.00,	0.00,	'pending',	NULL,	NULL,	'3781-101-83747',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	4,	'2026-05-07 01:57:38',	'2026-05-07 01:57:38'),
+(184,	NULL,	'MOSHAROF RONY',	'2026-04',	9000.00,	0.00,	0.00,	0.00,	9000.00,	0.00,	0.00,	0.00,	9000.00,	0.00,	'pending',	NULL,	NULL,	'3781-101-83594',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	4,	'2026-05-07 01:57:38',	'2026-05-07 01:57:38'),
+(185,	NULL,	'Mohammed Abdullah',	'2026-04',	11000.00,	0.00,	0.00,	0.00,	11000.00,	0.00,	0.00,	0.00,	11000.00,	0.00,	'pending',	NULL,	NULL,	'3781-101-83693',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	4,	'2026-05-07 01:57:38',	'2026-05-07 01:57:38'),
+(186,	NULL,	'Chelsi Rema',	'2026-04',	13000.00,	0.00,	0.00,	0.00,	13000.00,	0.00,	0.00,	0.00,	13000.00,	0.00,	'pending',	NULL,	NULL,	'3781-101-83779',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	4,	'2026-05-07 01:57:38',	'2026-05-07 01:57:38'),
+(187,	NULL,	'Emelia Ani Areng',	'2026-04',	13000.00,	0.00,	0.00,	0.00,	13000.00,	0.00,	0.00,	0.00,	13000.00,	0.00,	'pending',	NULL,	NULL,	'3781-101-83667',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	4,	'2026-05-07 01:57:38',	'2026-05-07 01:57:38'),
+(188,	NULL,	'Rakesh Saha',	'2026-04',	8000.00,	0.00,	0.00,	0.00,	8000.00,	0.00,	0.00,	0.00,	8000.00,	0.00,	'pending',	NULL,	NULL,	'3781-101-83652',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	4,	'2026-05-07 01:57:38',	'2026-05-07 01:57:38'),
+(189,	NULL,	'Barsha Saha',	'2026-04',	8000.00,	0.00,	0.00,	0.00,	8000.00,	0.00,	0.00,	0.00,	8000.00,	0.00,	'pending',	NULL,	NULL,	'3781-101-83630',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	4,	'2026-05-07 01:57:38',	'2026-05-07 01:57:38'),
+(190,	NULL,	'Riad Mia',	'2026-04',	21000.00,	0.00,	0.00,	0.00,	21000.00,	0.00,	0.00,	0.00,	21000.00,	0.00,	'pending',	NULL,	NULL,	'3781-101-83822',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	4,	'2026-05-07 01:57:38',	'2026-05-07 01:57:38');
 
 DROP TABLE IF EXISTS `sessions`;
 CREATE TABLE `sessions` (
@@ -985,7 +1045,7 @@ CREATE TABLE `sessions` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, `last_activity`) VALUES
-('QZsoarYAJ1J7GovsBoiHhfmearbgNMKc09G1EMjM',	4,	'127.0.0.1',	'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36',	'YTo1OntzOjY6Il90b2tlbiI7czo0MDoicTZqSlFNS0pXanhtaHg5NTJ0dlhDZHdWMW5KY0MwNVBpeEdEMXl5RCI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czoxMDoidHlyby1sb2dpbiI7YToxOntzOjc6ImNhcHRjaGEiO2E6MDp7fX1zOjk6Il9wcmV2aW91cyI7YToyOntzOjM6InVybCI7czo0MzoiaHR0cDovLzEyNy4wLjAuMTo4MDAwL2Rhc2hib2FyZC9jb21taXNzaW9ucyI7czo1OiJyb3V0ZSI7czoyMzoiYWRtaW4uY29tbWlzc2lvbnMuaW5kZXgiO31zOjUwOiJsb2dpbl93ZWJfNTliYTM2YWRkYzJiMmY5NDAxNTgwZjAxNGM3ZjU4ZWE0ZTMwOTg5ZCI7aTo0O30=',	1778068146);
+('02k97sO3YwOTAjntXY1coIAkKt6Fosnf6SvERpPe',	4,	'127.0.0.1',	'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36',	'YTo1OntzOjY6Il90b2tlbiI7czo0MDoiS0RTRG4zR3ZsY01ndWJiVEgzSnlEbHQ5c3d3Rkl4c0UxS2ZrbGwxVSI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czoxMDoidHlyby1sb2dpbiI7YToxOntzOjc6ImNhcHRjaGEiO2E6MDp7fX1zOjk6Il9wcmV2aW91cyI7YToyOntzOjM6InVybCI7czozMToiaHR0cDovLzEyNy4wLjAuMTo4MDAwL2Rhc2hib2FyZCI7czo1OiJyb3V0ZSI7czoyMDoidHlyby1kYXNoYm9hcmQuaW5kZXgiO31zOjUwOiJsb2dpbl93ZWJfNTliYTM2YWRkYzJiMmY5NDAxNTgwZjAxNGM3ZjU4ZWE0ZTMwOTg5ZCI7aTo0O30=',	1778148954);
 
 DROP TABLE IF EXISTS `settings`;
 CREATE TABLE `settings` (
@@ -999,7 +1059,7 @@ CREATE TABLE `settings` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 INSERT INTO `settings` (`id`, `key`, `value`, `created_at`, `updated_at`) VALUES
-(1,	'app_name',	'Inoodex',	'2026-02-16 03:20:28',	'2026-02-16 03:20:28'),
+(1,	'app_name',	'Insaf Immigration',	'2026-02-16 03:20:28',	'2026-05-06 22:33:07'),
 (2,	'contact_email',	'hello@inoodex.com',	'2026-02-16 03:20:28',	'2026-02-23 02:49:28'),
 (3,	'contact_phone',	'01234567890',	'2026-02-16 03:20:28',	'2026-02-23 02:49:28'),
 (4,	'address',	'Mirpur, Dhaka',	'2026-02-16 03:20:28',	'2026-02-23 02:49:28'),
@@ -1383,7 +1443,34 @@ INSERT INTO `tyro_audit_logs` (`id`, `user_id`, `event`, `auditable_type`, `audi
 (254,	1,	'user.logout',	'App\\Models\\User',	1,	NULL,	'{\"email\": \"hello@inoodex.com\"}',	'{\"ip\": \"127.0.0.1\", \"is_console\": false, \"user_agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36\"}',	'2026-05-06 11:26:09'),
 (255,	6,	'user.login',	'App\\Models\\User',	6,	NULL,	'{\"email\": \"application@example.com\"}',	'{\"ip\": \"127.0.0.1\", \"is_console\": false, \"user_agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36\"}',	'2026-05-06 11:26:25'),
 (256,	6,	'user.logout',	'App\\Models\\User',	6,	NULL,	'{\"email\": \"application@example.com\"}',	'{\"ip\": \"127.0.0.1\", \"is_console\": false, \"user_agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36\"}',	'2026-05-06 11:26:40'),
-(257,	4,	'user.login',	'App\\Models\\User',	4,	NULL,	'{\"email\": \"accountant@example.com\"}',	'{\"ip\": \"127.0.0.1\", \"is_console\": false, \"user_agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36\"}',	'2026-05-06 11:26:47');
+(257,	4,	'user.login',	'App\\Models\\User',	4,	NULL,	'{\"email\": \"accountant@example.com\"}',	'{\"ip\": \"127.0.0.1\", \"is_console\": false, \"user_agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36\"}',	'2026-05-06 11:26:47'),
+(258,	1,	'user.login',	'App\\Models\\User',	1,	NULL,	'{\"email\": \"hello@inoodex.com\"}',	'{\"ip\": \"127.0.0.1\", \"is_console\": false, \"user_agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36\"}',	'2026-05-07 03:28:40'),
+(259,	1,	'user.logout',	'App\\Models\\User',	1,	NULL,	'{\"email\": \"hello@inoodex.com\"}',	'{\"ip\": \"127.0.0.1\", \"is_console\": false, \"user_agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36\"}',	'2026-05-07 05:09:32'),
+(260,	1,	'user.login',	'App\\Models\\User',	1,	NULL,	'{\"email\": \"hello@inoodex.com\"}',	'{\"ip\": \"127.0.0.1\", \"is_console\": false, \"user_agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36\"}',	'2026-05-07 05:09:45'),
+(261,	1,	'user.logout',	'App\\Models\\User',	1,	NULL,	'{\"email\": \"hello@inoodex.com\"}',	'{\"ip\": \"127.0.0.1\", \"is_console\": false, \"user_agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36\"}',	'2026-05-07 06:05:35'),
+(262,	4,	'user.login',	'App\\Models\\User',	4,	NULL,	'{\"email\": \"accountant@example.com\"}',	'{\"ip\": \"127.0.0.1\", \"is_console\": false, \"user_agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36\"}',	'2026-05-07 06:05:45'),
+(263,	4,	'user.logout',	'App\\Models\\User',	4,	NULL,	'{\"email\": \"accountant@example.com\"}',	'{\"ip\": \"127.0.0.1\", \"is_console\": false, \"user_agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36\"}',	'2026-05-07 06:13:25'),
+(264,	1,	'user.login',	'App\\Models\\User',	1,	NULL,	'{\"email\": \"hello@inoodex.com\"}',	'{\"ip\": \"127.0.0.1\", \"is_console\": false, \"user_agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36\"}',	'2026-05-07 06:13:34'),
+(265,	1,	'user.logout',	'App\\Models\\User',	1,	NULL,	'{\"email\": \"hello@inoodex.com\"}',	'{\"ip\": \"127.0.0.1\", \"is_console\": false, \"user_agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36\"}',	'2026-05-07 06:15:01'),
+(266,	4,	'user.login',	'App\\Models\\User',	4,	NULL,	'{\"email\": \"accountant@example.com\"}',	'{\"ip\": \"127.0.0.1\", \"is_console\": false, \"user_agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36\"}',	'2026-05-07 06:15:08'),
+(267,	4,	'user.logout',	'App\\Models\\User',	4,	NULL,	'{\"email\": \"accountant@example.com\"}',	'{\"ip\": \"127.0.0.1\", \"is_console\": false, \"user_agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36\"}',	'2026-05-07 06:16:55'),
+(268,	1,	'user.login',	'App\\Models\\User',	1,	NULL,	'{\"email\": \"hello@inoodex.com\"}',	'{\"ip\": \"127.0.0.1\", \"is_console\": false, \"user_agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36\"}',	'2026-05-07 06:17:04'),
+(269,	1,	'user.logout',	'App\\Models\\User',	1,	NULL,	'{\"email\": \"hello@inoodex.com\"}',	'{\"ip\": \"127.0.0.1\", \"is_console\": false, \"user_agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36\"}',	'2026-05-07 06:18:12'),
+(270,	6,	'user.login',	'App\\Models\\User',	6,	NULL,	'{\"email\": \"application@example.com\"}',	'{\"ip\": \"127.0.0.1\", \"is_console\": false, \"user_agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36\"}',	'2026-05-07 06:18:20'),
+(271,	6,	'user.logout',	'App\\Models\\User',	6,	NULL,	'{\"email\": \"application@example.com\"}',	'{\"ip\": \"127.0.0.1\", \"is_console\": false, \"user_agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36\"}',	'2026-05-07 06:19:00'),
+(272,	4,	'user.login',	'App\\Models\\User',	4,	NULL,	'{\"email\": \"accountant@example.com\"}',	'{\"ip\": \"127.0.0.1\", \"is_console\": false, \"user_agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36\"}',	'2026-05-07 06:19:16'),
+(273,	4,	'user.logout',	'App\\Models\\User',	4,	NULL,	'{\"email\": \"accountant@example.com\"}',	'{\"ip\": \"127.0.0.1\", \"is_console\": false, \"user_agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36\"}',	'2026-05-07 06:25:01'),
+(274,	1,	'user.login',	'App\\Models\\User',	1,	NULL,	'{\"email\": \"hello@inoodex.com\"}',	'{\"ip\": \"127.0.0.1\", \"is_console\": false, \"user_agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36\"}',	'2026-05-07 06:25:11'),
+(275,	1,	'user.logout',	'App\\Models\\User',	1,	NULL,	'{\"email\": \"hello@inoodex.com\"}',	'{\"ip\": \"127.0.0.1\", \"is_console\": false, \"user_agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36\"}',	'2026-05-07 06:26:22'),
+(276,	4,	'user.login',	'App\\Models\\User',	4,	NULL,	'{\"email\": \"accountant@example.com\"}',	'{\"ip\": \"127.0.0.1\", \"is_console\": false, \"user_agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36\"}',	'2026-05-07 06:26:29'),
+(277,	4,	'user.logout',	'App\\Models\\User',	4,	NULL,	'{\"email\": \"accountant@example.com\"}',	'{\"ip\": \"127.0.0.1\", \"is_console\": false, \"user_agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36\"}',	'2026-05-07 06:37:23'),
+(278,	6,	'user.login',	'App\\Models\\User',	6,	NULL,	'{\"email\": \"application@example.com\"}',	'{\"ip\": \"127.0.0.1\", \"is_console\": false, \"user_agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36\"}',	'2026-05-07 06:37:32'),
+(279,	6,	'user.logout',	'App\\Models\\User',	6,	NULL,	'{\"email\": \"application@example.com\"}',	'{\"ip\": \"127.0.0.1\", \"is_console\": false, \"user_agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36\"}',	'2026-05-07 06:40:25'),
+(280,	1,	'user.login',	'App\\Models\\User',	1,	NULL,	'{\"email\": \"hello@inoodex.com\"}',	'{\"ip\": \"127.0.0.1\", \"is_console\": false, \"user_agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36\"}',	'2026-05-07 06:40:35'),
+(281,	1,	'user.logout',	'App\\Models\\User',	1,	NULL,	'{\"email\": \"hello@inoodex.com\"}',	'{\"ip\": \"127.0.0.1\", \"is_console\": false, \"user_agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36\"}',	'2026-05-07 06:54:40'),
+(282,	5,	'user.login',	'App\\Models\\User',	5,	NULL,	'{\"email\": \"editor@example.com\"}',	'{\"ip\": \"127.0.0.1\", \"is_console\": false, \"user_agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36\"}',	'2026-05-07 06:55:09'),
+(283,	5,	'user.logout',	'App\\Models\\User',	5,	NULL,	'{\"email\": \"editor@example.com\"}',	'{\"ip\": \"127.0.0.1\", \"is_console\": false, \"user_agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36\"}',	'2026-05-07 06:58:26'),
+(284,	4,	'user.login',	'App\\Models\\User',	4,	NULL,	'{\"email\": \"accountant@example.com\"}',	'{\"ip\": \"127.0.0.1\", \"is_console\": false, \"user_agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36\"}',	'2026-05-07 06:58:35');
 
 DROP TABLE IF EXISTS `universities`;
 CREATE TABLE `universities` (
@@ -1551,4 +1638,4 @@ INSERT INTO `vfs_checklists` (`id`, `application_id`, `checklist_item`, `is_chec
 (157,	12,	'Deposit Slip (If possible)',	0,	NULL,	NULL,	NULL,	'2026-04-27 05:29:13',	'2026-04-27 05:29:13'),
 (158,	12,	'Financial Declaration Affidavit',	0,	NULL,	NULL,	NULL,	'2026-04-27 05:29:13',	'2026-04-27 05:29:13');
 
--- 2026-05-06 11:49:57 UTC
+-- 2026-05-07 10:55:18 UTC
