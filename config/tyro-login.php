@@ -172,7 +172,7 @@ return [
         'remember_me' => env('TYRO_LOGIN_REMEMBER_ME', true),
 
         // Show "Forgot Password" link on login form
-        'forgot_password' => env('TYRO_LOGIN_FORGOT_PASSWORD', true),
+        'forgot_password' => env('TYRO_LOGIN_FORGOT_PASSWORD', false),
 
         // Enable magic link feature
         // Environment: TYRO_LOGIN_ENABLE_MAGIC_LINKS=true
