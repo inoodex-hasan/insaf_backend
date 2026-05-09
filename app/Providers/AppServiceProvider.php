@@ -51,5 +51,11 @@ class AppServiceProvider extends ServiceProvider
 
             return null; // Fallback to other gates/policies
         });
+
+        // Override the vendor UserController with our local one
+        $this->app->bind(
+            \HasinHayder\TyroDashboard\Http\Controllers\UserController::class,
+            \App\Http\Controllers\Admin\UserController::class
+        );
     }
 }

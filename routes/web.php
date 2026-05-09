@@ -3,13 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Support\Facades\RateLimiter;
-use App\Http\Controllers\Admin\{ApplicationController, CommissionController, CountryController, CourseController, CourseIntakeController, CurrencyController, DashboardController, LeadController, PaymentController, RoleController as LocalRoleController, SettingController, StudentController, UniversityController, UserController};
-
-// User Management Overrides (Top of file to ensure they override vendor routes)
-Route::middleware(['web', 'auth'])->group(function () {
-    Route::post('/dashboard/users', [UserController::class, 'store'])->name('tyro-dashboard.users.store');
-    Route::put('/dashboard/users/{user}', [UserController::class, 'update'])->name('tyro-dashboard.users.update');
-});
+use App\Http\Controllers\Admin\{ApplicationController, CommissionController, CountryController, CourseController, CourseIntakeController, CurrencyController, DashboardController, LeadController, PaymentController, RoleController as LocalRoleController, SettingController, StudentController, UniversityController};
 
 // Rate limiter for login routes (5 attempts per minute per IP)
 RateLimiter::for('login', function () {
