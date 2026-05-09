@@ -16,6 +16,8 @@ class UserController extends BaseUserController
      */
     public function store(Request $request)
     {
+        \Illuminate\Support\Facades\Log::info('UserController@store called with data:', $request->all());
+
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
@@ -52,6 +54,8 @@ class UserController extends BaseUserController
      */
     public function update(Request $request, $id)
     {
+        \Illuminate\Support\Facades\Log::info('UserController@update called with data:', $request->all());
+
         $userModel = $this->getUserModel();
         $user = $userModel::findOrFail($id);
         
