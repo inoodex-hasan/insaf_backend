@@ -368,3 +368,10 @@ Route::get('/files/{path}', [App\Http\Controllers\FileServingController::class, 
     ->where('path', '.*')
     ->middleware('auth')
     ->name('serve-file');
+
+// User Management Overrides (to handle missing username field on live server)
+Route::middleware(['web', 'auth'])->group(function () {
+    Route::post('/dashboard/users', [\App\Http\Controllers\Admin\UserController::class, 'store'])->name('tyro-dashboard.users.store');
+    Route::put('/dashboard/users/{user}', [\App\Http\Controllers\Admin\UserController::class, 'update'])->name('tyro-dashboard.users.update');
+});
+
