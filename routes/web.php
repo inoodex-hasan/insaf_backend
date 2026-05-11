@@ -110,14 +110,14 @@ Route::prefix('dashboard/commissions')->name('admin.commissions.')->middleware('
     Route::delete('{commission}', [CommissionController::class, 'destroy'])->name('destroy');
 });
 
-// My Commissions - Employee Routes
+// My Commissions - Employee Routes (All authenticated users can claim)
 Route::prefix('dashboard/my-commissions')->name('my-commissions.')->middleware('auth')->group(function () {
-    Route::get('/', [App\Http\Controllers\Admin\MyCommissionController::class, 'index'])->name('index')->middleware('senior.only');
-    Route::get('/claimable', [App\Http\Controllers\Admin\MyCommissionController::class, 'claimableApplications'])->name('claimable')->middleware('senior.only');
-    Route::get('applications/{application}/claim', [App\Http\Controllers\Admin\MyCommissionController::class, 'createClaim'])->name('create-claim')->middleware('senior.only');
-    Route::post('applications/{application}/claim', [App\Http\Controllers\Admin\MyCommissionController::class, 'storeClaim'])->name('store-claim')->middleware('senior.only');
-    Route::get('{commission}', [App\Http\Controllers\Admin\MyCommissionController::class, 'show'])->name('show')->middleware('senior.only');
-    Route::post('{commission}/cancel', [App\Http\Controllers\Admin\MyCommissionController::class, 'cancelClaim'])->name('cancel')->middleware('senior.only');
+    Route::get('/', [App\Http\Controllers\Admin\MyCommissionController::class, 'index'])->name('index');
+    Route::get('/claimable', [App\Http\Controllers\Admin\MyCommissionController::class, 'claimableApplications'])->name('claimable');
+    Route::get('applications/{application}/claim', [App\Http\Controllers\Admin\MyCommissionController::class, 'createClaim'])->name('create-claim');
+    Route::post('applications/{application}/claim', [App\Http\Controllers\Admin\MyCommissionController::class, 'storeClaim'])->name('store-claim');
+    Route::get('{commission}', [App\Http\Controllers\Admin\MyCommissionController::class, 'show'])->name('show');
+    Route::post('{commission}/cancel', [App\Http\Controllers\Admin\MyCommissionController::class, 'cancelClaim'])->name('cancel');
 });
 
 // Role Management Overrides

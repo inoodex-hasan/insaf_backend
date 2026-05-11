@@ -507,8 +507,8 @@
         @endcan
     @endif
 
-    <!-- My Commissions - Senior designation only -->
-    @if (auth()->check() && auth()->user()->isSenior())
+    <!-- My Commissions - All authenticated users -->
+    @if (auth()->check())
             <li class="menu nav-item relative group">
                 <a href="javascript:;" class="nav-link">
                     <div class="flex items-center">

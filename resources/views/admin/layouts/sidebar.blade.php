@@ -283,8 +283,8 @@
                     </ul>
                 </li>
 
-                <!-- My Commissions - Senior designation only -->
-                @if (auth()->check() && auth()->user()->isSenior())
+                <!-- My Commissions - All authenticated users -->
+                @if (auth()->check())
                 <li class="nav-item" x-data="{ open: false }">
                     <a href="javascript:;" @click="open = !open" class="group">
                         <div class="flex items-center justify-between w-full">
