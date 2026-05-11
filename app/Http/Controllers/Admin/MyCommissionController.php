@@ -65,6 +65,12 @@ class MyCommissionController extends Controller
     {
         $user = Auth::user();
 
+        // Only seniors can claim commissions
+        if (!$user->isSenior()) {
+            return redirect()->route('my-commissions.index')
+                ->with('error', 'Only senior staff members are authorized to claim commissions.');
+        }
+
         // Get applications based on user's role involvement
         $query = Application::with(['student', 'university', 'course', 'intake'])
             ->where(function ($q) use ($user) {
@@ -119,6 +125,12 @@ class MyCommissionController extends Controller
     {
         $user = Auth::user();
 
+        // Only seniors can claim commissions
+        if (!$user->isSenior()) {
+            return redirect()->route('my-commissions.claimable')
+                ->with('error', 'Only senior staff members are authorized to claim commissions.');
+        }
+
         // Check if user can claim on this application
         if (!$this->canClaimOnApplication($user, $application)) {
             return redirect()->route('my-commissions.claimable')
@@ -151,6 +163,12 @@ class MyCommissionController extends Controller
     public function storeClaim(Request $request, Application $application)
     {
         $user = Auth::user();
+
+        // Only seniors can claim commissions
+        if (!$user->isSenior()) {
+            return redirect()->route('my-commissions.claimable')
+                ->with('error', 'Only senior staff members are authorized to claim commissions.');
+        }
 
         // Verify authorization
         if (!$this->canClaimOnApplication($user, $application)) {

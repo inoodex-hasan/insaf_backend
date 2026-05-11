@@ -36,28 +36,30 @@
             @csrf
             @method('PUT')
             <div class="card-body">
-                <div class="form-group">
-                    <label for="name" class="form-label">Name</label>
-                    <input type="text" id="name" name="name" class="form-input @error('name') is-invalid @enderror" value="{{ old('name', $editUser->name) }}" required>
-                    @error('name')
-                        <span class="form-error">{{ $message }}</span>
-                    @enderror
-                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="name" class="form-label">Name</label>
+                        <input type="text" id="name" name="name" class="form-input @error('name') is-invalid @enderror" value="{{ old('name', $editUser->name) }}" required>
+                        @error('name')
+                            <span class="form-error">{{ $message }}</span>
+                        @enderror
+                    </div>
 
-                <div class="form-group">
-                    <label for="email" class="form-label">Email</label>
-                    <input type="email" id="email" name="email" class="form-input @error('email') is-invalid @enderror" value="{{ old('email', $editUser->email) }}" required>
-                    @error('email')
-                        <span class="form-error">{{ $message }}</span>
-                    @enderror
-                </div>
+                    <div class="form-group">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" id="email" name="email" class="form-input @error('email') is-invalid @enderror" value="{{ old('email', $editUser->email) }}" required>
+                        @error('email')
+                            <span class="form-error">{{ $message }}</span>
+                        @enderror
+                    </div>
 
-                <div class="form-group">
-                    <label for="username" class="form-label">User ID</label>
-                    <input type="text" id="username" name="username" class="form-input @error('username') is-invalid @enderror" value="{{ old('username', $editUser->username) }}" required>
-                    @error('username')
-                        <span class="form-error">{{ $message }}</span>
-                    @enderror
+                    <div class="form-group">
+                        <label for="username" class="form-label">User ID</label>
+                        <input type="text" id="username" name="username" class="form-input @error('username') is-invalid @enderror" value="{{ old('username', $editUser->username) }}" required>
+                        @error('username')
+                            <span class="form-error">{{ $message }}</span>
+                        @enderror
+                    </div>
                 </div>
 
                 <div class="form-group">
@@ -73,6 +75,18 @@
                 <div class="form-group">
                     <label for="password_confirmation" class="form-label">Confirm New Password</label>
                     <input type="password" id="password_confirmation" name="password_confirmation" class="form-input" placeholder="••••••••">
+                </div>
+
+                <div class="form-group">
+                    <label for="designation" class="form-label">Designation</label>
+                    <select id="designation" name="designation" class="form-input @error('designation') is-invalid @enderror">
+                        <option value="">None</option>
+                        <option value="senior" {{ old('designation', $editUser->designation) == 'senior' ? 'selected' : '' }}>Senior (can claim commission)</option>
+                        <option value="junior" {{ old('designation', $editUser->designation) == 'junior' ? 'selected' : '' }}>Junior (cannot claim commission)</option>
+                    </select>
+                    @error('designation')
+                        <span class="form-error">{{ $message }}</span>
+                    @enderror
                 </div>
 
                 <div class="form-group">

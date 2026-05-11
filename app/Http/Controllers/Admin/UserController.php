@@ -23,6 +23,7 @@ class UserController extends BaseUserController
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'username' => ['required', 'string', 'max:255', 'unique:users,username'],
             'password' => array_merge(['required', 'confirmed'], PasswordRules::get(['name' => $request->input('name'), 'email' => $request->input('email')])),
+            'designation' => ['nullable', 'string', 'in:senior,junior'],
             'roles' => ['array'],
             'roles.*' => ['exists:roles,id'],
         ]);
@@ -34,6 +35,7 @@ class UserController extends BaseUserController
             'email' => $validated['email'],
             'username' => $validated['username'],
             'password' => Hash::make($validated['password']),
+            'designation' => $validated['designation'] ?? null,
         ]);
 
         if (!empty($validated['roles'])) {
@@ -68,6 +70,7 @@ class UserController extends BaseUserController
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email,'.$user->id],
             'username' => ['required', 'string', 'max:255', 'unique:users,username,'.$user->id],
             'password' => array_merge(['nullable', 'confirmed'], PasswordRules::get(['name' => $request->input('name'), 'email' => $request->input('email')])),
+            'designation' => ['nullable', 'string', 'in:senior,junior'],
             'roles' => ['array'],
             'roles.*' => ['exists:roles,id'],
         ]);
@@ -75,6 +78,7 @@ class UserController extends BaseUserController
         $user->name = $validated['name'];
         $user->email = $validated['email'];
         $user->username = $validated['username'];
+        $user->designation = $validated['designation'] ?? $user->designation;
 
         if (!empty($validated['password'])) {
             $user->password = Hash::make($validated['password']);

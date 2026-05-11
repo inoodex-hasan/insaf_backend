@@ -283,7 +283,8 @@
                     </ul>
                 </li>
 
-                <!-- My Commissions -->
+                <!-- My Commissions - Senior designation only -->
+                @if (auth()->check() && auth()->user()->isSenior())
                 <li class="nav-item" x-data="{ open: false }">
                     <a href="javascript:;" @click="open = !open" class="group">
                         <div class="flex items-center justify-between w-full">
@@ -304,6 +305,7 @@
                         <li><a href="{{ route('my-commissions.claimable') }}" class="block rounded-md px-3 py-2 text-sm hover:bg-white hover:shadow-sm dark:hover:bg-[#0e1726]">Claim Commission</a></li>
                     </ul>
                 </li>
+                @endif
 
                 <!-- Accounting -->
                 <li class="nav-item" x-data="{ open: false }">

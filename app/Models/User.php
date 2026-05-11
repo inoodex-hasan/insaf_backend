@@ -30,6 +30,7 @@ class User extends Authenticatable
         'email',
         'username',
         'password',
+        'designation',
     ];
 
     /**
@@ -55,4 +56,11 @@ class User extends Authenticatable
         ];
     }
 
+    /**
+     * Check if the user is a senior.
+     */
+    public function isSenior(): bool
+    {
+        return $this->designation === 'senior';
+    }
 }

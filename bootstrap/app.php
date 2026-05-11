@@ -15,6 +15,7 @@ return Application::configure(basePath: dirname(__DIR__))
         // Rate limiting aliases
         $middleware->alias([
             'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
+            'senior.only' => \App\Http\Middleware\SeniorOnly::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

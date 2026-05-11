@@ -73,6 +73,7 @@
                     <thead>
                         <tr>
                             <th>User</th>
+                            <th>Designation</th>
                             <th>Roles</th>
                             <th>Status</th>
                             <th>Joined</th>
@@ -93,6 +94,15 @@
                                             <div class="user-cell-email">{{ $listUser->email }}</div>
                                         </div>
                                     </a>
+                                </td>
+                                <td>
+                                    @if($listUser->designation)
+                                        <span class="badge badge-{{ $listUser->designation === 'senior' ? 'success' : 'secondary' }}">
+                                            {{ ucfirst($listUser->designation) }}
+                                        </span>
+                                    @else
+                                        <span class="text-muted">None</span>
+                                    @endif
                                 </td>
                                 <td>
                                     <div class="badge-list">

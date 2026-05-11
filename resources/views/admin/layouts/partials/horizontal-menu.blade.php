@@ -507,12 +507,8 @@
         @endcan
     @endif
 
-    <!-- My Commissions - For Marketing, Consultant, Application Staff -->
-    @if (auth()->check() &&
-            (auth()->user()->hasRole('marketing') ||
-                auth()->user()->hasRole('consultant') ||
-                auth()->user()->hasRole('application')))
-        @canany(['*marketing', '*consultant', '*application'])
+    <!-- My Commissions - Senior designation only -->
+    @if (auth()->check() && auth()->user()->isSenior())
             <li class="menu nav-item relative group">
                 <a href="javascript:;" class="nav-link">
                     <div class="flex items-center">
@@ -537,7 +533,6 @@
                     <li><a href="{{ route('my-commissions.claimable') }}">Claim Commission</a></li>
                 </ul>
             </li>
-        @endcanany
     @endif
 
     @if (auth()->check() && auth()->user()->hasRole('accountant'))
