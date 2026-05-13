@@ -48,7 +48,7 @@
                     </select>
                     <select name="collected_by" class="form-select w-full min-w-[150px]">
                         <option value="">Collected By</option>
-                        @foreach($collectors as $collector)
+                        @foreach($collectors ?? [] as $collector)
                             <option value="{{ $collector->id }}" {{ request('collected_by') == $collector->id ? 'selected' : '' }}>{{ $collector->name }}</option>
                         @endforeach
                     </select>

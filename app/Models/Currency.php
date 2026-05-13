@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Facades\Cache;
 
 class Currency extends Model
 {
@@ -23,6 +24,17 @@ class Currency extends Model
         'is_active' => 'boolean',
         'is_default' => 'boolean',
     ];
+
+    protected static function booted()
+    {
+        static::saved(function () {
+            Cache::forget('active_currencies');
+        });
+
+        static::deleted(function () {
+            Cache::forget('active_currencies');
+        });
+    }
 
     /**
      * Scope: only active currencies.
