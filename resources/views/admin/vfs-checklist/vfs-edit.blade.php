@@ -47,9 +47,11 @@
                     <div>
                         <label class="font-bold mb-2 block">VFS Result <span class="text-danger">*</span></label>
                         <select name="vfs_result" class="form-select" required>
-                            <option value="pending" {{ $application->vfs_result == 'pending' ? 'selected' : '' }}>Pending</option>
-                            <option value="passed" {{ $application->vfs_result == 'passed' ? 'selected' : '' }}>Passed</option>
+                            <option value="submitted" {{ $application->vfs_result == 'submitted' ? 'selected' : '' }}>Submitted</option>
+                            <option value="not_submitted" {{ $application->vfs_result == 'not_submitted' ? 'selected' : '' }}>Not Submitted</option>
+                            <option value="not_attended" {{ $application->vfs_result == 'not_attended' ? 'selected' : '' }}>Not Attended</option>
                             <option value="rejected" {{ $application->vfs_result == 'rejected' ? 'selected' : '' }}>Rejected</option>
+                            <option value="approved" {{ $application->vfs_result == 'approved' ? 'selected' : '' }}>Approved</option>
                         </select>
                     </div>
 

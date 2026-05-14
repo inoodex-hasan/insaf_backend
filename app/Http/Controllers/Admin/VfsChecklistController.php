@@ -43,7 +43,7 @@ class VfsChecklistController extends Controller
 
     public function __construct()
     {
-        $this->middleware('can:*application');
+        $this->middleware('can:*application|*consultant');
     }
 
     public function index(Request $request)
@@ -135,7 +135,7 @@ class VfsChecklistController extends Controller
     public function updateVfsResult(Request $request, Application $application)
     {
         $request->validate([
-            'vfs_result' => 'required|in:pending,passed,rejected',
+            'vfs_result' => 'required|in:submitted,not_submitted,not_attended,rejected,approved',
             'vfs_note' => 'nullable|string',
         ]);
 

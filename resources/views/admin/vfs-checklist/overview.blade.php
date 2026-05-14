@@ -19,9 +19,11 @@
                 <div class="w-48">
                     <select name="vfs_result" class="form-select w-full">
                         <option value="">All Status</option>
-                        <option value="pending" {{ request('vfs_result') == 'pending' ? 'selected' : '' }}>Pending</option>
-                        <option value="passed" {{ request('vfs_result') == 'passed' ? 'selected' : '' }}>Passed</option>
+                        <option value="submitted" {{ request('vfs_result') == 'submitted' ? 'selected' : '' }}>Submitted</option>
+                        <option value="not_submitted" {{ request('vfs_result') == 'not_submitted' ? 'selected' : '' }}>Not Submitted</option>
+                        <option value="not_attended" {{ request('vfs_result') == 'not_attended' ? 'selected' : '' }}>Not Attended</option>
                         <option value="rejected" {{ request('vfs_result') == 'rejected' ? 'selected' : '' }}>Rejected</option>
+                        <option value="approved" {{ request('vfs_result') == 'approved' ? 'selected' : '' }}>Approved</option>
                     </select>
                 </div>
 
@@ -66,8 +68,17 @@
                                 <div class="font-medium">{{ $app->university?->name ?? 'N/A' }}</div>
                                 <div class="text-xs text-info">{{ $app->university?->country?->name }}</div>
                             </td>
-                            <td class="text-center">
-                                {{ $app->vfs_appointment_date ? $app->vfs_appointment_date->format('M d, Y') : 'Not Set' }}
+                            <td class="py-3 px-2 text-center">
+                                @php
+                                    $vfsDate = $app->vfs_appointment_date ? \Carbon\Carbon::parse($app->vfs_appointment_date)->format('M d, Y') : 'Not Set';
+                                    $isOverdue = $app->vfs_appointment_date && \Carbon\Carbon::parse($app->vfs_appointment_date)->isPast() && !in_array($app->vfs_result, ['approved', 'rejected', 'submitted']);
+                                @endphp
+                                <span class="{{ $isOverdue ? 'text-danger font-bold' : '' }}">
+                                    {{ $vfsDate }}
+                                    @if($isOverdue)
+                                        <div class="text-[10px] uppercase">⚠️ Overdue</div>
+                                    @endif
+                                </span>
                             </td>
                             <!-- <td class="text-center">
                                 @if($app->history->count() > 0)
@@ -80,9 +91,19 @@
                                             @foreach($app->history as $prev)
                                                 <li class="text-xs mb-2 pb-2 border-b border-dashed last:border-0">
                                                     <div class="flex justify-between font-semibold">
-                                                        <span>{{ $prev->vfs_appointment_date?->format('M d, Y') }}</span>
-                                                        <span class="{{ $prev->vfs_result == 'passed' ? 'text-success' : 'text-danger' }} uppercase">{{ $prev->vfs_result }}</span>
-                                                    </div>
+                                                            <span>{{ $prev->vfs_appointment_date?->format('M d, Y') }}</span>
+                                                            @php
+                                                                $prevBadgeClass = match($prev->vfs_result) {
+                                                                    'approved' => 'text-success',
+                                                                    'rejected' => 'text-danger',
+                                                                    'submitted' => 'text-primary',
+                                                                    'not_submitted' => 'text-warning',
+                                                                    'not_attended' => 'text-secondary',
+                                                                    default => 'text-info',
+                                                                };
+                                                            @endphp
+                                                            <span class="{{ $prevBadgeClass }} uppercase text-[10px]">{{ str_replace('_', ' ', $prev->vfs_result) }}</span>
+                                                        </div>
                                                     <div class="text-white-dark italic">{{ $prev->university?->name }}</div>
                                                 </li>
                                             @endforeach
@@ -93,8 +114,18 @@
                                 @endif
                             </td> -->
                             <td class="text-center">
-                                <span class="badge {{ $app->vfs_result == 'passed' ? 'bg-success' : ($app->vfs_result == 'rejected' ? 'bg-danger' : 'bg-warning') }} uppercase">
-                                    {{ $app->vfs_result }}
+                                @php
+                                    $badgeClass = match($app->vfs_result) {
+                                        'approved' => 'bg-success',
+                                        'rejected' => 'bg-danger',
+                                        'submitted' => 'bg-primary',
+                                        'not_submitted' => 'bg-warning',
+                                        'not_attended' => 'bg-secondary',
+                                        default => 'bg-info',
+                                    };
+                                @endphp
+                                <span class="badge {{ $badgeClass }} uppercase">
+                                    {{ str_replace('_', ' ', $app->vfs_result) }}
                                 </span>
                             </td>
                             <td class="text-center">

@@ -476,7 +476,7 @@
             </li>
             @endcan
         @endcanany
-        @can('*application')
+        @can('*application|*consultant')
             <li class="menu nav-item relative">
                 <a href="javascript:;" class="nav-link">
                     <div class="flex items-center">

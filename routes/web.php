@@ -277,7 +277,7 @@ Route::prefix('dashboard/bank-reconciliations')->name('admin.bank-reconciliation
 // VFS Checklist
 Route::prefix('dashboard/vfs-checklist')->name('admin.vfs-checklist.')->group(function () {
     Route::get('/', [App\Http\Controllers\Admin\VfsChecklistController::class, 'index'])->name('index')->middleware('can:*application');
-    Route::get('/overview', [App\Http\Controllers\Admin\VfsChecklistController::class, 'overview'])->name('overview')->middleware('can:*application');
+    Route::get('/overview', [App\Http\Controllers\Admin\VfsChecklistController::class, 'overview'])->name('overview')->middleware('can:*application|*consultant');
     Route::get('/overview/{application}', [App\Http\Controllers\Admin\VfsChecklistController::class, 'vfsShow'])->name('vfs-show')->middleware('can:*application');
     Route::get('/overview/{application}/edit', [App\Http\Controllers\Admin\VfsChecklistController::class, 'vfsEdit'])->name('vfs-edit')->middleware('can:*application');
     Route::post('/{application}/vfs-result', [App\Http\Controllers\Admin\VfsChecklistController::class, 'updateVfsResult'])->name('update-vfs-result')->middleware('can:*application');
