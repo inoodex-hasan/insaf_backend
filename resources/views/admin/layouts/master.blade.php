@@ -55,6 +55,64 @@
 
     @include('admin.layouts.scripts')
     @stack('scripts')
+
+    @if(auth()->check())
+    <audio id="notification-sound" preload="auto">
+        <source src="https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3" type="audio/mpeg">
+    </audio>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            let lastNotificationCount = {{ auth()->user()->unreadNotifications->count() }};
+            let originalTitle = document.title;
+            let notificationInterval = null;
+
+            function playNotificationSound() {
+                const sound = document.getElementById('notification-sound');
+                if (sound) {
+                    sound.play().catch(e => console.log('Sound play blocked by browser:', e));
+                }
+            }
+
+            function updateTabTitle(count) {
+                if (count > 0) {
+                    if (!notificationInterval) {
+                        notificationInterval = setInterval(() => {
+                            document.title = document.title === originalTitle 
+                                ? `(${count}) New Notification!` 
+                                : originalTitle;
+                        }, 1000);
+                    }
+                } else {
+                    if (notificationInterval) {
+                        clearInterval(notificationInterval);
+                        notificationInterval = null;
+                    }
+                    document.title = originalTitle;
+                }
+            }
+
+            // Initial check
+            if (lastNotificationCount > 0) {
+                updateTabTitle(lastNotificationCount);
+            }
+
+            // Poll for new notifications every 30 seconds
+            setInterval(() => {
+                fetch('{{ route("admin.notifications.count") }}')
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.count > lastNotificationCount) {
+                            playNotificationSound();
+                        }
+                        lastNotificationCount = data.count;
+                        updateTabTitle(lastNotificationCount);
+                    })
+                    .catch(error => console.error('Error fetching notifications:', error));
+            }, 30000);
+        });
+    </script>
+    @endif
 </body>
 
 </html>

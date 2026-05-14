@@ -23,6 +23,7 @@ Route::prefix('dashboard/settings')->name('admin.settings.')->middleware('can:ma
 
 // Notifications
 Route::prefix('dashboard/notifications')->name('admin.notifications.')->group(function () {
+    Route::get('count', [App\Http\Controllers\Admin\NotificationController::class, 'getUnreadCount'])->name('count');
     Route::get('{id}/read', [App\Http\Controllers\Admin\NotificationController::class, 'markAsRead'])->name('read');
     Route::get('read-all', [App\Http\Controllers\Admin\NotificationController::class, 'markAllAsRead'])->name('readAll');
 });
