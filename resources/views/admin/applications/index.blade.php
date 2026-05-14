@@ -109,7 +109,7 @@
                         <th>Application ID</th>
                         <th>Student</th>
                         <th>University & Course</th>
-                        <!-- <th>Intake</th> -->
+                        <!-- <th>VFS Appointment Date</th> -->
                         <th>Status</th>
                         <!-- <th>Offer Letter</th>
                         <th>VFS</th>
@@ -136,7 +136,7 @@
                         </td>
                         <td>
                             <div class="font-semibold">{{ $app->university->name ?? 'N/A' }}</div>
-                            <div class="text-xs text-white-dark">{{ $app->course->name ?? 'N/A' }}</div>
+                            <div class="text-xs text-white-dark">{{ $app->course ? Illuminate\Support\Str::limit($app->course->name, 30) : 'N/A' }}</div>
                         </td>
                         <!-- <td>{{ $app->intake->intake_name ?? 'N/A' }}</td> -->
                         <td>

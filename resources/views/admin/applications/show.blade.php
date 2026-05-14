@@ -49,22 +49,22 @@
     {{-- Academic Info Card --}}
     <div class="panel mt-6">
         <h5 class="text-lg font-semibold dark:text-white-light uppercase mb-4">Academic Information</h5>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div>
                 <label class="text-xs text-gray-500 dark:text-gray-400">Country</label>
-                <p class="font-medium">{{ $application->university->country->name ?? 'N/A' }}</p>
+                <p class="font-medium">{{ $application->university?->country?->name ?? 'N/A' }}</p>
             </div>
             <div>
                 <label class="text-xs text-gray-500 dark:text-gray-400">University</label>
-                <p class="font-medium">{{ $application->university->name ?? 'N/A' }}</p>
+                <p class="font-medium">{{ $application->university?->name ?? 'N/A' }}</p>
             </div>
             <div>
                 <label class="text-xs text-gray-500 dark:text-gray-400">Course</label>
-                <p class="font-medium">{{ $application->course->name ?? 'N/A' }}</p>
+                <p class="font-medium">{{ $application->course?->name ?? 'N/A' }}</p>
             </div>
             <div>
                 <label class="text-xs text-gray-500 dark:text-gray-400">Intake</label>
-                <p class="font-medium">{{ $application->intake->intake_name ?? 'N/A' }}</p>
+                <p class="font-medium">{{ $application->intake?->intake_name ?? 'N/A' }}</p>
             </div>
         </div>
     </div>
