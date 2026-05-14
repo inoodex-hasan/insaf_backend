@@ -1,0 +1,68 @@
+@extends('admin.layouts.master')
+
+@section('title', 'Edit VFS Status')
+
+@section('content')
+    <div class="flex flex-wrap items-center justify-between gap-4">
+        <h2 class="text-xl font-semibold uppercase">Edit VFS Status & Notes</h2>
+        <a href="{{ route('admin.vfs-checklist.overview') }}" class="btn btn-secondary">Back to Overview</a>
+    </div>
+
+    <div class="grid grid-cols-1 gap-6 pt-5 lg:grid-cols-2">
+        <div class="panel">
+            <div class="mb-5 flex items-center justify-between">
+                <h5 class="text-lg font-semibold dark:text-white-light uppercase">Student Information</h5>
+            </div>
+            <div class="space-y-4">
+                <div class="flex justify-between">
+                    <span class="text-white-dark font-bold">Application ID:</span>
+                    <span class="font-semibold">{{ $application->application_id }}</span>
+                </div>
+                <div class="flex justify-between border-t pt-2">
+                    <span class="text-white-dark font-bold">Student Name:</span>
+                    <span>{{ $application->student->first_name }} {{ $application->student->last_name }}</span>
+                </div>
+                <div class="flex justify-between border-t pt-2">
+                    <span class="text-white-dark font-bold">Passport Number:</span>
+                    <span>{{ $application->student->passport_number ?? 'N/A' }}</span>
+                </div>
+                <div class="flex justify-between border-t pt-2">
+                    <span class="text-white-dark font-bold">University:</span>
+                    <span>{{ $application->university?->name ?? 'N/A' }}</span>
+                </div>
+                <div class="flex justify-between border-t pt-2">
+                    <span class="text-white-dark font-bold">VFS Appointment Date:</span>
+                    <span class="text-primary font-bold">{{ $application->vfs_appointment_date ? $application->vfs_appointment_date->format('M d, Y') : 'Not Set' }}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel">
+            <div class="mb-5">
+                <h5 class="text-lg font-semibold dark:text-white-light uppercase">Update VFS Result</h5>
+            </div>
+            <form action="{{ route('admin.vfs-checklist.update-vfs-result', $application->id) }}" method="POST">
+                @csrf
+                <div class="space-y-5">
+                    <div>
+                        <label class="font-bold mb-2 block">VFS Result <span class="text-danger">*</span></label>
+                        <select name="vfs_result" class="form-select" required>
+                            <option value="pending" {{ $application->vfs_result == 'pending' ? 'selected' : '' }}>Pending</option>
+                            <option value="passed" {{ $application->vfs_result == 'passed' ? 'selected' : '' }}>Passed</option>
+                            <option value="rejected" {{ $application->vfs_result == 'rejected' ? 'selected' : '' }}>Rejected</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="font-bold mb-2 block">VFS Notes / Rejection Reason</label>
+                        <textarea name="vfs_note" class="form-textarea h-32" placeholder="Provide details about the VFS outcome...">{{ old('vfs_note', $application->vfs_note) }}</textarea>
+                    </div>
+
+                    <div class="flex justify-end gap-3 border-t pt-5">
+                        <button type="submit" class="btn btn-primary px-10">Save Updates</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+@endsection

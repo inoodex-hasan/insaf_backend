@@ -38,6 +38,8 @@ class Application extends Model
         'final_payment_status',
         'emgs_payment_status',
         'emgs_score',
+        'vfs_result',
+        'vfs_note',
     ];
 
     protected $casts = [

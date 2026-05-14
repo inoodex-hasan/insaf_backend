@@ -68,6 +68,90 @@ class VfsChecklistController extends Controller
         return view('admin.vfs-checklist.index', compact('applications'));
     }
 
+    public function overview(Request $request)
+    {
+        // Get the latest application ID for each student that has a VFS appointment date
+        $latestVfsSubquery = Application::whereNotNull('vfs_appointment_date')
+            ->selectRaw('MAX(id) as id')
+            ->groupBy('student_id');
+
+        $query = Application::with(['student', 'university.country'])
+            ->whereIn('id', $latestVfsSubquery)
+            ->orderBy('vfs_appointment_date', 'desc');
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('application_id', 'like', "%{$search}%")
+                    ->orWhereHas('student', function ($sq) use ($search) {
+                        $sq->where('first_name', 'like', "%{$search}%")
+                            ->orWhere('last_name', 'like', "%{$search}%")
+                            ->orWhere('passport_number', 'like', "%{$search}%");
+                    });
+            });
+        }
+
+        if ($request->filled('vfs_result')) {
+            $query->where('vfs_result', $request->vfs_result);
+        }
+
+        $applications = $query->paginate(20);
+
+        // Add history for each application in the current page
+        foreach ($applications as $app) {
+            $app->history = Application::where('student_id', $app->student_id)
+                ->where('id', '!=', $app->id)
+                ->whereNotNull('vfs_appointment_date')
+                ->with('university')
+                ->orderBy('vfs_appointment_date', 'desc')
+                ->get();
+            
+            // Count total attempts including current one
+            $app->total_vfs_attempts = $app->history->count() + 1;
+        }
+
+        return view('admin.vfs-checklist.overview', compact('applications'));
+    }
+
+    public function vfsShow(Application $application)
+    {
+        $application->load(['student', 'university.country']);
+        $application->history = Application::where('student_id', $application->student_id)
+            ->where('id', '!=', $application->id)
+            ->whereNotNull('vfs_appointment_date')
+            ->with('university')
+            ->orderBy('vfs_appointment_date', 'desc')
+            ->get();
+
+        return view('admin.vfs-checklist.vfs-show', compact('application'));
+    }
+
+    public function vfsEdit(Application $application)
+    {
+        $application->load(['student', 'university.country']);
+        return view('admin.vfs-checklist.vfs-edit', compact('application'));
+    }
+
+    public function updateVfsResult(Request $request, Application $application)
+    {
+        $request->validate([
+            'vfs_result' => 'required|in:pending,passed,rejected',
+            'vfs_note' => 'nullable|string',
+        ]);
+
+        $data = ['vfs_result' => $request->vfs_result];
+        
+        // Only update vfs_note if it is actually sent in the request
+        // This prevents the note from being cleared when updating status from the list
+        if ($request->has('vfs_note')) {
+            $data['vfs_note'] = $request->vfs_note;
+        }
+
+        $application->update($data);
+
+        return redirect()->route('admin.vfs-checklist.overview')->with('success', 'VFS Status updated successfully.');
+    }
+
     public function show(Application $application)
     {
         // Get country's ID from application's university

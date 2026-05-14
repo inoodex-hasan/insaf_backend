@@ -278,6 +278,7 @@
                         </div>
                     </a>
                     <ul x-show="open" x-collapse class="mt-1 space-y-1 rounded-md bg-gray-100 p-2 dark:bg-[#1b2e4b]">
+                        <li><a href="{{ route('admin.vfs-checklist.overview') }}" class="block rounded-md px-3 py-2 text-sm hover:bg-white hover:shadow-sm dark:hover:bg-[#0e1726]">VFS Overview</a></li>
                         <li><a href="{{ route('admin.vfs-checklist.index') }}" class="block rounded-md px-3 py-2 text-sm hover:bg-white hover:shadow-sm dark:hover:bg-[#0e1726]">Checklist List</a></li>
                         <li><a href="{{ route('admin.vfs-checklist.templates') }}" class="block rounded-md px-3 py-2 text-sm hover:bg-white hover:shadow-sm dark:hover:bg-[#0e1726]">Manage List</a></li>
                     </ul>

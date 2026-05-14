@@ -500,6 +500,7 @@
                     </div>
                 </a>
                 <ul class="sub-menu">
+                    <li><a href="{{ route('admin.vfs-checklist.overview') }}">VFS Overview</a></li>
                     <li><a href="{{ route('admin.vfs-checklist.index') }}">Checklist List</a></li>
                     <li><a href="{{ route('admin.vfs-checklist.templates') }}">Manage List</a></li>
                 </ul>
