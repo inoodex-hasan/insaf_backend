@@ -79,15 +79,27 @@
                             foreach ($app->documents as $doc) {
                                 $docStatus[$doc->document_type] = $doc;
                             }
+                            
+                            $isOverdue = $app->vfs_appointment_date && \Carbon\Carbon::parse($app->vfs_appointment_date)->isPast() && !$app->is_fully_submitted;
                         @endphp
-                        <tr class="border-b border-gray-100 dark:border-gray-800">
-                            <td class="py-3 px-2 font-medium">{{ $app->application_id }}</td>
+                        <tr class="border-b border-gray-100 dark:border-gray-800 {{ $app->is_fully_submitted ? 'opacity-60 bg-gray-50/50 dark:bg-gray-900/20' : '' }}">
+                            <td class="py-3 px-2 font-medium">
+                                {{ $app->application_id }}
+                                @if($app->is_fully_submitted)
+                                    <span class="badge badge-outline-success text-[10px] ml-1 px-1 py-0">Done</span>
+                                @endif
+                            </td>
                             <td class="py-3 px-2">{{ $app->student->full_name ?? 'Unknown' }}</td>
                             <td class="py-3 px-2 text-center">
                                 @php
                                     $vfsDate = $app->vfs_appointment_date ? \Carbon\Carbon::parse($app->vfs_appointment_date)->format('M d, Y') : 'Not Set';
                                 @endphp
-                                    <span class="text-xs">{{ $vfsDate }}</span>
+                                <span class="{{ $isOverdue ? 'text-danger font-bold' : '' }}">
+                                    {{ $vfsDate }}
+                                    @if($isOverdue)
+                                        <div class="text-[10px] uppercase">⚠️ Overdue</div>
+                                    @endif
+                                </span>
                             </td>
                             <td class="py-3 px-2 text-center">
                                 @php

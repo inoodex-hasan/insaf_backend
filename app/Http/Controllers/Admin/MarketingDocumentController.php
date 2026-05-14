@@ -79,10 +79,46 @@ class MarketingDocumentController extends Controller
         }
 
         // Group applications by VFS appointment date
-        $applications = $query->orderBy('vfs_appointment_date', 'asc')
-            ->orderBy('created_at', 'desc')
-            ->paginate(20)
-            ->withQueryString();
+        // Logic: 
+        // 1. Applications with upcoming/overdue VFS dates and INCOMPLETE documents first
+        // 2. Applications with no VFS date
+        // 3. Fully completed applications (all submitted) at the very bottom
+        $applications = $query->get()->map(function($app) {
+            $docs = $app->documents->pluck('status', 'document_type')->toArray();
+            $docTypes = ['sop', 'cv', 'cl'];
+            $isComplete = true;
+            foreach ($docTypes as $type) {
+                if (!isset($docs[$type]) || $docs[$type] !== 'submitted') {
+                    $isComplete = false;
+                    break;
+                }
+            }
+            $app->is_fully_submitted = $isComplete;
+            return $app;
+        })->sort(function($a, $b) {
+            // Priority 1: Incomplete vs Complete
+            if ($a->is_fully_submitted !== $b->is_fully_submitted) {
+                return $a->is_fully_submitted ? 1 : -1;
+            }
+
+            // Priority 2: VFS Date (NULLs to the middle, after incomplete with dates)
+            if ($a->vfs_appointment_date === null && $b->vfs_appointment_date !== null) return 1;
+            if ($a->vfs_appointment_date !== null && $b->vfs_appointment_date === null) return -1;
+            
+            return strcmp($a->vfs_appointment_date, $b->vfs_appointment_date);
+        });
+
+        // Re-paginate the sorted collection
+        $perPage = 20;
+        $page = $request->get('page', 1);
+        $paginatedItems = $applications->forPage($page, $perPage);
+        $applications = new \Illuminate\Pagination\LengthAwarePaginator(
+            $paginatedItems,
+            $applications->count(),
+            $perPage,
+            $page,
+            ['path' => $request->url(), 'query' => $request->query()]
+        );
 
         return view('admin.marketing.documents.list', compact('applications'));
     }
