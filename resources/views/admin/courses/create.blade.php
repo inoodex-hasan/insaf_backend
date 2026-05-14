@@ -43,18 +43,18 @@
                     <input type="text" name="duration" class="form-input" value="{{ old('duration') }}">
                 </div>
 
-                <!-- <div class="form-group">
-                                                                                                    <label>Tuition Fee <span class="text-danger">*</span></label>
-                                                                                                    <input type="number" name="tuition_fee" class="form-input"
-                                                                                                        value="{{ old('tuition_fee') }}" required>
-                                                                                                </div> -->
-
                 <div class="form-group">
                     <label>Status <span class="text-danger">*</span></label>
                     <select name="status" class="form-select" required>
                         <option value="1" {{ old('status', 1) == 1 ? 'selected' : '' }}>Active</option>
                         <option value="0" {{ old('status', 1) == 0 ? 'selected' : '' }}>Inactive</option>
                     </select>
+                </div>
+
+                <div class="form-group md:col-span-2">
+                    <label>Description</label>
+                    <div id="editor-container" class="h-40"></div>
+                    <input type="hidden" name="description" id="description">
                 </div>
 
             </div>
@@ -68,6 +68,7 @@
 @endsection
 
 @push('scripts')
+    <script src="{{ asset('assets/js/quill.js') }}"></script>
     <script>
         $(document).ready(function () {
             $('.select2').select2({
@@ -75,11 +76,28 @@
                 allowClear: true,
                 width: '100%'
             });
+
+            // Initialize Quill
+            var quill = new Quill('#editor-container', {
+                theme: 'snow',
+                placeholder: 'Write course description...',
+            });
+
+            // Set initial content if exists (old input)
+            @if(old('description'))
+                quill.root.innerHTML = `{!! old('description') !!}`;
+            @endif
+
+            // Update hidden input before form submit
+            $('form').on('submit', function() {
+                $('#description').val(quill.root.innerHTML);
+            });
         });
     </script>
 @endpush
 
 @push('styles')
+    <link rel="stylesheet" href="{{ asset('assets/css/quill.snow.css') }}">
     <style>
         /* Match your input style */
         .select2-container .select2-selection--single {

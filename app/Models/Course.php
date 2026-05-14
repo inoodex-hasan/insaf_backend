@@ -12,6 +12,7 @@ class Course extends Model
     protected $fillable = [
         'university_id',
         'name',
+        'description',
         'degree_level',
         'duration',
         'tuition_fee',

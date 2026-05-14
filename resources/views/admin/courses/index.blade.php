@@ -49,9 +49,10 @@
                     <th>#</th>
                     <th>University</th>
                     <th>Name</th>
+                    <!-- <th>Description</th> -->
                     <th>Degree Level</th>
                     <th>Duration</th>
-                    <th>Tuition Fee</th>
+                    <!-- <th>Tuition Fee</th> -->
                     <th>Status</th>
                     <th class="text-center">Action</th>
                 </tr>
@@ -61,16 +62,19 @@
                     <tr>
                         <td>{{ $loop->iteration }}</td>
                         <td>{{ $course->university->name ?? 'N/A' }}</td>
-                        <td>{{ $course->name ?? 'N/A' }}</td>
+                        <td>{{ \Illuminate\Support\Str::limit($course->name, 30) ?? 'N/A' }}</td>
+                        <!-- <td>{{ \Illuminate\Support\Str::limit(strip_tags($course->description), 50) ?? 'N/A' }}</td> -->
                         <td>{{ $course->degree_level ?? 'N/A' }}</td>
                         <td>{{ $course->duration ?? 'N/A' }}</td>
-                        <td>{{ $course->tuition_fee ? number_format($course->tuition_fee, 2) : 'N/A' }}</td>
+                        <!-- <td>{{ $course->tuition_fee ? number_format($course->tuition_fee, 2) : 'N/A' }}</td> -->
                         <td>
                             <span class="badge {{ $course->status ? 'bg-success' : 'bg-danger' }}">
                                 {{ $course->status ? 'Active' : 'Inactive' }}
                             </span>
                         </td>
                         <td class="flex items-center justify-center gap-2">
+                            <a href="{{ route('admin.courses.show', $course->id) }}"
+                                class="btn btn-sm btn-outline-info">View</a>
                             <a href="{{ route('admin.courses.edit', $course->id) }}"
                                 class="btn btn-sm btn-outline-primary">Edit</a>
 

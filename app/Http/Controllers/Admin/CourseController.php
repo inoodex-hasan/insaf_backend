@@ -47,6 +47,12 @@ class CourseController extends Controller
             ->with('success', 'Course created successfully.');
     }
 
+    public function show(Course $course)
+    {
+        $course->load('university');
+        return view('admin.courses.show', compact('course'));
+    }
+
     public function edit(Course $course)
     {
 
@@ -77,6 +83,7 @@ class CourseController extends Controller
         return $request->validate([
             'university_id' => ['required', 'exists:universities,id'],
             'name' => ['required', 'string', 'max:255'],
+            'description' => ['nullable', 'string'],
             'degree_level' => ['nullable', 'string', 'max:100'],
             'duration' => ['nullable', 'string', 'max:100'],
             'tuition_fee' => ['nullable', 'numeric'],
